@@ -335,6 +335,10 @@ export function listAvailableConnectorApps(workspaceId: number): ConnectorApp[] 
   return listConnectorApps().filter((app) => !isAppBlocked(workspaceId, app.id))
 }
 
+export function listBlockedConnectorApps(workspaceId: number): ConnectorApp[] {
+  return listConnectorApps().filter((app) => isAppBlocked(workspaceId, app.id))
+}
+
 export function listConnectorApps(): ConnectorApp[] {
   return CONNECTOR_APPS
 }

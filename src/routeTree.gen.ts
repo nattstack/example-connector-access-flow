@@ -19,7 +19,6 @@ import { Route as WorkspaceSlugSettingsAccountRouteImport } from "./routes/$work
 import { Route as WorkspaceSlugSettingsConnectorsRouteImport } from "./routes/$workspaceSlug.settings.connectors"
 import { Route as WorkspaceSlugSettingsMembersRouteImport } from "./routes/$workspaceSlug.settings.members"
 import { Route as WorkspaceSlugSettingsProfileRouteImport } from "./routes/$workspaceSlug.settings.profile"
-import { Route as WorkspaceSlugSettingsSecurityRouteImport } from "./routes/$workspaceSlug.settings.security"
 import { Route as WorkspaceSlugSettingsTeamsRouteImport } from "./routes/$workspaceSlug.settings.teams"
 import { Route as WorkspaceSlugSettingsWorkspaceRouteImport } from "./routes/$workspaceSlug.settings.workspace"
 import { Route as WorkspaceSlugSettingsConnectorsIndexRouteImport } from "./routes/$workspaceSlug.settings.connectors.index"
@@ -83,12 +82,6 @@ const WorkspaceSlugSettingsProfileRoute =
     path: "/profile",
     getParentRoute: () => WorkspaceSlugSettingsRoute,
   } as any)
-const WorkspaceSlugSettingsSecurityRoute =
-  WorkspaceSlugSettingsSecurityRouteImport.update({
-    id: "/security",
-    path: "/security",
-    getParentRoute: () => WorkspaceSlugSettingsRoute,
-  } as any)
 const WorkspaceSlugSettingsTeamsRoute =
   WorkspaceSlugSettingsTeamsRouteImport.update({
     id: "/teams",
@@ -136,7 +129,6 @@ export interface FileRoutesByFullPath {
   "/$workspaceSlug/settings/connectors": typeof WorkspaceSlugSettingsConnectorsRouteWithChildren
   "/$workspaceSlug/settings/members": typeof WorkspaceSlugSettingsMembersRoute
   "/$workspaceSlug/settings/profile": typeof WorkspaceSlugSettingsProfileRoute
-  "/$workspaceSlug/settings/security": typeof WorkspaceSlugSettingsSecurityRoute
   "/$workspaceSlug/settings/teams": typeof WorkspaceSlugSettingsTeamsRouteWithChildren
   "/$workspaceSlug/settings/workspace": typeof WorkspaceSlugSettingsWorkspaceRoute
   "/$workspaceSlug/settings/": typeof WorkspaceSlugSettingsIndexRoute
@@ -152,7 +144,6 @@ export interface FileRoutesByTo {
   "/$workspaceSlug/settings/account": typeof WorkspaceSlugSettingsAccountRoute
   "/$workspaceSlug/settings/members": typeof WorkspaceSlugSettingsMembersRoute
   "/$workspaceSlug/settings/profile": typeof WorkspaceSlugSettingsProfileRoute
-  "/$workspaceSlug/settings/security": typeof WorkspaceSlugSettingsSecurityRoute
   "/$workspaceSlug/settings/workspace": typeof WorkspaceSlugSettingsWorkspaceRoute
   "/$workspaceSlug/settings": typeof WorkspaceSlugSettingsIndexRoute
   "/$workspaceSlug/settings/connectors/$connectorId": typeof WorkspaceSlugSettingsConnectorsConnectorIdRoute
@@ -171,7 +162,6 @@ export interface FileRoutesById {
   "/$workspaceSlug/settings/connectors": typeof WorkspaceSlugSettingsConnectorsRouteWithChildren
   "/$workspaceSlug/settings/members": typeof WorkspaceSlugSettingsMembersRoute
   "/$workspaceSlug/settings/profile": typeof WorkspaceSlugSettingsProfileRoute
-  "/$workspaceSlug/settings/security": typeof WorkspaceSlugSettingsSecurityRoute
   "/$workspaceSlug/settings/teams": typeof WorkspaceSlugSettingsTeamsRouteWithChildren
   "/$workspaceSlug/settings/workspace": typeof WorkspaceSlugSettingsWorkspaceRoute
   "/$workspaceSlug/settings/": typeof WorkspaceSlugSettingsIndexRoute
@@ -192,7 +182,6 @@ export interface FileRouteTypes {
     | "/$workspaceSlug/settings/connectors"
     | "/$workspaceSlug/settings/members"
     | "/$workspaceSlug/settings/profile"
-    | "/$workspaceSlug/settings/security"
     | "/$workspaceSlug/settings/teams"
     | "/$workspaceSlug/settings/workspace"
     | "/$workspaceSlug/settings/"
@@ -208,7 +197,6 @@ export interface FileRouteTypes {
     | "/$workspaceSlug/settings/account"
     | "/$workspaceSlug/settings/members"
     | "/$workspaceSlug/settings/profile"
-    | "/$workspaceSlug/settings/security"
     | "/$workspaceSlug/settings/workspace"
     | "/$workspaceSlug/settings"
     | "/$workspaceSlug/settings/connectors/$connectorId"
@@ -226,7 +214,6 @@ export interface FileRouteTypes {
     | "/$workspaceSlug/settings/connectors"
     | "/$workspaceSlug/settings/members"
     | "/$workspaceSlug/settings/profile"
-    | "/$workspaceSlug/settings/security"
     | "/$workspaceSlug/settings/teams"
     | "/$workspaceSlug/settings/workspace"
     | "/$workspaceSlug/settings/"
@@ -311,13 +298,6 @@ declare module "@tanstack/react-router" {
       path: "/profile"
       fullPath: "/$workspaceSlug/settings/profile"
       preLoaderRoute: typeof WorkspaceSlugSettingsProfileRouteImport
-      parentRoute: typeof WorkspaceSlugSettingsRoute
-    }
-    "/$workspaceSlug/settings/security": {
-      id: "/$workspaceSlug/settings/security"
-      path: "/security"
-      fullPath: "/$workspaceSlug/settings/security"
-      preLoaderRoute: typeof WorkspaceSlugSettingsSecurityRouteImport
       parentRoute: typeof WorkspaceSlugSettingsRoute
     }
     "/$workspaceSlug/settings/teams": {
@@ -405,7 +385,6 @@ interface WorkspaceSlugSettingsRouteChildren {
   WorkspaceSlugSettingsConnectorsRoute: typeof WorkspaceSlugSettingsConnectorsRouteWithChildren
   WorkspaceSlugSettingsMembersRoute: typeof WorkspaceSlugSettingsMembersRoute
   WorkspaceSlugSettingsProfileRoute: typeof WorkspaceSlugSettingsProfileRoute
-  WorkspaceSlugSettingsSecurityRoute: typeof WorkspaceSlugSettingsSecurityRoute
   WorkspaceSlugSettingsTeamsRoute: typeof WorkspaceSlugSettingsTeamsRouteWithChildren
   WorkspaceSlugSettingsWorkspaceRoute: typeof WorkspaceSlugSettingsWorkspaceRoute
   WorkspaceSlugSettingsIndexRoute: typeof WorkspaceSlugSettingsIndexRoute
@@ -417,7 +396,6 @@ const WorkspaceSlugSettingsRouteChildren: WorkspaceSlugSettingsRouteChildren = {
     WorkspaceSlugSettingsConnectorsRouteWithChildren,
   WorkspaceSlugSettingsMembersRoute: WorkspaceSlugSettingsMembersRoute,
   WorkspaceSlugSettingsProfileRoute: WorkspaceSlugSettingsProfileRoute,
-  WorkspaceSlugSettingsSecurityRoute: WorkspaceSlugSettingsSecurityRoute,
   WorkspaceSlugSettingsTeamsRoute: WorkspaceSlugSettingsTeamsRouteWithChildren,
   WorkspaceSlugSettingsWorkspaceRoute: WorkspaceSlugSettingsWorkspaceRoute,
   WorkspaceSlugSettingsIndexRoute: WorkspaceSlugSettingsIndexRoute,

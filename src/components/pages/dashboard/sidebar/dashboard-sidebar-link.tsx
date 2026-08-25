@@ -16,7 +16,6 @@ type DashboardSidebarLinkTo =
   | "/$workspaceSlug/settings/connectors"
   | "/$workspaceSlug/settings/members"
   | "/$workspaceSlug/settings/profile"
-  | "/$workspaceSlug/settings/security"
   | "/$workspaceSlug/settings/teams"
   | "/$workspaceSlug/settings/workspace"
 

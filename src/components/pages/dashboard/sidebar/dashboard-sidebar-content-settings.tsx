@@ -3,7 +3,6 @@ import {
   IconGearOutline18,
   IconGridLayoutOutline18,
   IconPlugOutline18,
-  IconShieldOutline18,
   IconUserGroupOutline18,
   IconUserOutline18,
   IconUsersOutline18,
@@ -84,11 +83,6 @@ export function DashboardSidebarContentSettings(
           icon={<IconUserGroupOutline18 size={ICON_SIZE} />}
           label="Members"
           to="/$workspaceSlug/settings/members"
-        />
-        <DashboardSidebarLink
-          icon={<IconShieldOutline18 size={ICON_SIZE} />}
-          label="Security"
-          to="/$workspaceSlug/settings/security"
         />
       </Column>
     </motion.div>

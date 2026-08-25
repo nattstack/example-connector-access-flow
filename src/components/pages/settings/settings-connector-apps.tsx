@@ -1,17 +1,37 @@
-import { Column, Row, Spacer, Switch } from "@nattstack/ui"
+import { IconChevronExpandYOutline18 } from "@nattstack/icons"
+import {
+  Button,
+  Column,
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxItem,
+  ComboboxList,
+  ComboboxSearch,
+  ComboboxTrigger,
+  ComboboxValue,
+  Row,
+  Spacer,
+} from "@nattstack/ui"
 import { useRouter } from "@tanstack/react-router"
-import type { JSX } from "react"
+import { useMemo, useState, type JSX } from "react"
 import { AvatarConnector } from "#/components/avatar-connector"
 import {
-  isAppBlocked,
+  listBlockedConnectorApps,
   listConnectorApps,
   setAppBlocked,
   type ConnectorApp,
+  type ConnectorAppId,
 } from "#/data/connectors"
+
+interface BlockableAppOption {
+  label: string
+  value: ConnectorAppId
+}
 
 interface SettingsConnectorAppRowProps {
   app: ConnectorApp
-  workspaceId: number
+  onUnblock: () => Promise<void> | void
 }
 
 interface SettingsConnectorAppsProps {
@@ -20,7 +40,34 @@ interface SettingsConnectorAppsProps {
 
 export function SettingsConnectorApps(props: SettingsConnectorAppsProps): JSX.Element {
   const { workspaceId } = props
-  const apps = listConnectorApps()
+  const router = useRouter()
+  const [isComboboxOpen, setIsComboboxOpen] = useState(false)
+
+  const blockedApps = listBlockedConnectorApps(workspaceId)
+  const items: BlockableAppOption[] = useMemo(
+    () =>
+      listConnectorApps()
+        .filter((app) => blockedApps.every((blocked) => blocked.id !== app.id))
+        .map((app) => ({
+          label: app.name,
+          value: app.id,
+        })),
+    [blockedApps],
+  )
+
+  // oxlint-disable-next-line unicorn/no-null -- Base UI Combobox treats undefined as uncontrolled; null means "no selection".
+  const selectedValue: BlockableAppOption | null = null
+
+  async function onBlock(appId: ConnectorAppId): Promise<void> {
+    setAppBlocked(workspaceId, appId, true)
+    setIsComboboxOpen(false)
+    await router.invalidate()
+  }
+
+  async function onUnblock(app: ConnectorApp): Promise<void> {
+    setAppBlocked(workspaceId, app.id, false)
+    await router.invalidate()
+  }
 
   return (
     <Column
@@ -33,25 +80,62 @@ export function SettingsConnectorApps(props: SettingsConnectorAppsProps): JSX.El
       <Spacer height={8} />
 
       <p className="text-14 text-text-secondary">
-        Workspace admins can block an app from the connectors list. Blocked apps cannot be added,
-        and agents cannot use existing connections.
+        Apps are allowed unless you block them. Search to add an app to the block list. Blocked apps
+        cannot be added, and agents cannot use existing connections.
       </p>
       <Spacer height={16} />
 
-      <Column as="ul" className="gap-y-4">
-        {apps.map((app) => (
-          <SettingsConnectorAppRow app={app} key={app.id} workspaceId={workspaceId} />
-        ))}
-      </Column>
+      <Combobox<BlockableAppOption>
+        items={items}
+        onOpenChange={setIsComboboxOpen}
+        onValueChange={async (nextValue) => {
+          if (nextValue !== null) {
+            await onBlock(nextValue.value)
+          }
+        }}
+        open={isComboboxOpen}
+        value={selectedValue}
+      >
+        <ComboboxTrigger className="w-full **:data-[component=combobox-icon]:hidden" size={36}>
+          <ComboboxValue placeholder="Search an app to block" />
+          <IconChevronExpandYOutline18 className="shrink-0 text-gray-9" />
+        </ComboboxTrigger>
+        <ComboboxContent>
+          <ComboboxSearch placeholder="Search apps" />
+          <ComboboxEmpty>
+            {items.length === 0 ? "Every app is already blocked." : "No apps found."}
+          </ComboboxEmpty>
+          <ComboboxList>
+            {(item: BlockableAppOption) => (
+              <ComboboxItem key={item.value} value={item}>
+                <Row className="items-center gap-8">
+                  <AvatarConnector appId={item.value} />
+                  <span className="truncate">{item.label}</span>
+                </Row>
+              </ComboboxItem>
+            )}
+          </ComboboxList>
+        </ComboboxContent>
+      </Combobox>
+      <Spacer height={16} />
+
+      {blockedApps.length === 0 ? (
+        <p className="text-14 text-text-secondary">
+          No apps are blocked. Search to add one to the block list.
+        </p>
+      ) : (
+        <Column as="ul" className="gap-y-4">
+          {blockedApps.map((app) => (
+            <SettingsConnectorAppRow app={app} key={app.id} onUnblock={() => onUnblock(app)} />
+          ))}
+        </Column>
+      )}
     </Column>
   )
 }
 
 function SettingsConnectorAppRow(props: SettingsConnectorAppRowProps): JSX.Element {
-  const { app, workspaceId } = props
-  const router = useRouter()
-  const blocked = isAppBlocked(workspaceId, app.id)
-  const switchId = `settings-connector-app-${app.id}`
+  const { app, onUnblock } = props
 
   return (
     <li className="flex min-h-56 items-center rounded-12 px-12">
@@ -59,27 +143,12 @@ function SettingsConnectorAppRow(props: SettingsConnectorAppRowProps): JSX.Eleme
       <Spacer width={12} />
 
       <Column className="min-w-0 flex-1">
-        <label className="truncate text-14 font-500 text-text-primary" htmlFor={switchId}>
-          {app.name}
-        </label>
+        <span className="truncate text-14 font-500 text-text-primary">{app.name}</span>
         <span className="truncate text-13 text-text-secondary">
-          {blocked ? "Blocked from the connectors list" : "Allowed in this workspace"}
+          Blocked from the connectors list
         </span>
       </Column>
-      <Row className="shrink-0 items-center">
-        <span className="text-13 text-text-secondary">{blocked ? "Blocked" : "Allowed"}</span>
-        <Spacer width={8} />
-
-        <Switch
-          checked={!blocked}
-          id={switchId}
-          onCheckedChange={async (allowed) => {
-            setAppBlocked(workspaceId, app.id, !allowed)
-            await router.invalidate()
-          }}
-          size={24}
-        />
-      </Row>
+      <Button label="Unblock" onClick={onUnblock} size={32} variant="ghost" />
     </li>
   )
 }
