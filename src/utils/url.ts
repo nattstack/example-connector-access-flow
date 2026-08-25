@@ -1,7 +1,7 @@
 import { ENVIRONMENT } from "#/utils/environment"
 
 const BASE_URLS = {
-  DEVELOPMENT: "https://connector.localhost/dashboard",
+  DEVELOPMENT: "https://connector.localhost",
   PRODUCTION: "https://kale.so",
 }
 
