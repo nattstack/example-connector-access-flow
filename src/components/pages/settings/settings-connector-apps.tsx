@@ -23,6 +23,7 @@ import {
   type ConnectorApp,
   type ConnectorAppId,
 } from "#/data/connectors"
+import { isCurrentUserWorkspaceAdmin } from "#/data/members"
 
 interface BlockableAppOption {
   label: string
@@ -31,6 +32,7 @@ interface BlockableAppOption {
 
 interface SettingsConnectorAppRowProps {
   app: ConnectorApp
+  canUnblock: boolean
   onUnblock: () => Promise<void> | void
 }
 
@@ -43,6 +45,7 @@ export function SettingsConnectorApps(props: SettingsConnectorAppsProps): JSX.El
   const router = useRouter()
   const [isComboboxOpen, setIsComboboxOpen] = useState(false)
 
+  const isAdmin = isCurrentUserWorkspaceAdmin(workspaceId)
   const blockedApps = listBlockedConnectorApps(workspaceId)
   const items: BlockableAppOption[] = useMemo(
     () =>
@@ -80,12 +83,21 @@ export function SettingsConnectorApps(props: SettingsConnectorAppsProps): JSX.El
       <Spacer height={8} />
 
       <p className="text-14 text-text-secondary">
-        Apps are allowed unless you block them. Search to add an app to the block list. Blocked apps
-        cannot be added, and agents cannot use existing connections.
+        {isAdmin
+          ? `
+            Apps are allowed unless you block them. Search to add an app to the
+            block list. Blocked apps cannot be added, and agents cannot use
+            existing connections.
+          `
+          : `
+            Apps are allowed unless a workspace admin blocks them. Blocked apps
+            cannot be added, and agents cannot use existing connections.
+          `}
       </p>
       <Spacer height={16} />
 
       <Combobox<BlockableAppOption>
+        disabled={!isAdmin}
         items={items}
         onOpenChange={setIsComboboxOpen}
         onValueChange={async (nextValue) => {
@@ -96,8 +108,19 @@ export function SettingsConnectorApps(props: SettingsConnectorAppsProps): JSX.El
         open={isComboboxOpen}
         value={selectedValue}
       >
-        <ComboboxTrigger className="w-full **:data-[component=combobox-icon]:hidden" size={36}>
-          <ComboboxValue placeholder="Search an app to block" />
+        <ComboboxTrigger
+          className="
+            w-full
+            data-disabled:cursor-default data-disabled:opacity-50
+            **:data-[component=combobox-icon]:hidden
+          "
+          size={36}
+        >
+          <ComboboxValue
+            placeholder={
+              isAdmin ? "Search an app to block" : "Only workspace admins can block apps"
+            }
+          />
           <IconChevronExpandYOutline18 className="shrink-0 text-gray-9" />
         </ComboboxTrigger>
         <ComboboxContent>
@@ -121,12 +144,19 @@ export function SettingsConnectorApps(props: SettingsConnectorAppsProps): JSX.El
 
       {blockedApps.length === 0 ? (
         <p className="text-14 text-text-secondary">
-          No apps are blocked. Search to add one to the block list.
+          {isAdmin
+            ? "No apps are blocked. Search to add one to the block list."
+            : "No apps are blocked."}
         </p>
       ) : (
         <Column as="ul" className="gap-y-4">
           {blockedApps.map((app) => (
-            <SettingsConnectorAppRow app={app} key={app.id} onUnblock={() => onUnblock(app)} />
+            <SettingsConnectorAppRow
+              app={app}
+              canUnblock={isAdmin}
+              key={app.id}
+              onUnblock={() => onUnblock(app)}
+            />
           ))}
         </Column>
       )}
@@ -135,7 +165,7 @@ export function SettingsConnectorApps(props: SettingsConnectorAppsProps): JSX.El
 }
 
 function SettingsConnectorAppRow(props: SettingsConnectorAppRowProps): JSX.Element {
-  const { app, onUnblock } = props
+  const { app, canUnblock, onUnblock } = props
 
   return (
     <li className="flex min-h-56 items-center rounded-12 px-12">
@@ -148,7 +178,13 @@ function SettingsConnectorAppRow(props: SettingsConnectorAppRowProps): JSX.Eleme
           Blocked from the connectors list
         </span>
       </Column>
-      <Button label="Unblock" onClick={onUnblock} size={32} variant="ghost" />
+      <Button
+        disabled={!canUnblock}
+        label="Unblock"
+        onClick={onUnblock}
+        size={32}
+        variant="ghost"
+      />
     </li>
   )
 }

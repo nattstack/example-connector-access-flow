@@ -13,6 +13,13 @@ export type MemberRole = "Admin" | "Member"
 
 const CURRENT_USER_MEMBER_ID = "current-user"
 
+const CURRENT_USER_ROLE_BY_WORKSPACE_ID: Record<number, MemberRole> = {
+  1: "Admin",
+  2: "Admin",
+  3: "Admin",
+  4: "Member",
+}
+
 const MOCK_MEMBERS: Member[] = [
   {
     email: "jordan@example.com",
@@ -93,6 +100,10 @@ const MOCK_MEMBERS: Member[] = [
   },
 ]
 
+export function getCurrentUserRole(workspaceId: number): MemberRole {
+  return CURRENT_USER_ROLE_BY_WORKSPACE_ID[workspaceId] ?? "Member"
+}
+
 export function inviteMember(input: {
   email: string
   role: MemberRole
@@ -125,6 +136,10 @@ export function inviteMember(input: {
   return member
 }
 
+export function isCurrentUserWorkspaceAdmin(workspaceId: number): boolean {
+  return getCurrentUserRole(workspaceId) === "Admin"
+}
+
 export function listMembersByWorkspaceId(workspaceId: number): Member[] {
   const workspaceMembers = MOCK_MEMBERS.filter((member) => member.workspaceId === workspaceId)
 
@@ -151,7 +166,7 @@ function memberFromCurrentUser(user: User, workspaceId: number): Member {
     email: user.email,
     id: CURRENT_USER_MEMBER_ID,
     name: user.name,
-    role: "Admin",
+    role: getCurrentUserRole(workspaceId),
     workspaceId,
   }
 }
