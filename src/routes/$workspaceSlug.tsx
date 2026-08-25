@@ -25,4 +25,15 @@ export const Route = createFileRoute("/$workspaceSlug")({
       </Row>
     )
   },
+  head: ({ params }) => {
+    const workspace = getWorkspaceBySlug(params.workspaceSlug)
+
+    return {
+      meta: [
+        {
+          title: workspace?.name ?? "Dashboard",
+        },
+      ],
+    }
+  },
 })

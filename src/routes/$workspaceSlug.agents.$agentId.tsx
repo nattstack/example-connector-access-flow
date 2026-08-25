@@ -7,6 +7,7 @@ import { AgentChat } from "#/components/pages/dashboard/agent-chat"
 import { AgentComposer } from "#/components/pages/dashboard/agent-composer"
 import { getAgentChatById } from "#/data/agent-chat.ts"
 import { getAgentById } from "#/data/agents.ts"
+import { RouteAgentHead } from "#/routes/-route-agent-head"
 
 export const Route = createFileRoute("/$workspaceSlug/agents/$agentId")({
   component: function AgentDetailPage(): JSX.Element {
@@ -38,6 +39,7 @@ export const Route = createFileRoute("/$workspaceSlug/agents/$agentId")({
       </>
     )
   },
+  head: RouteAgentHead,
   loader: ({ context, params }) => {
     const agent = getAgentById(context.workspace.id, params.agentId)
 
