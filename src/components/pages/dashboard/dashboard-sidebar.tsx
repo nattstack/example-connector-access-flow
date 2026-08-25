@@ -58,7 +58,7 @@ function LinkAgent(props: LinkAgentProps): JSX.Element {
         select-none
         hover:bg-gray-3
       "
-      params={{ agentId: String(agent.id), workspaceSlug }}
+      params={{ agentId: agent.id, workspaceSlug }}
       to="/$workspaceSlug/agents/$agentId"
     >
       {/* Avatar */}

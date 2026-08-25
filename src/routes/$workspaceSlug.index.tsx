@@ -13,7 +13,7 @@ export const Route = createFileRoute("/$workspaceSlug/")({
 
     throw redirect({
       params: {
-        agentId: String(agent.id),
+        agentId: agent.id,
         workspaceSlug: params.workspaceSlug,
       },
       to: "/$workspaceSlug/agents/$agentId",

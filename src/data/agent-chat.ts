@@ -632,21 +632,21 @@ const CHAT_EMAIL_SUMMARY: ChatItem[] = [
   },
 ]
 
-const MOCK_AGENT_CHATS: Record<number, ChatItem[]> = {
-  1: CHAT_DAILY_PRIORITY,
-  10: CHAT_GTM,
-  11: CHAT_EMAIL_SUMMARY,
-  2: CHAT_PODCASTS,
-  3: CHAT_EMAIL_RESPONDING,
-  4: CHAT_GITHUB_FIXER,
-  5: CHAT_DESIGN_PORTFOLIO,
-  6: CHAT_VIRTUAL_ASSISTANT,
-  7: CHAT_UI_BOT,
-  8: CHAT_PRODUCT_RESEARCH,
-  9: CHAT_COMPETITOR_ANALYSIS,
+const MOCK_AGENT_CHATS: Record<string, ChatItem[]> = {
+  "1fff8a3f-f8a2-4033-a086-9cc2cbf8b9fc": CHAT_DAILY_PRIORITY,
+  "9984c2b6-7b18-4e36-97d3-a3b2fb900231": CHAT_COMPETITOR_ANALYSIS,
+  "a2926ff5-1b8e-40d9-aea1-16a7135b63e5": CHAT_GTM,
+  "b10245e6-c29f-4d0c-b0e9-0f535001711c": CHAT_GITHUB_FIXER,
+  "b959bc08-651f-4b1a-bfc9-3b3312d8c817": CHAT_DESIGN_PORTFOLIO,
+  "ba13dfae-b828-488b-ba82-882df3c89c50": CHAT_PODCASTS,
+  "bc3d75f4-bfdf-447f-9c1d-e27fd9b1e1d5": CHAT_VIRTUAL_ASSISTANT,
+  "c973a755-0476-4b8a-ba8d-8cbfb30ed609": CHAT_UI_BOT,
+  "d28c5b88-901f-4df0-b5b1-c6b9cab1b420": CHAT_EMAIL_SUMMARY,
+  "d7fe3ac1-f0b2-4d47-b861-a97a592a08e5": CHAT_PRODUCT_RESEARCH,
+  "fdf33ec7-4f10-4865-8b53-f8f55115f65c": CHAT_EMAIL_RESPONDING,
 }
 
-export function getAgentChatById(agentId: number): ChatItem[] {
+export function getAgentChatById(agentId: string): ChatItem[] {
   const chat = MOCK_AGENT_CHATS[agentId]
 
   if (chat === undefined) {
