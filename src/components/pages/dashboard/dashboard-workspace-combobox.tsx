@@ -102,7 +102,7 @@ export function DashboardWorkspaceCombobox(): JSX.Element {
           className="
             h-56! w-full rounded-12 bg-transparent! px-8 shadow-none!
             hover:bg-gray-3! hover:shadow-none!
-            data-popup-open:bg-gray-3 data-popup-open:shadow-none!
+            data-popup-open:bg-gray-3! data-popup-open:shadow-none!
             **:data-[component=combobox-icon]:hidden
           "
           size={48}
