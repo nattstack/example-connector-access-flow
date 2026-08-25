@@ -9,9 +9,9 @@ export const Route = createFileRoute("/dashboard")({
       <Row className="min-h-dvh">
         <DashboardSidebar />
 
-        <main className="min-w-0 flex-1 bg-bg-shell-inner">
+        <Row as="main" className="w-full">
           <Outlet />
-        </main>
+        </Row>
       </Row>
     )
   },

@@ -4,6 +4,7 @@ import type { JSX } from "react"
 import { AgentAvatar } from "#/components/agent-avatar"
 import { LogoLink } from "#/components/logo-link"
 import { MOCK_AGENTS, type Agent } from "#/data/agents"
+import { formatRelativeTimestamp } from "#/utils/date"
 
 interface LinkAgentProps {
   agent: Agent
@@ -47,14 +48,22 @@ function LinkAgent(props: LinkAgentProps): JSX.Element {
       params={{ agentId: agent.id }}
       to="/dashboard/agents/$agentId"
     >
+      {/* Avatar */}
       <AgentAvatar alt={agent.name} src={agent.logo} />
 
       <Column className="w-full min-w-0">
-        {/* Name */}
-        <span className="text-14 font-500 text-text-primary">{agent.name}</span>
+        <Row className="items-baseline justify-between gap-x-8">
+          {/* Name */}
+          <span className="min-w-0 truncate text-14 font-500 text-text-primary">{agent.name}</span>
+
+          {/* Updated at */}
+          <time className="shrink-0 text-12 text-text-secondary" dateTime={agent.updatedAt}>
+            {formatRelativeTimestamp(agent.updatedAt)}
+          </time>
+        </Row>
 
         {/* Chat */}
-        <span className="truncate text-14 text-text-secondary">{agent.chat}</span>
+        <span className="truncate text-13 text-text-secondary">{agent.chat}</span>
       </Column>
     </Link>
   )

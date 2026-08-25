@@ -9,7 +9,9 @@ export const Route = createFileRoute("/dashboard/agents/$agentId")({
     const { agent } = Route.useLoaderData()
 
     return (
-      <Column className="px-32 py-32">
+      <Column className="mx-auto w-full max-w-768">
+        <Spacer height={32} />
+
         <Row alignItems="center" className="gap-12">
           <AgentAvatar alt={agent.name} src={agent.logo} />
           <h1 className="text-24 font-500 text-text-primary">{agent.name}</h1>

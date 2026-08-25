@@ -11,7 +11,7 @@ export function AgentAvatar(props: AgentAvatarProps): JSX.Element {
   return (
     <img
       alt={alt}
-      className="size-40 shrink-0 rounded-full object-cover"
+      className="size-32 shrink-0 rounded-full object-cover"
       height={40}
       src={src}
       width={40}
