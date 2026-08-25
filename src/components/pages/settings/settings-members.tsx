@@ -64,9 +64,15 @@ export function SettingsMembers(props: SettingsMembersProps): JSX.Element {
         )
       })
       .toSorted((left, right) => {
-        const result = left.name.localeCompare(right.name)
+        const roleResult = left.role.localeCompare(right.role)
 
-        return sortDirection === "asc" ? result : -result
+        if (roleResult !== 0) {
+          return roleResult
+        }
+
+        const nameResult = left.name.localeCompare(right.name)
+
+        return sortDirection === "asc" ? nameResult : -nameResult
       })
   }, [members, roleFilter, search, sortDirection])
 
