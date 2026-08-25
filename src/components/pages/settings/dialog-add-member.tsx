@@ -18,18 +18,16 @@ import { memberRoleLabel, type MemberRole } from "#/data/members"
 
 interface DialogAddMemberProps {
   isOpen: boolean
-  onAdd: (input: { email: string; name: string; role: MemberRole }) => Promise<void> | void
+  onAdd: (input: { email: string; role: MemberRole }) => Promise<void> | void
   onIsOpenChange: (isOpen: boolean) => void
 }
 
 const EMAIL_INPUT_ID = "settings-add-member-email"
-const NAME_INPUT_ID = "settings-add-member-name"
 
 export function DialogAddMember(props: DialogAddMemberProps): JSX.Element {
   const { isOpen, onAdd, onIsOpenChange } = props
 
   const [email, setEmail] = useState("")
-  const [name, setName] = useState("")
   const [role, setRole] = useState<MemberRole>("Member")
   const [errorMessage, setErrorMessage] = useState<string>()
 
@@ -38,7 +36,6 @@ export function DialogAddMember(props: DialogAddMemberProps): JSX.Element {
 
     if (!nextOpen) {
       setEmail("")
-      setName("")
       setRole("Member")
       setErrorMessage(undefined)
     }
@@ -48,16 +45,14 @@ export function DialogAddMember(props: DialogAddMemberProps): JSX.Element {
     event.preventDefault()
 
     const trimmedEmail = email.trim().toLowerCase()
-    const trimmedName = name.trim()
 
-    if (trimmedName.length === 0 || trimmedEmail.length === 0) {
+    if (trimmedEmail.length === 0) {
       return
     }
 
     try {
       await onAdd({
         email: trimmedEmail,
-        name: trimmedName,
         role,
       })
       onOpenChange(false)
@@ -75,7 +70,7 @@ export function DialogAddMember(props: DialogAddMemberProps): JSX.Element {
             <Spacer height={8} />
 
             <p className="text-14 text-text-secondary">
-              Invite someone to this workspace by name and email.
+              Invite someone to this workspace by email.
             </p>
             <Spacer height={24} />
 
@@ -88,26 +83,12 @@ export function DialogAddMember(props: DialogAddMemberProps): JSX.Element {
               </>
             )}
 
-            <Label htmlFor={NAME_INPUT_ID}>Name</Label>
-            <Spacer height={8} />
-
-            <Input
-              autoFocus
-              id={NAME_INPUT_ID}
-              onChange={(event) => {
-                setName(event.target.value)
-                setErrorMessage(undefined)
-              }}
-              placeholder="Jordan Hale"
-              value={name}
-            />
-            <Spacer height={16} />
-
             <Label htmlFor={EMAIL_INPUT_ID}>Email</Label>
             <Spacer height={8} />
 
             <Input
               autoComplete="email"
+              autoFocus
               id={EMAIL_INPUT_ID}
               onChange={(event) => {
                 setEmail(event.target.value)
@@ -143,9 +124,8 @@ export function DialogAddMember(props: DialogAddMemberProps): JSX.Element {
             <Row className="justify-end gap-8">
               <Button label="Cancel" onClick={() => onOpenChange(false)} variant="ghost" />
               <Button
-                disabled={name.trim().length === 0 || email.trim().length === 0}
+                disabled={email.trim().length === 0}
                 label="Add a member"
-                rounded
                 type="submit"
                 variant="primary"
               />

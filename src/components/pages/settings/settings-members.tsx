@@ -141,6 +141,8 @@ export function SettingsMembers(props: SettingsMembersProps): JSX.Element {
                 <Spacer width={4} />
                 <IconChevronDownOutline18
                   className={sortDirection === "desc" ? "rotate-180" : undefined}
+                  size={12}
+                  strokeWidth={2}
                 />
               </button>
             </th>

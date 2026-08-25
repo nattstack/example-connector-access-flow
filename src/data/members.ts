@@ -95,16 +95,10 @@ const MOCK_MEMBERS: Member[] = [
 
 export function inviteMember(input: {
   email: string
-  name: string
   role: MemberRole
   workspaceId: number
 }): Member {
   const email = input.email.trim().toLowerCase()
-  const name = input.name.trim()
-
-  if (name.length === 0) {
-    throw new Error("Expected a member name")
-  }
 
   if (!isMemberEmail(email)) {
     throw new Error("Expected a valid member email")
@@ -121,7 +115,7 @@ export function inviteMember(input: {
   const member: Member = {
     email,
     id: crypto.randomUUID(),
-    name,
+    name: nameFromEmail(email),
     role: input.role,
     workspaceId: input.workspaceId,
   }
@@ -160,4 +154,15 @@ function memberFromCurrentUser(user: User, workspaceId: number): Member {
     role: "Admin",
     workspaceId,
   }
+}
+
+function nameFromEmail(email: string): string {
+  const [localPart] = email.split("@")
+  const parts = (localPart ?? email).split(/[._-]+/u).filter(Boolean)
+
+  if (parts.length === 0) {
+    return email
+  }
+
+  return parts.map((part) => `${part.charAt(0).toUpperCase()}${part.slice(1)}`).join(" ")
 }
