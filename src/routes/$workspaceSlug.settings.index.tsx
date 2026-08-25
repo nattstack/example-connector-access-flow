@@ -4,7 +4,7 @@ export const Route = createFileRoute("/$workspaceSlug/settings/")({
   beforeLoad: ({ params }) => {
     throw redirect({
       params: { workspaceSlug: params.workspaceSlug },
-      to: "/$workspaceSlug/settings/profile",
+      to: "/$workspaceSlug/settings/teams",
     })
   },
 })

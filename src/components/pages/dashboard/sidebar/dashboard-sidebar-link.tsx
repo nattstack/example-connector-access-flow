@@ -3,6 +3,7 @@ import { Link, useParams } from "@tanstack/react-router"
 import type { JSX } from "react"
 
 interface DashboardSidebarLinkProps {
+  disabled?: boolean
   exact?: boolean
   icon: JSX.Element
   label: string
@@ -19,8 +20,31 @@ type DashboardSidebarLinkTo =
   | "/$workspaceSlug/settings/workspace"
 
 export function DashboardSidebarLink(props: DashboardSidebarLinkProps): JSX.Element {
-  const { exact = true, icon, label, to } = props
+  const { disabled = false, exact = true, icon, label, to } = props
   const { workspaceSlug } = useParams({ from: "/$workspaceSlug" })
+
+  const content = (
+    <>
+      {icon}
+      <Spacer width={8} />
+
+      <span className="truncate text-14 font-500">{label}</span>
+    </>
+  )
+
+  if (disabled) {
+    return (
+      <div
+        aria-disabled
+        className="
+          flex h-36 w-full shrink-0 cursor-default items-center overflow-hidden
+          rounded-8 px-8 text-text-secondary opacity-50 select-none
+        "
+      >
+        {content}
+      </div>
+    )
+  }
 
   return (
     <Link
@@ -34,10 +58,7 @@ export function DashboardSidebarLink(props: DashboardSidebarLinkProps): JSX.Elem
       params={{ workspaceSlug }}
       to={to}
     >
-      {icon}
-      <Spacer width={8} />
-
-      <span className="truncate text-14 font-500">{label}</span>
+      {content}
     </Link>
   )
 }

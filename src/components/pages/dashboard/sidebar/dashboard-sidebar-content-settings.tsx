@@ -47,11 +47,13 @@ export function DashboardSidebarContentSettings(
         <DashboardSidebarLabel label="Personal" />
 
         <DashboardSidebarLink
+          disabled
           icon={<IconUserOutline18 size={ICON_SIZE} />}
           label="Profile"
           to="/$workspaceSlug/settings/profile"
         />
         <DashboardSidebarLink
+          disabled
           icon={<IconGearOutline18 size={ICON_SIZE} />}
           label="Account"
           to="/$workspaceSlug/settings/account"
@@ -61,6 +63,7 @@ export function DashboardSidebarContentSettings(
         <DashboardSidebarLabel label="Administration" />
 
         <DashboardSidebarLink
+          disabled
           icon={<IconGridLayoutOutline18 size={ICON_SIZE} />}
           label="Workspace"
           to="/$workspaceSlug/settings/workspace"
