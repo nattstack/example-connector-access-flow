@@ -1,5 +1,10 @@
-import { IconPencilOutline18, IconPlusOutline18 } from "@nattstack/icons"
 import {
+  IconChevronExpandYOutline18,
+  IconPencilOutline18,
+  IconPlusOutline18,
+} from "@nattstack/icons"
+import {
+  Column,
   Combobox,
   ComboboxContent,
   ComboboxEmpty,
@@ -16,9 +21,11 @@ import { useMemo, useState, type JSX } from "react"
 import { AvatarWorkspace } from "#/components/avatar-workspace"
 import { DialogCreateWorkspace } from "#/components/pages/dashboard/dialog-create-workspace"
 import { DialogRenameWorkspace } from "#/components/pages/dashboard/dialog-rename-workspace"
+import { listAgentsByWorkspaceId } from "#/data/agents"
 import { createWorkspace, listWorkspaces, renameWorkspace } from "#/data/workspaces"
 
 interface WorkspaceOption {
+  agentCount: number
   label: string
   value: string
 }
@@ -38,6 +45,7 @@ export function DashboardWorkspaceCombobox(): JSX.Element {
   const items: WorkspaceOption[] = useMemo(
     () =>
       workspaces.map((candidate) => ({
+        agentCount: listAgentsByWorkspaceId(candidate.id).length,
         label: candidate.name,
         value: candidate.slug,
       })),
@@ -83,15 +91,29 @@ export function DashboardWorkspaceCombobox(): JSX.Element {
         open={isComboboxOpen}
         value={selectedValue}
       >
-        <ComboboxTrigger className="w-full">
-          <ComboboxValue placeholder="Select a workspace">
+        <ComboboxTrigger
+          className="
+            h-56! w-full rounded-8 bg-transparent! px-8 shadow-none!
+            hover:bg-gray-3! hover:shadow-none!
+            data-popup-open:bg-gray-3 data-popup-open:shadow-none!
+            **:data-[component=combobox-icon]:hidden
+          "
+          size={48}
+        >
+          <ComboboxValue className="flex min-w-0 flex-1" placeholder="Select a workspace">
             {(item: WorkspaceOption) => (
-              <Row className="items-center gap-8">
-                <AvatarWorkspace name={item.label} />
-                <span className="truncate">{item.label}</span>
+              <Row alignItems="center" className="w-full min-w-0" gap={10}>
+                <AvatarWorkspace name={item.label} size={32} />
+                <Column className="min-w-0">
+                  <span className="truncate text-14 font-500 text-text-primary">{item.label}</span>
+                  <span className="truncate text-12 text-text-secondary">
+                    {formatAgentCountLabel(item.agentCount)}
+                  </span>
+                </Column>
               </Row>
             )}
           </ComboboxValue>
+          <IconChevronExpandYOutline18 className="shrink-0 text-gray-9" />
         </ComboboxTrigger>
         <ComboboxContent>
           <ComboboxSearch placeholder="Search workspaces" />
@@ -158,4 +180,8 @@ export function DashboardWorkspaceCombobox(): JSX.Element {
       />
     </>
   )
+}
+
+function formatAgentCountLabel(count: number): string {
+  return count === 1 ? "1 agent" : `${count} agents`
 }
