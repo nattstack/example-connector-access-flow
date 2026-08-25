@@ -1,7 +1,10 @@
-import { Spacer } from "@nattstack/ui"
+import { Column, Spacer } from "@nattstack/ui"
 import { createFileRoute, notFound, useRouteContext } from "@tanstack/react-router"
 import type { JSX } from "react"
-import { SettingsTeamAgents } from "#/components/pages/settings/settings-team-agents"
+import {
+  SettingsTeamAgents,
+  SettingsTeamGeneral,
+} from "#/components/pages/settings/settings-team-agents"
 import { SettingsTeamConnectors } from "#/components/pages/settings/settings-team-connectors"
 import { listConnectorsForTeam } from "#/data/connectors"
 import { getTeamBySlug, listTeamAgents } from "#/data/teams"
@@ -27,12 +30,13 @@ export const Route = createFileRoute("/$workspaceSlug/settings/teams/$teamSlug")
     return (
       <>
         <h1 className="text-30">{team.name}</h1>
-        <Spacer height={16} />
+        <Spacer height={24} />
 
-        <SettingsTeamAgents agents={listTeamAgents(workspace.id, team.name)} team={team} />
-        <Spacer height={16} />
-
-        <SettingsTeamConnectors connectors={listConnectorsForTeam(workspace.id, team.id)} />
+        <Column className="gap-y-32">
+          <SettingsTeamGeneral team={team} />
+          <SettingsTeamAgents agents={listTeamAgents(workspace.id, team.name)} />
+          <SettingsTeamConnectors connectors={listConnectorsForTeam(workspace.id, team.id)} />
+        </Column>
       </>
     )
   },

@@ -11,7 +11,7 @@ export const Route = createFileRoute("/$workspaceSlug/settings/teams/")({
     return (
       <>
         <h1 className="text-30">Teams</h1>
-        <Spacer height={16} />
+        <Spacer height={24} />
 
         <SettingsTeams items={items} />
       </>

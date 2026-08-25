@@ -15,7 +15,6 @@ import {
   SelectTrigger,
   SelectValue,
   Spacer,
-  Switch,
 } from "@nattstack/ui"
 import { useNavigate, useParams, useRouter } from "@tanstack/react-router"
 import { useState, type FormEvent, type JSX } from "react"
@@ -255,7 +254,6 @@ function ConnectorGeneralSection(props: { connector: Connector }): JSX.Element {
       updateConnector({
         connectorId: connector.id,
         label: trimmedLabel,
-        scopeIds: connector.scopeIds,
         workspaceId: connector.workspaceId,
       })
       setLabel(trimmedLabel)
@@ -323,69 +321,27 @@ function ConnectorGeneralSection(props: { connector: Connector }): JSX.Element {
 
 function ConnectorScopesSection(props: { connector: Connector }): JSX.Element {
   const { connector } = props
-  const router = useRouter()
   const app = getConnectorApp(connector.appId)
-  const [errorMessage, setErrorMessage] = useState<string>()
-  const [scopeIds, setScopeIds] = useState(connector.scopeIds)
 
   if (app === undefined) {
     return <></>
   }
 
-  async function onScopeChange(scopeId: string, nextChecked: boolean): Promise<void> {
-    const nextScopeIds = nextChecked
-      ? [...scopeIds, scopeId]
-      : scopeIds.filter((currentScopeId) => currentScopeId !== scopeId)
-
-    if (nextScopeIds.length === 0) {
-      setErrorMessage("Choose at least one scope.")
-      return
-    }
-
-    try {
-      updateConnector({
-        connectorId: connector.id,
-        label: connector.label,
-        scopeIds: nextScopeIds,
-        workspaceId: connector.workspaceId,
-      })
-      setErrorMessage(undefined)
-      setScopeIds(nextScopeIds)
-      await router.invalidate()
-    } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : "Could not update these scopes.")
-    }
-  }
-
   return (
     <SettingsSection title="Scopes">
       {app.scopes.map((scope) => {
-        const inputId = `settings-connector-scope-${scope.id}`
+        const granted = connector.scopeIds.includes(scope.id)
 
         return (
           <SettingsRow
-            description={scope.description}
-            htmlFor={inputId}
+            description={`${scope.description} This cannot be changed after the connector is created.`}
             key={scope.id}
             label={scope.label}
           >
-            <Switch
-              checked={scopeIds.includes(scope.id)}
-              id={inputId}
-              onCheckedChange={async (nextChecked) => {
-                if (typeof nextChecked === "boolean") {
-                  await onScopeChange(scope.id, nextChecked)
-                }
-              }}
-            />
+            <span className="text-14 text-text-secondary">{granted ? "On" : "Off"}</span>
           </SettingsRow>
         )
       })}
-      {Boolean(errorMessage) && (
-        <p className="px-20 py-12 text-13 text-error" role="alert">
-          {errorMessage}
-        </p>
-      )}
     </SettingsSection>
   )
 }

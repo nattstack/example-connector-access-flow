@@ -1,4 +1,3 @@
-import type { Agent } from "#/data/agents"
 import { CONNECTOR_APP_CATALOG, type ConnectorAppId } from "#/data/connector-apps"
 export { type ConnectorAppId } from "#/data/connector-apps"
 import { getTeamById, type Team } from "#/data/teams"
@@ -302,12 +301,6 @@ export function listConnectorsByWorkspaceId(workspaceId: number): Connector[] {
   return MOCK_CONNECTORS.filter((connector) => connector.workspaceId === workspaceId)
 }
 
-export function listConnectorsForAgent(workspaceId: number, agent: Agent): Connector[] {
-  return listConnectorsByWorkspaceId(workspaceId).filter((connector) =>
-    agentCanUseConnector(agent, connector),
-  )
-}
-
 export function listConnectorsForTeam(workspaceId: number, teamId: string): Connector[] {
   return listConnectorsByWorkspaceId(workspaceId).filter((connector) => connector.teamId === teamId)
 }
@@ -351,22 +344,9 @@ export function setConnectorAccess(input: {
 export function updateConnector(input: {
   connectorId: string
   label: string
-  scopeIds: string[]
   workspaceId: number
 }): Connector {
   const connector = requireConnector(input.workspaceId, input.connectorId)
-  const app = getConnectorApp(connector.appId)
-
-  if (app === undefined) {
-    throw new Error("Expected a connector app")
-  }
-
-  const scopeIds = uniqueScopeIds(app, input.scopeIds)
-
-  if (app.scopes.length > 0 && scopeIds.length === 0) {
-    throw new Error(`Select at least one ${app.name} scope`)
-  }
-
   const label = input.label.trim()
 
   if (label.length === 0) {
@@ -374,27 +354,8 @@ export function updateConnector(input: {
   }
 
   connector.label = label
-  connector.scopeIds = scopeIds
 
   return connector
-}
-
-function agentCanUseConnector(agent: Agent, connector: Connector): boolean {
-  if (isAppBlocked(connector.workspaceId, connector.appId)) {
-    return false
-  }
-
-  if (connector.teamId === undefined) {
-    return true
-  }
-
-  if (agent.team === undefined) {
-    return false
-  }
-
-  const accessTeam = getTeamById(connector.workspaceId, connector.teamId)
-
-  return accessTeam !== undefined && agent.team === accessTeam.name
 }
 
 function requireConnector(workspaceId: number, connectorId: string): Connector {

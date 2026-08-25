@@ -124,7 +124,8 @@ export function DialogAddConnector(props: DialogAddConnectorProps): JSX.Element 
             <Spacer height={8} />
 
             <p className="text-14 text-text-secondary">
-              Connect an app and choose whether everybody or one team can use it.
+              Connect an app, choose scopes, and decide who can use it. Scopes cannot be changed
+              later.
             </p>
             <Spacer height={24} />
 
@@ -204,13 +205,18 @@ export function DialogAddConnector(props: DialogAddConnectorProps): JSX.Element 
                     <Label>Scopes</Label>
                     <Spacer height={8} />
 
+                    <p className="text-13 text-text-secondary">
+                      These cannot be changed after the connector is created.
+                    </p>
+                    <Spacer height={8} />
+
                     <Column className="gap-y-8">
                       {selectedApp.scopes.map((scope) => {
                         const checked = scopeIds.includes(scope.id)
                         const inputId = `settings-add-connector-scope-${scope.id}`
 
                         return (
-                          <Row className="items-center" key={scope.id}>
+                          <Row className="items-start" key={scope.id}>
                             <Checkbox
                               checked={checked}
                               id={inputId}
@@ -225,7 +231,12 @@ export function DialogAddConnector(props: DialogAddConnectorProps): JSX.Element 
                             />
                             <Spacer width={8} />
 
-                            <Label htmlFor={inputId}>{scope.label}</Label>
+                            <Column className="min-w-0">
+                              <Label htmlFor={inputId}>{scope.label}</Label>
+                              <Spacer height={4} />
+
+                              <p className="text-13 text-text-secondary">{scope.description}</p>
+                            </Column>
                           </Row>
                         )
                       })}

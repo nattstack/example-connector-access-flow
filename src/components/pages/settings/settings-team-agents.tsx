@@ -1,7 +1,12 @@
-import { Column, Spacer } from "@nattstack/ui"
-import { Link, useParams } from "@tanstack/react-router"
+import { IconChevronRightOutline18 } from "@nattstack/icons"
+import { useParams } from "@tanstack/react-router"
 import type { JSX } from "react"
 import { AvatarAgent } from "#/components/avatar-agent"
+import {
+  SettingsLinkRow,
+  SettingsRow,
+  SettingsSection,
+} from "#/components/pages/settings/settings-section"
 import type { Agent } from "#/data/agents"
 import type { Team } from "#/data/teams"
 
@@ -11,35 +16,41 @@ interface SettingsTeamAgentRowProps {
 
 interface SettingsTeamAgentsProps {
   agents: Agent[]
+}
+
+interface SettingsTeamGeneralProps {
   team: Team
 }
 
 export function SettingsTeamAgents(props: SettingsTeamAgentsProps): JSX.Element {
-  const { agents, team } = props
+  const { agents } = props
 
   return (
-    <Column
-      as="section"
-      className="
-        rounded-16 border border-border bg-bg-shell-inner p-24 shadow-2
-      "
-    >
-      <h2 className="text-24">Agents</h2>
-      <Spacer height={8} />
-
-      <p className="text-14 text-text-secondary">{team.description}</p>
-      <Spacer height={16} />
-
+    <SettingsSection title="Agents">
       {agents.length === 0 ? (
-        <p className="text-14 text-text-secondary">No agents are part of this team yet.</p>
+        <SettingsRow description="No agents are part of this team yet." label="Agents">
+          <span className="text-14 text-text-secondary">None</span>
+        </SettingsRow>
       ) : (
-        <Column as="ul" className="gap-y-4">
-          {agents.map((agent) => (
-            <SettingsTeamAgentRow agent={agent} key={agent.id} />
-          ))}
-        </Column>
+        agents.map((agent) => <SettingsTeamAgentRow agent={agent} key={agent.id} />)
       )}
-    </Column>
+    </SettingsSection>
+  )
+}
+
+export function SettingsTeamGeneral(props: SettingsTeamGeneralProps): JSX.Element {
+  const { team } = props
+
+  return (
+    <SettingsSection>
+      <SettingsRow description="Shown in settings and anywhere this team appears." label="Name">
+        <span className="text-14 text-text-secondary">{team.name}</span>
+      </SettingsRow>
+      <SettingsRow description={team.description} label="Description" />
+      <SettingsRow description="Used in this team's URL. This cannot be changed." label="URL">
+        <span className="text-14 text-text-secondary">/{team.slug}</span>
+      </SettingsRow>
+    </SettingsSection>
   )
 }
 
@@ -48,23 +59,16 @@ function SettingsTeamAgentRow(props: SettingsTeamAgentRowProps): JSX.Element {
   const { workspaceSlug } = useParams({ from: "/$workspaceSlug" })
 
   return (
-    <li>
-      <Link
-        className="
-          flex min-h-56 w-full items-center rounded-12 px-12 select-none
-          hover:bg-gray-3
-        "
-        params={{ agentId: agent.id, workspaceSlug }}
-        to="/$workspaceSlug/agents/$agentId"
-      >
-        <AvatarAgent alt={agent.name} src={agent.avatar} />
-        <Spacer width={8} />
-
-        <Column className="min-w-0 flex-1">
-          <span className="truncate text-14 font-500 text-text-primary">{agent.name}</span>
-          <span className="truncate text-13 text-text-secondary">{agent.chat}</span>
-        </Column>
-      </Link>
-    </li>
+    <SettingsLinkRow
+      description={agent.chat}
+      label={agent.name}
+      leading={<AvatarAgent alt={agent.name} src={agent.avatar} />}
+      link={{
+        params: { agentId: agent.id, workspaceSlug },
+        to: "/$workspaceSlug/agents/$agentId",
+      }}
+    >
+      <IconChevronRightOutline18 className="text-gray-9" />
+    </SettingsLinkRow>
   )
 }
