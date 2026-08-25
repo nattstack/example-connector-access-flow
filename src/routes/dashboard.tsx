@@ -8,6 +8,7 @@ export const Route = createFileRoute("/dashboard")({
     return (
       <Row className="min-h-svh bg-bg-shell-outer">
         <DashboardSidebar />
+
         <main className="min-w-0 flex-1 bg-bg-shell-inner">
           <Outlet />
         </main>

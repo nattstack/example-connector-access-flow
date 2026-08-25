@@ -1,7 +1,7 @@
 import { Spacer } from "@nattstack/ui"
 import type { JSX } from "react"
 
-export function PageNotFound(): JSX.Element {
+export function RouteNotFound(): JSX.Element {
   return (
     <main className="flex min-h-svh flex-col items-center justify-center px-24">
       <h1 className="text-24 font-500 text-text-primary">Page not found</h1>

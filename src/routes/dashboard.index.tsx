@@ -6,7 +6,7 @@ import { getProjectStatusLabel, projects } from "#/data/projects.ts"
 export const Route = createFileRoute("/dashboard/")({
   component: function DashboardPage(): JSX.Element {
     return (
-      <Column className="px-32 py-32">
+      <Column className="d px-32 py-32">
         <h1 className="text-24 font-500 text-text-primary">Dashboard</h1>
 
         <Spacer className="h-8" />

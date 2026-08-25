@@ -1,8 +1,8 @@
 import { createRootRoute } from "@tanstack/react-router"
-import { PageNotFound } from "#/components/page-not-found"
-import { PageRoot } from "#/components/page-root"
+import { RouteNotFound } from "#/routes/-route-not-found"
+import { RouteRoot } from "#/routes/-route-root"
 
 export const Route = createRootRoute({
-  component: PageRoot,
-  notFoundComponent: PageNotFound,
+  component: RouteRoot,
+  notFoundComponent: RouteNotFound,
 })

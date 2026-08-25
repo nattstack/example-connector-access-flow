@@ -3,7 +3,7 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools"
 import type { JSX } from "react"
 import { ENVIRONMENT } from "#/utils/environment"
 
-export function PageRoot(): JSX.Element {
+export function RouteRoot(): JSX.Element {
   return (
     <>
       <Outlet />
