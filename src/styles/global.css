@@ -39,8 +39,6 @@
 }
 
 body {
-  @apply bg-bg-shell-outer text-14 leading-1-5 text-text-primary;
-
   /*
       calt: Contextual alternates
       cv01: Alternate one

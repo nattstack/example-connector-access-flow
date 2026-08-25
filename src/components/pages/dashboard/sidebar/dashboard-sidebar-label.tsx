@@ -7,5 +7,5 @@ interface DashboardSidebarLabelProps {
 export function DashboardSidebarLabel(props: DashboardSidebarLabelProps): JSX.Element {
   const { label } = props
 
-  return <span className="px-8 text-12 font-500 text-text-secondary">{label}</span>
+  return <span className="px-8 text-12 font-500">{label}</span>
 }
