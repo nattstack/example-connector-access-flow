@@ -1,4 +1,3 @@
-import { IconChevronExpandYOutline18 } from "@nattstack/icons"
 import {
   Button,
   Column,
@@ -111,7 +110,6 @@ export function SettingsConnectorApps(props: SettingsConnectorAppsProps): JSX.El
           className="
             w-full
             data-disabled:cursor-default data-disabled:opacity-50
-            **:data-[component=combobox-icon]:hidden
           "
           size={36}
         >
@@ -120,7 +118,6 @@ export function SettingsConnectorApps(props: SettingsConnectorAppsProps): JSX.El
               isAdmin ? "Search an app to block" : "Only workspace admins can block apps"
             }
           />
-          <IconChevronExpandYOutline18 className="shrink-0 text-gray-9" />
         </ComboboxTrigger>
         <ComboboxContent>
           <ComboboxSearch placeholder="Search apps" />

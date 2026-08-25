@@ -21,6 +21,7 @@ export interface ConnectorApp {
 }
 
 export interface ConnectorScope {
+  description: string
   id: string
   label: string
 }
@@ -31,8 +32,16 @@ interface BlockedApp {
 }
 
 const GMAIL_SCOPES: ConnectorScope[] = [
-  { id: "read", label: "Read" },
-  { id: "delete", label: "Delete" },
+  {
+    description: "Let agents read messages in this Gmail account.",
+    id: "read",
+    label: "Read",
+  },
+  {
+    description: "Let agents permanently delete messages.",
+    id: "delete",
+    label: "Delete",
+  },
 ]
 
 const CONNECTOR_APPS: ConnectorApp[] = CONNECTOR_APP_CATALOG.map((app) => ({

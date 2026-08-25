@@ -1,7 +1,8 @@
 import {
   Button,
-  Checkbox,
   Column,
+  DialogResponsive,
+  DialogResponsivePopup,
   Input,
   Label,
   Row,
@@ -14,14 +15,13 @@ import {
   SelectTrigger,
   SelectValue,
   Spacer,
+  Switch,
 } from "@nattstack/ui"
 import { useNavigate, useParams, useRouter } from "@tanstack/react-router"
-import { useState, type FormEvent, type JSX } from "react"
+import { useState, type FormEvent, type JSX, type ReactNode } from "react"
 import { AvatarConnector } from "#/components/avatar-connector"
 import {
   deleteConnector,
-  formatConnectorScopeLabel,
-  formatConnectorTitle,
   getConnectorAccessTeam,
   getConnectorApp,
   isAppBlocked,
@@ -40,54 +40,34 @@ interface SettingsConnectorAccessProps {
   connector: Connector
 }
 
+interface SettingsRowProps {
+  children: ReactNode
+  description: string
+  htmlFor?: string
+  label: string
+}
+
+interface SettingsSectionProps {
+  children: ReactNode
+  title?: string
+}
+
 export function SettingsConnectorAccess(props: SettingsConnectorAccessProps): JSX.Element {
   const { connector } = props
-  const blocked = isAppBlocked(connector.workspaceId, connector.appId)
   const app = getConnectorApp(connector.appId)
   const hasScopes = app !== undefined && app.scopes.length > 0
 
   return (
-    <Column className="gap-y-16">
-      <Column
-        as="section"
-        className="
-          rounded-16 border border-border bg-bg-shell-inner p-24 shadow-2
-        "
-      >
-        <Row className="items-center">
-          <AvatarConnector appId={connector.appId} />
-          <Spacer width={12} />
-
-          <Column className="min-w-0">
-            <h2 className="text-24">{formatConnectorTitle(connector)}</h2>
-            <p className="text-14 text-text-secondary">
-              {connector.label}
-              {" · "}
-              {formatConnectorScopeLabel(connector)}
-            </p>
-          </Column>
-        </Row>
-        {blocked && (
-          <>
-            <Spacer height={16} />
-
-            <p className="text-14 text-text-secondary">
-              This app is blocked in the workspace. Agents cannot use it until a workspace admin
-              allows it again.
-            </p>
-          </>
-        )}
-      </Column>
-
-      <ConnectorLabelCard connector={connector} />
-      {hasScopes && app !== undefined && <ConnectorScopesCard connector={connector} />}
-      <ConnectorAccessCard connector={connector} />
-      <ConnectorDeleteCard connector={connector} />
+    <Column className="gap-y-32">
+      <ConnectorGeneralSection connector={connector} />
+      {hasScopes && <ConnectorScopesSection connector={connector} />}
+      <ConnectorAccessSection connector={connector} />
+      <ConnectorDeleteSection connector={connector} />
     </Column>
   )
 }
 
-function ConnectorAccessCard(props: { connector: Connector }): JSX.Element {
+function ConnectorAccessSection(props: { connector: Connector }): JSX.Element {
   const { connector } = props
   const router = useRouter()
   const teams = listTeamsByWorkspaceId(connector.workspaceId)
@@ -108,53 +88,65 @@ function ConnectorAccessCard(props: { connector: Connector }): JSX.Element {
   }
 
   return (
-    <Column
-      as="section"
-      className="
-        rounded-16 border border-border bg-bg-shell-inner p-24 shadow-2
-      "
-    >
-      <h2 className="text-24">Access</h2>
-      <Spacer height={8} />
-
-      <p className="text-14 text-text-secondary">
-        Everybody in the workspace can use this connector, or restrict it to one team.
-      </p>
-      <Spacer height={16} />
-
-      <Select onValueChange={onAccessChange} value={accessValue}>
-        <SelectTrigger className="w-full">
-          <SelectValue>{accessTeam?.name ?? "Everybody"}</SelectValue>
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value={ACCESS_EVERYBODY}>Everybody</SelectItem>
-          {teams.length > 0 && (
-            <>
-              <SelectSeparator />
-              <SelectGroup>
-                <SelectGroupLabel>Team</SelectGroupLabel>
-                {teams.map((team) => (
-                  <SelectItem key={team.id} value={team.id}>
-                    {team.name}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </>
-          )}
-        </SelectContent>
-      </Select>
-    </Column>
+    <SettingsSection title="Access">
+      <SettingsRow
+        description={
+          accessTeam === undefined
+            ? "Everybody in this workspace can use this connector."
+            : `Only ${accessTeam.name} can use this connector.`
+        }
+        label="Who can use this"
+      >
+        <Select onValueChange={onAccessChange} value={accessValue}>
+          <SelectTrigger
+            className="
+              w-240
+              max-768:w-full
+            "
+            size={36}
+          >
+            <SelectValue>{accessTeam?.name ?? "Everybody"}</SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value={ACCESS_EVERYBODY}>Everybody</SelectItem>
+            {teams.length > 0 && (
+              <>
+                <SelectSeparator />
+                <SelectGroup>
+                  <SelectGroupLabel>Team</SelectGroupLabel>
+                  {teams.map((team) => (
+                    <SelectItem key={team.id} value={team.id}>
+                      {team.name}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </>
+            )}
+          </SelectContent>
+        </Select>
+      </SettingsRow>
+    </SettingsSection>
   )
 }
 
-function ConnectorDeleteCard(props: { connector: Connector }): JSX.Element {
+function ConnectorDeleteSection(props: { connector: Connector }): JSX.Element {
   const { connector } = props
   const navigate = useNavigate()
   const router = useRouter()
   const { workspaceSlug } = useParams({ from: "/$workspaceSlug" })
   const [confirmation, setConfirmation] = useState("")
   const [errorMessage, setErrorMessage] = useState<string>()
+  const [isOpen, setIsOpen] = useState(false)
   const isDeleteDisabled = confirmation.trim() !== connector.label
+
+  function onOpenChange(nextOpen: boolean): void {
+    setIsOpen(nextOpen)
+
+    if (!nextOpen) {
+      setConfirmation("")
+      setErrorMessage(undefined)
+    }
+  }
 
   async function onSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault()
@@ -168,6 +160,7 @@ function ConnectorDeleteCard(props: { connector: Connector }): JSX.Element {
         connectorId: connector.id,
         workspaceId: connector.workspaceId,
       })
+      onOpenChange(false)
       await navigate({ params: { workspaceSlug }, to: "/$workspaceSlug/settings/connectors" })
       await router.invalidate()
     } catch (error) {
@@ -176,74 +169,96 @@ function ConnectorDeleteCard(props: { connector: Connector }): JSX.Element {
   }
 
   return (
-    <Column
-      as="section"
-      className="
-        rounded-16 border border-error/40 bg-bg-shell-inner p-24 shadow-2
-      "
-    >
-      <h2 className="text-24 text-error">Delete connector</h2>
-      <Spacer height={8} />
-
-      <p className="text-14 text-text-secondary">
-        Permanently remove this connector. Agents lose access immediately. This action can&apos;t be
-        undone.
-      </p>
-      <Spacer height={16} />
-
-      {Boolean(errorMessage) && (
-        <>
-          <p className="text-13 text-error" role="alert">
-            {errorMessage}
-          </p>
-          <Spacer height={16} />
-        </>
-      )}
-
-      <form className="flex flex-col" onSubmit={onSubmit}>
-        <Label htmlFor={DELETE_INPUT_ID}>Type {connector.label} to confirm</Label>
-        <Spacer height={4} />
-
-        <Input
-          autoComplete="off"
-          id={DELETE_INPUT_ID}
-          onChange={(event) => {
-            setConfirmation(event.target.value)
-            setErrorMessage(undefined)
-          }}
-          placeholder={connector.label}
-          size={48}
-          value={confirmation}
+    <SettingsSection title="Danger zone">
+      <SettingsRow
+        description="Permanently remove this connector. Agents lose access immediately. This action can't be undone."
+        label="Delete connector"
+      >
+        <Button
+          className="text-error"
+          label="Delete connector"
+          onClick={() => setIsOpen(true)}
+          size={32}
+          variant="ghost"
         />
-        <Spacer height={16} />
+      </SettingsRow>
 
-        <Row className="justify-end">
-          <Button
-            disabled={isDeleteDisabled}
-            label="Delete connector"
-            rounded
-            type="submit"
-            variant="primary"
-          />
-        </Row>
-      </form>
-    </Column>
+      <DialogResponsive onOpenChange={onOpenChange} open={isOpen}>
+        <DialogResponsivePopup className="max-w-[420px]">
+          <form onSubmit={onSubmit}>
+            <Column>
+              <h2 className="text-24 tracking-[-0.02em]">Delete connector</h2>
+              <Spacer height={8} />
+
+              <p className="text-14 text-text-secondary">
+                Permanently remove this connector. Agents lose access immediately. This action
+                can&apos;t be undone.
+              </p>
+              <Spacer height={24} />
+
+              {Boolean(errorMessage) && (
+                <>
+                  <p className="text-13 text-error" role="alert">
+                    {errorMessage}
+                  </p>
+                  <Spacer height={16} />
+                </>
+              )}
+
+              <Label htmlFor={DELETE_INPUT_ID}>Type {connector.label} to confirm</Label>
+              <Spacer height={8} />
+
+              <Input
+                autoComplete="off"
+                autoFocus
+                id={DELETE_INPUT_ID}
+                onChange={(event) => {
+                  setConfirmation(event.target.value)
+                  setErrorMessage(undefined)
+                }}
+                placeholder="Type the label"
+                size={36}
+                value={confirmation}
+              />
+              <Spacer height={24} />
+
+              <Row className="justify-end gap-8">
+                <Button label="Cancel" onClick={() => onOpenChange(false)} variant="ghost" />
+                <Button
+                  disabled={isDeleteDisabled}
+                  label="Delete connector"
+                  type="submit"
+                  variant="primary"
+                />
+              </Row>
+            </Column>
+          </form>
+        </DialogResponsivePopup>
+      </DialogResponsive>
+    </SettingsSection>
   )
 }
 
-function ConnectorLabelCard(props: { connector: Connector }): JSX.Element {
+function ConnectorGeneralSection(props: { connector: Connector }): JSX.Element {
   const { connector } = props
   const router = useRouter()
+  const blocked = isAppBlocked(connector.workspaceId, connector.appId)
+  const app = getConnectorApp(connector.appId)
+  const appName = app?.name ?? "Connector"
   const [errorMessage, setErrorMessage] = useState<string>()
   const [label, setLabel] = useState(connector.label)
-  const [successMessage, setSuccessMessage] = useState<string>()
-  const trimmedLabel = label.trim()
-  const isSaveDisabled = trimmedLabel.length === 0 || trimmedLabel === connector.label
 
-  async function onSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
-    event.preventDefault()
+  async function saveLabel(): Promise<void> {
+    const trimmedLabel = label.trim()
 
-    if (isSaveDisabled) {
+    if (trimmedLabel.length === 0) {
+      setLabel(connector.label)
+      setErrorMessage(undefined)
+      return
+    }
+
+    if (trimmedLabel === connector.label) {
+      setLabel(trimmedLabel)
       return
     }
 
@@ -256,7 +271,6 @@ function ConnectorLabelCard(props: { connector: Connector }): JSX.Element {
       })
       setLabel(trimmedLabel)
       setErrorMessage(undefined)
-      setSuccessMessage("Label updated.")
       await router.invalidate()
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : "Could not update this label.")
@@ -264,92 +278,78 @@ function ConnectorLabelCard(props: { connector: Connector }): JSX.Element {
   }
 
   return (
-    <Column
-      as="section"
-      className="
-        rounded-16 border border-border bg-bg-shell-inner p-24 shadow-2
-      "
-    >
-      <h2 className="text-24">Label</h2>
-      <Spacer height={8} />
+    <SettingsSection>
+      <SettingsRow
+        description={
+          blocked
+            ? "This app is blocked in the workspace. Agents cannot use it until a workspace admin allows it again."
+            : `Connected to ${appName}.`
+        }
+        label="App"
+      >
+        <Row className="items-center">
+          <AvatarConnector appId={connector.appId} />
+          <Spacer width={8} />
 
-      <p className="text-14 text-text-secondary">
-        Shown in the connectors list and anywhere this connection appears.
-      </p>
-      <Spacer height={16} />
-
-      {Boolean(successMessage) && (
-        <>
-          <output
-            className="
-              rounded-8 border border-success/40 bg-success/10 px-12 py-10
-              text-14 text-success
-            "
-          >
-            {successMessage}
-          </output>
-          <Spacer height={16} />
-        </>
-      )}
-
-      {Boolean(errorMessage) && (
-        <>
-          <p className="text-13 text-error" role="alert">
-            {errorMessage}
-          </p>
-          <Spacer height={16} />
-        </>
-      )}
-
-      <form className="flex flex-col" onSubmit={onSubmit}>
-        <Label htmlFor={LABEL_INPUT_ID}>Label</Label>
-        <Spacer height={4} />
-
-        <Input
-          id={LABEL_INPUT_ID}
-          maxLength={CONNECTOR_LABEL_MAX_LENGTH}
-          onChange={(event) => {
-            setLabel(event.target.value)
-            setErrorMessage(undefined)
-            setSuccessMessage(undefined)
-          }}
-          placeholder="Work inbox"
-          size={48}
-          value={label}
-        />
-        <Spacer height={16} />
-
-        <Row className="justify-end">
-          <Button
-            disabled={isSaveDisabled}
-            label="Save"
-            rounded
-            type="submit"
-            variant="secondary"
-          />
+          <span className="text-14 font-500">{appName}</span>
         </Row>
-      </form>
-    </Column>
+      </SettingsRow>
+      <SettingsRow
+        description="Shown in the connectors list and anywhere this connection appears."
+        htmlFor={LABEL_INPUT_ID}
+        label="Label"
+      >
+        <form
+          onSubmit={async (event) => {
+            event.preventDefault()
+            await saveLabel()
+          }}
+        >
+          <Input
+            className="
+              w-240
+              max-768:w-full
+            "
+            id={LABEL_INPUT_ID}
+            maxLength={CONNECTOR_LABEL_MAX_LENGTH}
+            onBlur={saveLabel}
+            onChange={(event) => {
+              setLabel(event.target.value)
+              setErrorMessage(undefined)
+            }}
+            placeholder="Work inbox"
+            size={36}
+            value={label}
+          />
+        </form>
+      </SettingsRow>
+      {Boolean(errorMessage) && (
+        <p className="px-20 py-12 text-13 text-error" role="alert">
+          {errorMessage}
+        </p>
+      )}
+    </SettingsSection>
   )
 }
 
-function ConnectorScopesCard(props: { connector: Connector }): JSX.Element {
+function ConnectorScopesSection(props: { connector: Connector }): JSX.Element {
   const { connector } = props
   const router = useRouter()
   const app = getConnectorApp(connector.appId)
   const [errorMessage, setErrorMessage] = useState<string>()
   const [scopeIds, setScopeIds] = useState(connector.scopeIds)
-  const [successMessage, setSuccessMessage] = useState<string>()
-  const isSaveDisabled = scopeIds.length === 0 || sameScopeIds(scopeIds, connector.scopeIds)
 
   if (app === undefined) {
     return <></>
   }
 
-  async function onSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
-    event.preventDefault()
+  async function onScopeChange(scopeId: string, nextChecked: boolean): Promise<void> {
+    const nextScopeIds = nextChecked
+      ? [...scopeIds, scopeId]
+      : scopeIds.filter((currentScopeId) => currentScopeId !== scopeId)
 
-    if (isSaveDisabled) {
+    if (nextScopeIds.length === 0) {
+      setErrorMessage("Choose at least one scope.")
       return
     }
 
@@ -357,11 +357,11 @@ function ConnectorScopesCard(props: { connector: Connector }): JSX.Element {
       updateConnector({
         connectorId: connector.id,
         label: connector.label,
-        scopeIds,
+        scopeIds: nextScopeIds,
         workspaceId: connector.workspaceId,
       })
       setErrorMessage(undefined)
-      setSuccessMessage("Scopes updated.")
+      setScopeIds(nextScopeIds)
       await router.invalidate()
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : "Could not update these scopes.")
@@ -369,93 +369,84 @@ function ConnectorScopesCard(props: { connector: Connector }): JSX.Element {
   }
 
   return (
-    <Column
-      as="section"
-      className="
-        rounded-16 border border-border bg-bg-shell-inner p-24 shadow-2
-      "
-    >
-      <h2 className="text-24">Scopes</h2>
-      <Spacer height={8} />
+    <SettingsSection title="Scopes">
+      {app.scopes.map((scope) => {
+        const inputId = `settings-connector-scope-${scope.id}`
 
-      <p className="text-14 text-text-secondary">
-        Choose what this connector can do in {app.name}.
-      </p>
-      <Spacer height={16} />
-
-      {Boolean(successMessage) && (
-        <>
-          <output
-            className="
-              rounded-8 border border-success/40 bg-success/10 px-12 py-10
-              text-14 text-success
-            "
+        return (
+          <SettingsRow
+            description={scope.description}
+            htmlFor={inputId}
+            key={scope.id}
+            label={scope.label}
           >
-            {successMessage}
-          </output>
-          <Spacer height={16} />
-        </>
-      )}
-
+            <Switch
+              checked={scopeIds.includes(scope.id)}
+              id={inputId}
+              onCheckedChange={async (nextChecked) => {
+                if (typeof nextChecked === "boolean") {
+                  await onScopeChange(scope.id, nextChecked)
+                }
+              }}
+            />
+          </SettingsRow>
+        )
+      })}
       {Boolean(errorMessage) && (
-        <>
-          <p className="text-13 text-error" role="alert">
-            {errorMessage}
-          </p>
-          <Spacer height={16} />
-        </>
+        <p className="px-20 py-12 text-13 text-error" role="alert">
+          {errorMessage}
+        </p>
       )}
-
-      <form className="flex flex-col" onSubmit={onSubmit}>
-        <Column className="gap-y-8">
-          {app.scopes.map((scope) => {
-            const checked = scopeIds.includes(scope.id)
-            const inputId = `settings-connector-scope-${scope.id}`
-
-            return (
-              <Row className="items-center" key={scope.id}>
-                <Checkbox
-                  checked={checked}
-                  id={inputId}
-                  onCheckedChange={(nextChecked) => {
-                    setErrorMessage(undefined)
-                    setSuccessMessage(undefined)
-                    setScopeIds((current) =>
-                      nextChecked === true
-                        ? [...current, scope.id]
-                        : current.filter((scopeId) => scopeId !== scope.id),
-                    )
-                  }}
-                />
-                <Spacer width={8} />
-
-                <Label htmlFor={inputId}>{scope.label}</Label>
-              </Row>
-            )
-          })}
-        </Column>
-        <Spacer height={16} />
-
-        <Row className="justify-end">
-          <Button
-            disabled={isSaveDisabled}
-            label="Save"
-            rounded
-            type="submit"
-            variant="secondary"
-          />
-        </Row>
-      </form>
-    </Column>
+    </SettingsSection>
   )
 }
 
-function sameScopeIds(left: string[], right: string[]): boolean {
-  if (left.length !== right.length) {
-    return false
-  }
+function SettingsRow(props: SettingsRowProps): JSX.Element {
+  const { children, description, htmlFor, label } = props
 
-  const rightIds = new Set(right)
+  return (
+    <Row
+      className="
+        items-center justify-between gap-24 border-b border-border px-20 py-16
+        last:border-b-0
+      "
+    >
+      <Column className="min-w-0 flex-1">
+        {htmlFor === undefined ? (
+          <span className="text-14 font-500">{label}</span>
+        ) : (
+          <Label className="text-14 font-500" htmlFor={htmlFor}>
+            {label}
+          </Label>
+        )}
+        <Spacer height={4} />
 
-  return left.every((scopeId) => rightIds.has(scopeId))
+        <p className="text-13 text-text-secondary">{description}</p>
+      </Column>
+      <div className="shrink-0">{children}</div>
+    </Row>
+  )
+}
+
+function SettingsSection(props: SettingsSectionProps): JSX.Element {
+  const { children, title } = props
+
+  return (
+    <Column as="section">
+      {title !== undefined && (
+        <>
+          <h2 className="text-14 font-500">{title}</h2>
+          <Spacer height={8} />
+        </>
+      )}
+      <Column
+        className="
+          overflow-hidden rounded-16 border border-border bg-bg-shell-inner
+          shadow-2
+        "
+      >
+        {children}
+      </Column>
+    </Column>
+  )
 }
