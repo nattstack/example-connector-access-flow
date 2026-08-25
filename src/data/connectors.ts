@@ -188,6 +188,14 @@ export function addConnector(input: {
   return connector
 }
 
+export function clearConnectorTeamAccess(input: { teamId: string; workspaceId: number }): void {
+  for (const connector of MOCK_CONNECTORS) {
+    if (connector.workspaceId === input.workspaceId && connector.teamId === input.teamId) {
+      delete connector.teamId
+    }
+  }
+}
+
 export function deleteConnector(input: { connectorId: string; workspaceId: number }): void {
   const index = MOCK_CONNECTORS.findIndex(
     (connector) =>

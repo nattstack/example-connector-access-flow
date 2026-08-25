@@ -42,7 +42,7 @@ export function DashboardUserMenu(): JSX.Element {
         <MenuLinkItem
           className="h-auto py-8"
           closeOnClick
-          render={<Link params={{ workspaceSlug }} to="/$workspaceSlug/settings/members" />}
+          render={<Link params={{ workspaceSlug }} to="/$workspaceSlug/settings/workspace" />}
         >
           <Column className="min-w-0">
             <span className="truncate text-14 font-500 text-text-primary">{user.name}</span>
@@ -52,7 +52,7 @@ export function DashboardUserMenu(): JSX.Element {
         <MenuSeparator />
         <MenuLinkItem
           closeOnClick
-          render={<Link params={{ workspaceSlug }} to="/$workspaceSlug/settings/members" />}
+          render={<Link params={{ workspaceSlug }} to="/$workspaceSlug/settings/workspace" />}
         >
           <IconGearOutline18 className="text-gray-9" />
           Settings

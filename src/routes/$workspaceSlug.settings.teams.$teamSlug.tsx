@@ -1,14 +1,15 @@
 import { Column, Spacer } from "@nattstack/ui"
 import { createFileRoute, notFound, useRouteContext } from "@tanstack/react-router"
 import type { JSX } from "react"
-import { SettingsBackLink } from "#/components/pages/settings/settings-back-link"
-import {
-  SettingsTeamAgents,
-  SettingsTeamGeneral,
-} from "#/components/pages/settings/settings-team-agents"
+import { SettingsTeamAgents } from "#/components/pages/settings/settings-team-agents"
 import { SettingsTeamConnectors } from "#/components/pages/settings/settings-team-connectors"
+import {
+  SettingsTeamDelete,
+  SettingsTeamGeneral,
+} from "#/components/pages/settings/settings-team-general"
 import { SettingsTeamMembers } from "#/components/pages/settings/settings-team-members"
 import { listConnectorsForTeam } from "#/data/connectors"
+import { isCurrentUserWorkspaceAdmin } from "#/data/members"
 import { getTeamBySlug, listTeamAgents, listTeamMembers } from "#/data/teams"
 import { getWorkspaceBySlug } from "#/data/workspaces"
 
@@ -31,17 +32,15 @@ export const Route = createFileRoute("/$workspaceSlug/settings/teams/$teamSlug")
 
     return (
       <>
-        <SettingsBackLink label="Teams" />
-        <Spacer height={8} />
-
         <h1 className="text-30">{team.name}</h1>
         <Spacer height={24} />
 
         <Column className="gap-y-32">
-          <SettingsTeamGeneral team={team} />
-          <SettingsTeamMembers members={listTeamMembers(workspace.id, team.id)} />
-          <SettingsTeamAgents agents={listTeamAgents(workspace.id, team.name)} />
+          <SettingsTeamGeneral key={team.id} team={team} />
+          <SettingsTeamMembers members={listTeamMembers(workspace.id, team.id)} team={team} />
+          <SettingsTeamAgents agents={listTeamAgents(workspace.id, team.name)} team={team} />
           <SettingsTeamConnectors connectors={listConnectorsForTeam(workspace.id, team.id)} />
+          {isCurrentUserWorkspaceAdmin(workspace.id) && <SettingsTeamDelete team={team} />}
         </Column>
       </>
     )

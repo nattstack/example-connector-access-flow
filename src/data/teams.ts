@@ -1,5 +1,10 @@
-import { listAgentsByWorkspaceId, type Agent } from "#/data/agents"
-import { listMembersByWorkspaceId, type Member } from "#/data/members"
+import { listAgentsByWorkspaceId, setAgentTeam, type Agent } from "#/data/agents"
+import {
+  isCurrentUserWorkspaceAdmin,
+  listMembersByWorkspaceId,
+  setMemberTeam,
+  type Member,
+} from "#/data/members"
 
 export interface Team {
   description: string
@@ -74,12 +79,54 @@ const MOCK_TEAMS: Team[] = [
   },
 ]
 
+export function deleteTeam(input: { teamId: string; workspaceId: number }): void {
+  requireWorkspaceAdmin(input.workspaceId)
+
+  const team = requireTeam(input.workspaceId, input.teamId)
+
+  for (const member of listTeamMembers(input.workspaceId, team.id)) {
+    setMemberTeam({
+      memberId: member.id,
+      teamId: undefined,
+      workspaceId: input.workspaceId,
+    })
+  }
+
+  for (const agent of listTeamAgents(input.workspaceId, team.name)) {
+    setAgentTeam({
+      agentId: agent.id,
+      teamName: undefined,
+      workspaceId: input.workspaceId,
+    })
+  }
+
+  const index = MOCK_TEAMS.findIndex((item) => item.id === team.id)
+
+  if (index === -1) {
+    throw new Error("Expected a team in this workspace")
+  }
+
+  MOCK_TEAMS.splice(index, 1)
+}
+
 export function getTeamById(workspaceId: number, teamId: string): Team | undefined {
   return MOCK_TEAMS.find((team) => team.workspaceId === workspaceId && team.id === teamId)
 }
 
 export function getTeamBySlug(workspaceId: number, teamSlug: string): Team | undefined {
   return MOCK_TEAMS.find((team) => team.workspaceId === workspaceId && team.slug === teamSlug)
+}
+
+export function listAgentsAvailableForTeam(workspaceId: number, teamName: string): Agent[] {
+  return listAgentsByWorkspaceId(workspaceId)
+    .filter((agent) => agent.team !== teamName)
+    .toSorted((left, right) => left.name.localeCompare(right.name))
+}
+
+export function listMembersAvailableForTeam(workspaceId: number, teamId: string): Member[] {
+  return listMembersByWorkspaceId(workspaceId)
+    .filter((member) => member.teamId !== teamId)
+    .toSorted((left, right) => left.name.localeCompare(right.name))
 }
 
 export function listTeamAgents(workspaceId: number, teamName: string): Agent[] {
@@ -104,4 +151,62 @@ export function listTeamsWithAgentsByWorkspaceId(workspaceId: number): TeamWithA
     members: listTeamMembers(workspaceId, team.id),
     team,
   }))
+}
+
+export function updateTeam(input: {
+  description?: string
+  name?: string
+  teamId: string
+  workspaceId: number
+}): Team {
+  requireWorkspaceAdmin(input.workspaceId)
+
+  const team = requireTeam(input.workspaceId, input.teamId)
+  const nextDescription =
+    input.description === undefined ? team.description : input.description.trim()
+  const nextName = input.name === undefined ? team.name : input.name.trim()
+
+  if (nextName.length === 0) {
+    throw new Error("Expected a team name")
+  }
+
+  const nameTaken = listTeamsByWorkspaceId(input.workspaceId).some(
+    (item) => item.id !== team.id && item.name.toLowerCase() === nextName.toLowerCase(),
+  )
+
+  if (nameTaken) {
+    throw new Error("A team with this name already exists")
+  }
+
+  if (nextName !== team.name) {
+    for (const agent of listTeamAgents(input.workspaceId, team.name)) {
+      setAgentTeam({
+        agentId: agent.id,
+        teamName: nextName,
+        workspaceId: input.workspaceId,
+      })
+    }
+
+    team.name = nextName
+  }
+
+  team.description = nextDescription
+
+  return team
+}
+
+function requireTeam(workspaceId: number, teamId: string): Team {
+  const team = getTeamById(workspaceId, teamId)
+
+  if (team === undefined) {
+    throw new Error("Expected a team in this workspace")
+  }
+
+  return team
+}
+
+function requireWorkspaceAdmin(workspaceId: number): void {
+  if (!isCurrentUserWorkspaceAdmin(workspaceId)) {
+    throw new Error("Only workspace admins can edit teams")
+  }
 }

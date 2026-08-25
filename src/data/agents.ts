@@ -1,3 +1,5 @@
+import { isCurrentUserWorkspaceAdmin } from "#/data/members"
+
 export interface Agent {
   avatar: string
   chat: string
@@ -294,4 +296,29 @@ export function getFirstAgent(workspaceId: number): Agent | undefined {
 
 export function listAgentsByWorkspaceId(workspaceId: number): Agent[] {
   return MOCK_AGENTS.filter((agent) => agent.workspaceId === workspaceId)
+}
+
+export function setAgentTeam(input: {
+  agentId: string
+  teamName: string | undefined
+  workspaceId: number
+}): Agent {
+  if (!isCurrentUserWorkspaceAdmin(input.workspaceId)) {
+    throw new Error("Only workspace admins can edit teams")
+  }
+
+  const agent = getAgentById(input.workspaceId, input.agentId)
+
+  if (agent === undefined) {
+    throw new Error("Expected an agent in this workspace")
+  }
+
+  if (input.teamName === undefined) {
+    delete agent.team
+    return agent
+  }
+
+  agent.team = input.teamName
+
+  return agent
 }

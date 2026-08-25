@@ -205,6 +205,39 @@ export function memberRoleLabel(role: MemberRole): string {
   return role === "Admin" ? "Workspace admin" : "Member"
 }
 
+export function setMemberTeam(input: {
+  memberId: string
+  teamId: string | undefined
+  workspaceId: number
+}): Member {
+  if (!isCurrentUserWorkspaceAdmin(input.workspaceId)) {
+    throw new Error("Only workspace admins can edit teams")
+  }
+
+  if (input.memberId === CURRENT_USER_MEMBER_ID) {
+    CURRENT_USER_TEAM_ID_BY_WORKSPACE_ID[input.workspaceId] = input.teamId
+
+    return memberFromCurrentUser(getCurrentUser(), input.workspaceId)
+  }
+
+  const member = MOCK_MEMBERS.find(
+    (item) => item.workspaceId === input.workspaceId && item.id === input.memberId,
+  )
+
+  if (member === undefined) {
+    throw new Error("Expected a member in this workspace")
+  }
+
+  if (input.teamId === undefined) {
+    delete member.teamId
+    return member
+  }
+
+  member.teamId = input.teamId
+
+  return member
+}
+
 function isMemberEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+$/u.test(email)
 }

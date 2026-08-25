@@ -1,7 +1,6 @@
 import { Spacer } from "@nattstack/ui"
 import { createFileRoute, notFound, useRouteContext } from "@tanstack/react-router"
 import type { JSX } from "react"
-import { SettingsBackLink } from "#/components/pages/settings/settings-back-link"
 import { SettingsConnectorAccess } from "#/components/pages/settings/settings-connector-access"
 import { formatConnectorTitle, getConnectorById } from "#/data/connectors"
 import { getWorkspaceBySlug } from "#/data/workspaces"
@@ -25,9 +24,6 @@ export const Route = createFileRoute("/$workspaceSlug/settings/connectors/$conne
 
     return (
       <>
-        <SettingsBackLink label="Connectors" />
-        <Spacer height={8} />
-
         <h1 className="text-30">{connector.label}</h1>
         <Spacer height={24} />
 
