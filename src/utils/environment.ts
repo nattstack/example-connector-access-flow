@@ -1,2 +1,4 @@
-export const isDevelopment = import.meta.env.DEV
-export const isProduction = import.meta.env.PROD
+export const ENVIRONMENT = {
+  IS_DEVELOPMENT: import.meta.env.DEV,
+  IS_PRODUCTION: import.meta.env.PROD,
+}
