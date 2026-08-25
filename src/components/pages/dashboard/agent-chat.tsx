@@ -112,7 +112,9 @@ function ChatConnect(props: { item: Extract<ChatItem, { type: "connect" }> }): J
   return (
     <Row
       alignItems="center"
-      className="w-full max-w-640 justify-between rounded-16 bg-gray-3 px-12 py-10"
+      className="
+        w-full max-w-640 justify-between rounded-16 bg-gray-3 px-12 py-10
+      "
     >
       <Row alignItems="center" className="min-w-0">
         <AvatarConnector appId={item.appId} />
