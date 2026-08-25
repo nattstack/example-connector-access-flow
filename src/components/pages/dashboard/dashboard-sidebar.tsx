@@ -1,5 +1,5 @@
 import { Column, Row, Spacer } from "@nattstack/ui"
-import { Link } from "@tanstack/react-router"
+import { Link, useParams } from "@tanstack/react-router"
 import type { JSX } from "react"
 import { AvatarAgent } from "#/components/avatar-agent"
 import { LogoLink } from "#/components/logo-link"
@@ -43,6 +43,7 @@ export function DashboardSidebar(): JSX.Element {
 
 function LinkAgent(props: LinkAgentProps): JSX.Element {
   const { agent } = props
+  const { workspaceSlug } = useParams({ from: "/$workspaceSlug" })
 
   return (
     <Link
@@ -52,8 +53,8 @@ function LinkAgent(props: LinkAgentProps): JSX.Element {
         select-none
         hover:bg-gray-3
       "
-      params={{ agentId: agent.id }}
-      to="/dashboard/agents/$agentId"
+      params={{ agentId: String(agent.id), workspaceSlug }}
+      to="/$workspaceSlug/agents/$agentId"
     >
       {/* Avatar */}
       <AvatarAgent alt={agent.name} src={agent.avatar} />

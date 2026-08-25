@@ -14,7 +14,7 @@ import type { Workspace } from "#/data/workspaces"
 interface DialogRenameWorkspaceProps {
   isOpen: boolean
   onIsOpenChange: (isOpen: boolean) => void
-  onRename: (name: string) => void
+  onRename: (name: string) => Promise<void> | void
   workspace: Workspace
 }
 

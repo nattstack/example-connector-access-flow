@@ -632,21 +632,21 @@ const CHAT_EMAIL_SUMMARY: ChatItem[] = [
   },
 ]
 
-const MOCK_AGENT_CHATS: Record<string, ChatItem[]> = {
-  "1": CHAT_DAILY_PRIORITY,
-  "10": CHAT_GTM,
-  "11": CHAT_EMAIL_SUMMARY,
-  "2": CHAT_PODCASTS,
-  "3": CHAT_EMAIL_RESPONDING,
-  "4": CHAT_GITHUB_FIXER,
-  "5": CHAT_DESIGN_PORTFOLIO,
-  "6": CHAT_VIRTUAL_ASSISTANT,
-  "7": CHAT_UI_BOT,
-  "8": CHAT_PRODUCT_RESEARCH,
-  "9": CHAT_COMPETITOR_ANALYSIS,
+const MOCK_AGENT_CHATS: Record<number, ChatItem[]> = {
+  1: CHAT_DAILY_PRIORITY,
+  10: CHAT_GTM,
+  11: CHAT_EMAIL_SUMMARY,
+  2: CHAT_PODCASTS,
+  3: CHAT_EMAIL_RESPONDING,
+  4: CHAT_GITHUB_FIXER,
+  5: CHAT_DESIGN_PORTFOLIO,
+  6: CHAT_VIRTUAL_ASSISTANT,
+  7: CHAT_UI_BOT,
+  8: CHAT_PRODUCT_RESEARCH,
+  9: CHAT_COMPETITOR_ANALYSIS,
 }
 
-export function getAgentChatById(agentId: string): ChatItem[] {
+export function getAgentChatById(agentId: number): ChatItem[] {
   const chat = MOCK_AGENT_CHATS[agentId]
 
   if (chat === undefined) {

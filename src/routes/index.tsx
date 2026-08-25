@@ -1,11 +1,11 @@
 import { createFileRoute, redirect } from "@tanstack/react-router"
-import { getFirstAgent } from "#/data/agents"
+import { getDefaultWorkspace } from "#/data/workspaces"
 
 export const Route = createFileRoute("/")({
   beforeLoad: () => {
     throw redirect({
-      params: { agentId: getFirstAgent().id },
-      to: "/dashboard/agents/$agentId",
+      params: { workspaceSlug: getDefaultWorkspace().slug },
+      to: "/$workspaceSlug",
     })
   },
 })

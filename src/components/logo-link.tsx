@@ -1,11 +1,12 @@
 import { Spacer } from "@nattstack/ui"
-import { Link, type LinkComponentProps } from "@tanstack/react-router"
+import { Link, type LinkComponentProps, useParams } from "@tanstack/react-router"
 import type { JSX } from "react"
 import { Logomark } from "#/components/logomark"
 import { Logotype } from "#/components/logotype"
 
 export function LogoLink(props: LinkComponentProps): JSX.Element {
-  const { to = "/dashboard", ...rest } = props
+  const { workspaceSlug } = useParams({ from: "/$workspaceSlug" })
+  const { to = "/$workspaceSlug", ...rest } = props
 
   return (
     <Link
@@ -13,6 +14,7 @@ export function LogoLink(props: LinkComponentProps): JSX.Element {
         flex w-fit items-center rounded-12 p-8 transition-opacity select-none
         hover:opacity-75
       "
+      params={{ workspaceSlug }}
       to={to}
       {...rest}
     >

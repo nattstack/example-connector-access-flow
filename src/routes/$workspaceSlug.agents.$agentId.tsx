@@ -7,7 +7,7 @@ import { AgentComposer } from "#/components/pages/dashboard/agent-composer"
 import { getAgentChatById } from "#/data/agent-chat.ts"
 import { getAgentById } from "#/data/agents.ts"
 
-export const Route = createFileRoute("/dashboard/agents/$agentId")({
+export const Route = createFileRoute("/$workspaceSlug/agents/$agentId")({
   component: function AgentDetailPage(): JSX.Element {
     const { agent, chat } = Route.useLoaderData()
 
@@ -37,7 +37,8 @@ export const Route = createFileRoute("/dashboard/agents/$agentId")({
     )
   },
   loader: ({ params }) => {
-    const agent = getAgentById(params.agentId)
+    const agentId = Number(params.agentId)
+    const agent = Number.isInteger(agentId) ? getAgentById(agentId) : undefined
 
     if (agent === undefined) {
       throw notFound()

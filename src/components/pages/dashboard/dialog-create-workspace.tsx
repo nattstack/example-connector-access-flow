@@ -13,7 +13,7 @@ import { useState, type FormEvent, type JSX } from "react"
 
 interface DialogCreateWorkspaceProps {
   isOpen: boolean
-  onCreate: (name: string) => void
+  onCreate: (name: string) => Promise<void> | void
   onIsOpenChange: (isOpen: boolean) => void
 }
 

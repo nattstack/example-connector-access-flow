@@ -10,65 +10,70 @@
 
 import { Route as rootRouteImport } from "./routes/__root"
 import { Route as IndexRouteImport } from "./routes/index"
-import { Route as DashboardRouteImport } from "./routes/dashboard"
-import { Route as DashboardIndexRouteImport } from "./routes/dashboard.index"
-import { Route as DashboardAgentsAgentIdRouteImport } from "./routes/dashboard.agents.$agentId"
+import { Route as WorkspaceSlugRouteImport } from "./routes/$workspaceSlug"
+import { Route as WorkspaceSlugIndexRouteImport } from "./routes/$workspaceSlug.index"
+import { Route as WorkspaceSlugAgentsAgentIdRouteImport } from "./routes/$workspaceSlug.agents.$agentId"
 
 const IndexRoute = IndexRouteImport.update({
   id: "/",
   path: "/",
   getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardRoute = DashboardRouteImport.update({
-  id: "/dashboard",
-  path: "/dashboard",
+const WorkspaceSlugRoute = WorkspaceSlugRouteImport.update({
+  id: "/$workspaceSlug",
+  path: "/$workspaceSlug",
   getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardIndexRoute = DashboardIndexRouteImport.update({
+const WorkspaceSlugIndexRoute = WorkspaceSlugIndexRouteImport.update({
   id: "/",
   path: "/",
-  getParentRoute: () => DashboardRoute,
+  getParentRoute: () => WorkspaceSlugRoute,
 } as any)
-const DashboardAgentsAgentIdRoute = DashboardAgentsAgentIdRouteImport.update({
-  id: "/agents/$agentId",
-  path: "/agents/$agentId",
-  getParentRoute: () => DashboardRoute,
-} as any)
+const WorkspaceSlugAgentsAgentIdRoute =
+  WorkspaceSlugAgentsAgentIdRouteImport.update({
+    id: "/agents/$agentId",
+    path: "/agents/$agentId",
+    getParentRoute: () => WorkspaceSlugRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   "/": typeof IndexRoute
-  "/dashboard": typeof DashboardRouteWithChildren
-  "/dashboard/": typeof DashboardIndexRoute
-  "/dashboard/agents/$agentId": typeof DashboardAgentsAgentIdRoute
+  "/$workspaceSlug": typeof WorkspaceSlugRouteWithChildren
+  "/$workspaceSlug/": typeof WorkspaceSlugIndexRoute
+  "/$workspaceSlug/agents/$agentId": typeof WorkspaceSlugAgentsAgentIdRoute
 }
 export interface FileRoutesByTo {
   "/": typeof IndexRoute
-  "/dashboard": typeof DashboardIndexRoute
-  "/dashboard/agents/$agentId": typeof DashboardAgentsAgentIdRoute
+  "/$workspaceSlug": typeof WorkspaceSlugIndexRoute
+  "/$workspaceSlug/agents/$agentId": typeof WorkspaceSlugAgentsAgentIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   "/": typeof IndexRoute
-  "/dashboard": typeof DashboardRouteWithChildren
-  "/dashboard/": typeof DashboardIndexRoute
-  "/dashboard/agents/$agentId": typeof DashboardAgentsAgentIdRoute
+  "/$workspaceSlug": typeof WorkspaceSlugRouteWithChildren
+  "/$workspaceSlug/": typeof WorkspaceSlugIndexRoute
+  "/$workspaceSlug/agents/$agentId": typeof WorkspaceSlugAgentsAgentIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: "/" | "/dashboard" | "/dashboard/" | "/dashboard/agents/$agentId"
+  fullPaths:
+    | "/"
+    | "/$workspaceSlug"
+    | "/$workspaceSlug/"
+    | "/$workspaceSlug/agents/$agentId"
   fileRoutesByTo: FileRoutesByTo
-  to: "/" | "/dashboard" | "/dashboard/agents/$agentId"
+  to: "/" | "/$workspaceSlug" | "/$workspaceSlug/agents/$agentId"
   id:
     | "__root__"
     | "/"
-    | "/dashboard"
-    | "/dashboard/"
-    | "/dashboard/agents/$agentId"
+    | "/$workspaceSlug"
+    | "/$workspaceSlug/"
+    | "/$workspaceSlug/agents/$agentId"
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  DashboardRoute: typeof DashboardRouteWithChildren
+  WorkspaceSlugRoute: typeof WorkspaceSlugRouteWithChildren
 }
 
 declare module "@tanstack/react-router" {
@@ -80,47 +85,47 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    "/dashboard": {
-      id: "/dashboard"
-      path: "/dashboard"
-      fullPath: "/dashboard"
-      preLoaderRoute: typeof DashboardRouteImport
+    "/$workspaceSlug": {
+      id: "/$workspaceSlug"
+      path: "/$workspaceSlug"
+      fullPath: "/$workspaceSlug"
+      preLoaderRoute: typeof WorkspaceSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
-    "/dashboard/": {
-      id: "/dashboard/"
+    "/$workspaceSlug/": {
+      id: "/$workspaceSlug/"
       path: "/"
-      fullPath: "/dashboard/"
-      preLoaderRoute: typeof DashboardIndexRouteImport
-      parentRoute: typeof DashboardRoute
+      fullPath: "/$workspaceSlug/"
+      preLoaderRoute: typeof WorkspaceSlugIndexRouteImport
+      parentRoute: typeof WorkspaceSlugRoute
     }
-    "/dashboard/agents/$agentId": {
-      id: "/dashboard/agents/$agentId"
+    "/$workspaceSlug/agents/$agentId": {
+      id: "/$workspaceSlug/agents/$agentId"
       path: "/agents/$agentId"
-      fullPath: "/dashboard/agents/$agentId"
-      preLoaderRoute: typeof DashboardAgentsAgentIdRouteImport
-      parentRoute: typeof DashboardRoute
+      fullPath: "/$workspaceSlug/agents/$agentId"
+      preLoaderRoute: typeof WorkspaceSlugAgentsAgentIdRouteImport
+      parentRoute: typeof WorkspaceSlugRoute
     }
   }
 }
 
-interface DashboardRouteChildren {
-  DashboardIndexRoute: typeof DashboardIndexRoute
-  DashboardAgentsAgentIdRoute: typeof DashboardAgentsAgentIdRoute
+interface WorkspaceSlugRouteChildren {
+  WorkspaceSlugIndexRoute: typeof WorkspaceSlugIndexRoute
+  WorkspaceSlugAgentsAgentIdRoute: typeof WorkspaceSlugAgentsAgentIdRoute
 }
 
-const DashboardRouteChildren: DashboardRouteChildren = {
-  DashboardIndexRoute: DashboardIndexRoute,
-  DashboardAgentsAgentIdRoute: DashboardAgentsAgentIdRoute,
+const WorkspaceSlugRouteChildren: WorkspaceSlugRouteChildren = {
+  WorkspaceSlugIndexRoute: WorkspaceSlugIndexRoute,
+  WorkspaceSlugAgentsAgentIdRoute: WorkspaceSlugAgentsAgentIdRoute,
 }
 
-const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
-  DashboardRouteChildren,
+const WorkspaceSlugRouteWithChildren = WorkspaceSlugRoute._addFileChildren(
+  WorkspaceSlugRouteChildren,
 )
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  DashboardRoute: DashboardRouteWithChildren,
+  WorkspaceSlugRoute: WorkspaceSlugRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

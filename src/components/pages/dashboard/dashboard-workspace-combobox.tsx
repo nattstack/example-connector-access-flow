@@ -11,16 +11,12 @@ import {
   ComboboxValue,
   Row,
 } from "@nattstack/ui"
+import { useNavigate, useRouteContext, useRouter } from "@tanstack/react-router"
 import { useMemo, useState, type JSX } from "react"
 import { Logomark } from "#/components/logomark"
 import { DialogCreateWorkspace } from "#/components/pages/dashboard/dialog-create-workspace"
 import { DialogRenameWorkspace } from "#/components/pages/dashboard/dialog-rename-workspace"
-import {
-  createWorkspaceId,
-  getDefaultWorkspace,
-  MOCK_WORKSPACES,
-  type Workspace,
-} from "#/data/workspaces"
+import { createWorkspace, listWorkspaces, renameWorkspace } from "#/data/workspaces"
 
 interface WorkspaceOption {
   label: string
@@ -28,8 +24,12 @@ interface WorkspaceOption {
 }
 
 export function DashboardWorkspaceCombobox(): JSX.Element {
-  const [workspaces, setWorkspaces] = useState<Workspace[]>(MOCK_WORKSPACES)
-  const [selectedWorkspaceId, setSelectedWorkspaceId] = useState(getDefaultWorkspace().id)
+  const { workspace } = useRouteContext({ from: "/$workspaceSlug" })
+
+  const navigate = useNavigate()
+  const router = useRouter()
+
+  const [workspaces, setWorkspaces] = useState(() => [...listWorkspaces()])
 
   const [isComboboxOpen, setIsComboboxOpen] = useState(false)
   const [isCreateOpen, setIsCreateOpen] = useState(false)
@@ -37,34 +37,34 @@ export function DashboardWorkspaceCombobox(): JSX.Element {
 
   const items: WorkspaceOption[] = useMemo(
     () =>
-      workspaces.map((workspace) => ({
-        label: workspace.name,
-        value: workspace.id,
+      workspaces.map((candidate) => ({
+        label: candidate.name,
+        value: candidate.slug,
       })),
     [workspaces],
   )
 
-  const selectedWorkspace = workspaces.find((workspace) => workspace.id === selectedWorkspaceId)
-
   // oxlint-disable-next-line unicorn/no-null -- Base UI Combobox treats undefined as uncontrolled; null means "no selection".
-  const selectedValue = items.find((item) => item.value === selectedWorkspaceId) ?? null
+  const selectedValue = items.find((item) => item.value === workspace.slug) ?? null
 
-  function onCreateWorkspace(name: string): void {
-    const workspace: Workspace = {
-      id: createWorkspaceId(name, workspaces),
-      name,
-    }
-
-    setWorkspaces((current) => [...current, workspace])
-    setSelectedWorkspaceId(workspace.id)
+  function syncWorkspaces(): void {
+    setWorkspaces([...listWorkspaces()])
   }
 
-  function onRenameWorkspace(name: string): void {
-    setWorkspaces((current) =>
-      current.map((workspace) =>
-        workspace.id === selectedWorkspaceId ? { ...workspace, name } : workspace,
-      ),
-    )
+  async function onCreateWorkspace(name: string): Promise<void> {
+    const created = createWorkspace(name)
+
+    syncWorkspaces()
+    await navigate({
+      params: { workspaceSlug: created.slug },
+      to: "/$workspaceSlug",
+    })
+  }
+
+  async function onRenameWorkspace(name: string): Promise<void> {
+    renameWorkspace(workspace.slug, name)
+    syncWorkspaces()
+    await router.invalidate()
   }
 
   return (
@@ -72,9 +72,12 @@ export function DashboardWorkspaceCombobox(): JSX.Element {
       <Combobox
         items={items}
         onOpenChange={setIsComboboxOpen}
-        onValueChange={(nextValue) => {
-          if (nextValue !== null) {
-            setSelectedWorkspaceId(nextValue.value)
+        onValueChange={async (nextValue) => {
+          if (nextValue !== null && nextValue.value !== workspace.slug) {
+            await navigate({
+              params: { workspaceSlug: nextValue.value },
+              to: "/$workspaceSlug",
+            })
           }
         }}
         open={isComboboxOpen}
@@ -147,14 +150,12 @@ export function DashboardWorkspaceCombobox(): JSX.Element {
         onCreate={onCreateWorkspace}
         onIsOpenChange={setIsCreateOpen}
       />
-      {selectedWorkspace === undefined ? undefined : (
-        <DialogRenameWorkspace
-          isOpen={isRenameOpen}
-          onIsOpenChange={setIsRenameOpen}
-          onRename={onRenameWorkspace}
-          workspace={selectedWorkspace}
-        />
-      )}
+      <DialogRenameWorkspace
+        isOpen={isRenameOpen}
+        onIsOpenChange={setIsRenameOpen}
+        onRename={onRenameWorkspace}
+        workspace={workspace}
+      />
     </>
   )
 }
