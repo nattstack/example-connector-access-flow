@@ -10,6 +10,7 @@ export type ChatItem =
       actionLabel: string
       appId: ConnectorAppId
       description: string
+      dialogDescription?: string
       id: string
       status?: "added"
       title: string
@@ -359,6 +360,26 @@ const CHAT_FIGJAM_SUMMARIZER: ChatItem[] = [
   },
 ]
 
+const CHAT_EMAIL_SUMMARY_VERCEL: ChatItem[] = [
+  {
+    id: "21-meta-date",
+    text: "Tue, Aug 25 1:18 AM",
+    type: "meta",
+  },
+  {
+    content: ["Hey Sam. Good to meet you."],
+    id: "21-agent-hello",
+    role: "agent",
+    type: "message",
+  },
+  {
+    content: ["I can live in the company inboxes. What do you want me watching?"],
+    id: "21-agent-purpose",
+    role: "agent",
+    type: "message",
+  },
+]
+
 const CHAT_THREAD_SUMMARIZER: ChatItem[] = [
   {
     id: "27-meta-date",
@@ -541,6 +562,7 @@ const MOCK_AGENT_CHATS: Record<string, ChatItem[]> = {
   "a2926ff5-1b8e-40d9-aea1-16a7135b63e5": CHAT_GTM,
   "a4150364-fb95-412d-9119-3abecc35cba4": CHAT_COMPONENT_AUDITOR,
   "c23b6993-2165-4042-89cd-107b05b24ec0": CHAT_MEETING_NOTES,
+  "c8e4a1b0-3d72-4f19-8a56-2b9c0e7d4f31": CHAT_EMAIL_SUMMARY_VERCEL,
   "d28c5b88-901f-4df0-b5b1-c6b9cab1b420": CHAT_EMAIL_SUMMARY,
   "d58af729-505e-4621-8499-672861ddcafe": CHAT_PRICING,
   "d7fe3ac1-f0b2-4d47-b861-a97a592a08e5": CHAT_THREAD_SUMMARIZER,
@@ -562,7 +584,77 @@ const CHAT_PLACEHOLDER: ChatItem[] = [
   },
 ]
 
+export function getAgentAuthorizeDeniedReply(agentId: string): ChatItem[] {
+  if (agentId !== "c8e4a1b0-3d72-4f19-8a56-2b9c0e7d4f31") {
+    return []
+  }
+
+  return [
+    {
+      content: [
+        "Still missing Delete on Company support. Grant it on the card and I'll clear the noise.",
+      ],
+      id: "21-agent-still-missing-delete",
+      role: "agent",
+      type: "message",
+    },
+  ]
+}
+
 export function getAgentAuthorizeReply(agentId: string): ChatItem[] {
+  if (agentId === "c8e4a1b0-3d72-4f19-8a56-2b9c0e7d4f31") {
+    return [
+      {
+        content: ["Delete's on. Pulling the last 24 hours from Company support."],
+        id: "21-agent-gmail-reconnected",
+        role: "agent",
+        type: "message",
+      },
+      {
+        content: ["11 threads since yesterday morning. I deleted 6 I could ignore."],
+        id: "21-agent-thread-count",
+        role: "agent",
+        type: "message",
+      },
+      {
+        content: [
+          "On a clock: Acme can't ship after the 1.4 rollout — they left a thread on ",
+          { href: "https://vercel.com", text: "the failed deploy", type: "link" },
+          ". Priya says the billing portal is looping people back to login. Legal wants a yes on the ",
+          { href: "https://docs.google.com", text: "DPA", type: "link" },
+          " before Friday.",
+        ],
+        id: "21-agent-on-a-clock",
+        role: "agent",
+        type: "message",
+      },
+      {
+        content: [
+          "Deleted: 4 Google security alerts to ",
+          { href: "mailto:sam@example.com", text: "sam@example.com", type: "link" },
+          ", TLDR, and a Substack. Press and legal were quiet. Product inbox only has a Linear ping you already saw.",
+        ],
+        id: "21-agent-the-rest",
+        role: "agent",
+        type: "message",
+      },
+      {
+        content: [
+          "Go to ",
+          {
+            href: "/vercel/settings/connectors",
+            text: "/vercel/settings/connectors",
+            type: "link",
+          },
+          " to see Company support at 2/2.",
+        ],
+        id: "21-agent-see-connector",
+        role: "agent",
+        type: "message",
+      },
+    ]
+  }
+
   if (agentId !== "d28c5b88-901f-4df0-b5b1-c6b9cab1b420") {
     return []
   }
@@ -626,6 +718,43 @@ export function getAgentChatById(agentId: string): ChatItem[] {
 }
 
 export function getAgentSendReply(agentId: string): ChatItem[] {
+  if (agentId === "c8e4a1b0-3d72-4f19-8a56-2b9c0e7d4f31") {
+    return [
+      {
+        content: ["On it. Checking Company support for anything from the last 24 hours."],
+        id: "21-agent-on-it",
+        role: "agent",
+        type: "message",
+      },
+      {
+        content: [
+          "Gmail is already connected: Company support, press, legal, business, and Product inbox. All of them are Read only, so I can summarize but I can't delete.",
+        ],
+        id: "21-agent-existing-gmail",
+        role: "agent",
+        type: "message",
+      },
+      {
+        content: [
+          "Reconnect Company support on the card, grant Delete, and I'll clear the noise right after.",
+        ],
+        id: "21-agent-need-delete",
+        role: "agent",
+        type: "message",
+      },
+      {
+        actionLabel: "Reconnect",
+        appId: "gmail",
+        description: "Read granted · Delete required",
+        dialogDescription:
+          "Company support already has Read. Grant Delete so I can clear the mail you don't need.",
+        id: "21-connect-gmail",
+        title: "Company support",
+        type: "connect",
+      },
+    ]
+  }
+
   if (agentId !== "d28c5b88-901f-4df0-b5b1-c6b9cab1b420") {
     return []
   }

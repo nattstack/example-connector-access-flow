@@ -287,8 +287,7 @@ function SettingsConnectorRow(props: SettingsConnectorRowProps): JSX.Element {
       </td>
       <td className="py-12">
         <Row className="min-w-0 flex-wrap items-center" gap={8}>
-          <SettingsConnectorAccessBadge connector={connector} />
-          {blocked && (
+          {blocked ? (
             <span
               className="
                 flex h-[18px] shrink-0 items-center rounded-4 bg-gray-4 px-4
@@ -297,6 +296,8 @@ function SettingsConnectorRow(props: SettingsConnectorRowProps): JSX.Element {
             >
               Blocked
             </span>
+          ) : (
+            <SettingsConnectorAccessBadge connector={connector} />
           )}
         </Row>
       </td>

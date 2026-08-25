@@ -82,6 +82,17 @@ export const MOCK_AGENTS: Agent[] = [
     workspaceId: 1,
   },
   {
+    avatar: "/avatars/cloud.webp",
+    chat: "I can live in the company inboxes. What do you want me watching?",
+    createdAt: "2026-08-25T01:18:00",
+    draft:
+      "Review all emails received in Company support during the past 24 hours and delete the ones I can ignore",
+    id: "c8e4a1b0-3d72-4f19-8a56-2b9c0e7d4f31",
+    name: "Email summary",
+    updatedAt: "2026-08-25T01:24:00",
+    workspaceId: 2,
+  },
+  {
     avatar: "/avatars/mailbox.webp",
     chat: "This thread is 18 messages. Here's the ask.",
     createdAt: "2026-08-20T08:02:00",

@@ -167,6 +167,7 @@ function ChatConnect(props: {
 
       <DialogAuthorizeConnector
         appId={item.appId}
+        description={item.dialogDescription}
         isOpen={isAuthorizeOpen}
         onAuthorize={(scopeIds) => onAuthorize?.(item.id, scopeIds)}
         onIsOpenChange={setIsAuthorizeOpen}

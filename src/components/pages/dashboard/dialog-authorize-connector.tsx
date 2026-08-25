@@ -14,6 +14,7 @@ import { getConnectorApp, type ConnectorAppId } from "#/data/connectors"
 
 interface DialogAuthorizeConnectorProps {
   appId: ConnectorAppId
+  description?: string
   isOpen: boolean
   onAuthorize?: (scopeIds: string[]) => void
   onIsOpenChange: (isOpen: boolean) => void
@@ -24,7 +25,7 @@ type PermissionMode = "all" | "choose"
 const SCOPE_PAIR_COUNT = 2
 
 export function DialogAuthorizeConnector(props: DialogAuthorizeConnectorProps): JSX.Element {
-  const { appId, isOpen, onAuthorize, onIsOpenChange } = props
+  const { appId, description, isOpen, onAuthorize, onIsOpenChange } = props
   const app = getConnectorApp(appId)
   const scopes = app?.scopes ?? []
   const allScopeIds = scopes.map((scope) => scope.id)
@@ -68,7 +69,8 @@ export function DialogAuthorizeConnector(props: DialogAuthorizeConnectorProps): 
             <Spacer height={8} />
 
             <p className="text-14 text-text-secondary">
-              Grant every permission we request, or choose which scopes this agent can use.
+              {description ??
+                "Grant every permission we request, or choose which scopes this agent can use."}
             </p>
             <Spacer height={24} />
 

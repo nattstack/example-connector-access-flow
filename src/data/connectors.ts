@@ -254,6 +254,23 @@ export function getConnectorById(workspaceId: number, connectorId: string): Conn
   )
 }
 
+export function grantConnectorScopes(input: {
+  connectorId: string
+  scopeIds: string[]
+  workspaceId: number
+}): Connector {
+  const connector = requireConnector(input.workspaceId, input.connectorId)
+  const app = getConnectorApp(connector.appId)
+
+  if (app === undefined) {
+    throw new Error("Expected a connector app")
+  }
+
+  connector.scopeIds = uniqueScopeIds(app, [...connector.scopeIds, ...input.scopeIds])
+
+  return connector
+}
+
 export function isAppBlocked(workspaceId: number, appId: ConnectorAppId): boolean {
   return MOCK_BLOCKED_APPS.some((item) => item.workspaceId === workspaceId && item.appId === appId)
 }
