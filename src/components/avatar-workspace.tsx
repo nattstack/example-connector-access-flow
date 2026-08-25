@@ -1,4 +1,4 @@
-import { SiFigma, SiLinear, SiNotion, SiVercel } from "@icons-pack/react-simple-icons"
+import { SiFigma, SiVercel } from "@icons-pack/react-simple-icons"
 import type { JSX } from "react"
 import type { WorkspaceLogo } from "#/data/workspaces"
 
@@ -15,8 +15,6 @@ const VIEWBOX = "0 0 16 16"
 
 const BRAND_AVATARS = {
   figma: { Icon: SiFigma, background: "#FDE8E3" },
-  linear: { Icon: SiLinear, background: "#EEEFFB" },
-  notion: { Icon: SiNotion, background: "#F4F4F5" },
   vercel: { Icon: SiVercel, background: "#F4F4F5" },
 } as const satisfies Record<WorkspaceLogo, { background: string; Icon: typeof SiFigma }>
 

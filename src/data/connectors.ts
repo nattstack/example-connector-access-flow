@@ -49,10 +49,7 @@ const CONNECTOR_APPS: ConnectorApp[] = CONNECTOR_APP_CATALOG.map((app) => ({
   scopes: app.id === "gmail" ? GMAIL_SCOPES : [],
 }))
 
-const MOCK_BLOCKED_APPS: BlockedApp[] = [
-  { appId: "slack", workspaceId: 2 },
-  { appId: "github", workspaceId: 4 },
-]
+const MOCK_BLOCKED_APPS: BlockedApp[] = [{ appId: "github", workspaceId: 2 }]
 
 const MOCK_CONNECTORS: Connector[] = [
   {
@@ -60,60 +57,28 @@ const MOCK_CONNECTORS: Connector[] = [
     id: "682b4e5c-07a9-441d-38bf-c57f81a3d4cb",
     label: "Company support",
     scopeIds: ["read"],
-    workspaceId: 3,
+    workspaceId: 2,
   },
   {
     appId: "gmail",
     id: "793c5f6d-18ba-452e-49c0-d68f92b4e5dc",
     label: "Company press",
     scopeIds: ["read"],
-    workspaceId: 3,
+    workspaceId: 2,
   },
   {
     appId: "gmail",
     id: "8a4d607e-29cb-463f-5ad1-e79fa3c5f6ed",
     label: "Company legal",
     scopeIds: ["read"],
-    workspaceId: 3,
+    workspaceId: 2,
   },
   {
     appId: "gmail",
     id: "9b5e718f-3adc-4740-6be2-f8a0b4d607fe",
     label: "Company business",
     scopeIds: ["read"],
-    workspaceId: 3,
-  },
-  {
-    appId: "github",
-    id: "f1b4d7e5-9032-4da6-c148-5e0f1a3c6d54",
-    label: "nattstack",
-    scopeIds: [],
-    teamId: "b4e2d9f3-5c8e-4f02-ad3b-2e7c9e1f4b22",
     workspaceId: 2,
-  },
-  {
-    appId: "slack",
-    id: "02c5e8f6-a143-4eb7-d259-6f1a2b4d7e65",
-    label: "Linear Product",
-    scopeIds: [],
-    teamId: "a9361bc3-4c13-4ad2-a242-c861b085560d",
-    workspaceId: 2,
-  },
-  {
-    appId: "gmail",
-    id: "13d6f907-b254-4fc8-e36a-702b3c5e8f76",
-    label: "Ops inbox",
-    scopeIds: ["read"],
-    teamId: "cac5d6b9-444d-4f69-973a-04a0fd2781df",
-    workspaceId: 3,
-  },
-  {
-    appId: "slack",
-    id: "24e70a18-c365-40d9-f47b-813c4d6f9087",
-    label: "Notion Design",
-    scopeIds: [],
-    teamId: "c5f3e0a4-6d9f-4013-be4c-3f8d0f2a5c33",
-    workspaceId: 3,
   },
   {
     appId: "github",
@@ -121,7 +86,7 @@ const MOCK_CONNECTORS: Connector[] = [
     label: "vercel",
     scopeIds: [],
     teamId: "d6a4f1b5-7e0a-4124-cf5d-4a9e1a3b6d44",
-    workspaceId: 4,
+    workspaceId: 2,
   },
   {
     appId: "slack",
@@ -129,7 +94,7 @@ const MOCK_CONNECTORS: Connector[] = [
     label: "Vercel Marketing",
     scopeIds: [],
     teamId: "e7b5a2c6-8f1b-4235-da6e-5b0f2b4c7e55",
-    workspaceId: 4,
+    workspaceId: 2,
   },
   {
     appId: "gmail",
@@ -137,7 +102,7 @@ const MOCK_CONNECTORS: Connector[] = [
     label: "Product inbox",
     scopeIds: ["read"],
     teamId: "d6a4f1b5-7e0a-4124-cf5d-4a9e1a3b6d44",
-    workspaceId: 4,
+    workspaceId: 2,
   },
 ]
 
