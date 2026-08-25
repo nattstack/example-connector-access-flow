@@ -668,6 +668,20 @@ export function getAgentRequestAccessReply(agentId: string): ChatItem[] {
       role: "agent",
       type: "message",
     },
+    {
+      content: [
+        "Go to ",
+        {
+          href: "/vercel/settings/connectors",
+          text: "/vercel/settings/connectors",
+          type: "link",
+        },
+        " to see the blocked connector.",
+      ],
+      id: "21-agent-see-connector",
+      role: "agent",
+      type: "message",
+    },
   ]
 }
 
