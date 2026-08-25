@@ -19,7 +19,7 @@ export function LogoLink(props: LinkComponentProps): JSX.Element {
       <Logomark />
       <Spacer width={8} />
 
-      <Logotype className="mt-4" />
+      <Logotype className="mt-2" />
     </Link>
   )
 }
