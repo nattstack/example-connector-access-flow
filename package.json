@@ -8,7 +8,7 @@
     "check:format:fix": "oxfmt",
     "check:lint": "oxlint",
     "check:lint:fix": "oxlint --fix --fix-suggestions --fix-dangerously",
-    "check:type": "tsc",
+    "check:type": "tsc --build",
     "dev": "vite",
     "lint": "oxlint",
     "preview": "vite preview"
