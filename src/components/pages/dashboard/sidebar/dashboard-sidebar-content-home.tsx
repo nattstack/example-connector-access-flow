@@ -102,8 +102,7 @@ function LinkAgent(props: LinkAgentProps): JSX.Element {
   return (
     <div
       className="
-        relative flex h-56 w-full shrink-0 items-center gap-x-8 rounded-12
-        px-8
+        relative flex h-56 w-full shrink-0 items-center gap-x-8 rounded-12 px-8
       "
     >
       <Link
@@ -116,7 +115,10 @@ function LinkAgent(props: LinkAgentProps): JSX.Element {
         params={{ agentId: agent.id, workspaceSlug }}
         to="/$workspaceSlug/agents/$agentId"
       />
-      <div className="pointer-events-none relative z-1 flex min-w-0 flex-1 items-center gap-x-8">
+      <div className="
+        pointer-events-none relative z-1 flex min-w-0 flex-1 items-center
+        gap-x-8
+      ">
         {content}
       </div>
     </div>
