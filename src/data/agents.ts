@@ -20,7 +20,6 @@ export const MOCK_AGENTS: Agent[] = [
     draft: "Review all emails received in my connected inbox during the past 24 hours",
     id: "d28c5b88-901f-4df0-b5b1-c6b9cab1b420",
     name: "Email summary",
-    team: "Operations",
     updatedAt: "2026-08-25T01:10:00",
     workspaceId: 1,
   },

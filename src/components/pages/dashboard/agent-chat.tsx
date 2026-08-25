@@ -1,6 +1,7 @@
 import { Button, Column, Row, Spacer } from "@nattstack/ui"
-import { Fragment, type JSX } from "react"
+import { Fragment, useState, type JSX } from "react"
 import { AvatarConnector } from "#/components/avatar-connector"
+import { DialogAuthorizeConnector } from "#/components/pages/dashboard/dialog-authorize-connector"
 import type { ChatInline, ChatItem, ChatText } from "#/data/agent-chat"
 
 const GAP_CLUSTER = 8
@@ -108,34 +109,44 @@ function ChatChoice(props: { item: Extract<ChatItem, { type: "choice" }> }): JSX
 
 function ChatConnect(props: { item: Extract<ChatItem, { type: "connect" }> }): JSX.Element {
   const { item } = props
+  const [isAuthorizeOpen, setIsAuthorizeOpen] = useState(false)
 
   return (
-    <Row
-      alignItems="center"
-      className="
-        w-full max-w-640 justify-between rounded-16 bg-gray-3 px-12 py-10
-      "
-    >
-      <Row alignItems="center" className="min-w-0">
-        <AvatarConnector appId={item.appId} />
+    <>
+      <Row
+        alignItems="center"
+        className="
+          w-full max-w-640 justify-between rounded-16 bg-gray-3 px-12 py-10
+        "
+      >
+        <Row alignItems="center" className="min-w-0">
+          <AvatarConnector appId={item.appId} />
 
-        <Spacer width={12} />
+          <Spacer width={12} />
 
-        <Column className="min-w-0">
-          <p className="text-14 font-500 text-text-primary">{item.title}</p>
-          <p className="text-12 text-text-secondary">{item.description}</p>
-        </Column>
+          <Column className="min-w-0">
+            <p className="text-14 font-500 text-text-primary">{item.title}</p>
+            <p className="text-12 text-text-secondary">{item.description}</p>
+          </Column>
+        </Row>
+
+        <Button
+          className="shrink-0"
+          label={item.actionLabel}
+          onClick={() => setIsAuthorizeOpen(true)}
+          rounded
+          size={32}
+          type="button"
+          variant="secondary"
+        />
       </Row>
 
-      <Button
-        className="shrink-0"
-        label={item.actionLabel}
-        rounded
-        size={32}
-        type="button"
-        variant="secondary"
+      <DialogAuthorizeConnector
+        appId={item.appId}
+        isOpen={isAuthorizeOpen}
+        onIsOpenChange={setIsAuthorizeOpen}
       />
-    </Row>
+    </>
   )
 }
 

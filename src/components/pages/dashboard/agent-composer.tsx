@@ -44,8 +44,8 @@ export function AgentComposer(props: AgentComposerProps): JSX.Element {
         <Textarea
           aria-label="Send a message to your agent"
           className="
-            min-h-48 resize-none border-0 bg-transparent p-0 shadow-none
-            outline-none
+            min-h-48 resize-none rounded-none border-0 bg-transparent p-0
+            shadow-none! outline-none
             placeholder:text-text-secondary
           "
           onChange={(event) => {
