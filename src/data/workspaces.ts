@@ -34,19 +34,6 @@ const workspaces: Workspace[] = [
   },
 ]
 
-export function createWorkspace(name: string): Workspace {
-  const slug = createWorkspaceSlug(name, workspaces)
-  const workspace: Workspace = {
-    id: nextWorkspaceId(workspaces),
-    name,
-    slug,
-  }
-
-  workspaces.push(workspace)
-
-  return workspace
-}
-
 export function getDefaultWorkspace(): Workspace {
   const [workspace] = workspaces
 
@@ -75,32 +62,4 @@ export function renameWorkspace(workspaceSlug: string, name: string): Workspace 
   workspace.name = name
 
   return workspace
-}
-
-function createWorkspaceSlug(name: string, existing: Workspace[]): string {
-  const base =
-    name
-      .toLowerCase()
-      .normalize("NFKD")
-      .replaceAll(/[\u0300-\u036F]/gu, "")
-      .replaceAll(/[^a-z0-9]+/gu, "-")
-      .replaceAll(/^-+|-+$/gu, "") || "workspace"
-
-  const taken = new Set(existing.map((workspace) => workspace.slug))
-
-  if (!taken.has(base)) {
-    return base
-  }
-
-  let suffix = 2
-
-  while (taken.has(`${base}-${suffix}`)) {
-    suffix += 1
-  }
-
-  return `${base}-${suffix}`
-}
-
-function nextWorkspaceId(existing: Workspace[]): number {
-  return Math.max(0, ...existing.map((workspace) => workspace.id)) + 1
 }

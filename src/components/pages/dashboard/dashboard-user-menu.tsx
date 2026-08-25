@@ -46,7 +46,7 @@ export function DashboardUserMenu(): JSX.Element {
         <MenuSeparator />
         <MenuLinkItem
           closeOnClick
-          render={<Link params={{ workspaceSlug }} to="/$workspaceSlug/settings/teams" />}
+          render={<Link params={{ workspaceSlug }} to="/$workspaceSlug/settings/members" />}
         >
           <IconGearOutline18 className="text-gray-9" />
           Settings
