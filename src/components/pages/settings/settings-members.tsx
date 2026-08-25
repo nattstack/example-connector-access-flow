@@ -1,12 +1,16 @@
 import { Column, Spacer } from "@nattstack/ui"
 import type { JSX } from "react"
 import { AvatarUser } from "#/components/avatar-user"
-import { listMembers, type Member } from "#/data/members"
+import type { Member } from "#/data/members"
 import { useCurrentUser } from "#/data/user"
 
-export function SettingsMembers(): JSX.Element {
+interface SettingsMembersProps {
+  members: Member[]
+}
+
+export function SettingsMembers(props: SettingsMembersProps): JSX.Element {
+  const { members } = props
   const user = useCurrentUser()
-  const members = listMembers()
 
   return (
     <Column
