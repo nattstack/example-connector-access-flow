@@ -14,6 +14,6 @@ const router = createRouter({
   scrollRestoration: true,
 })
 
-export function AppRouter(): JSX.Element {
+export function Router(): JSX.Element {
   return <RouterProvider router={router} />
 }
