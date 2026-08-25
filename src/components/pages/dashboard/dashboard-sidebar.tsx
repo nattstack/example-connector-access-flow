@@ -31,10 +31,14 @@ export function DashboardSidebar(): JSX.Element {
       </Row>
       <Spacer height={8} />
 
+      {/* Workspace  */}
       <Column className="px-8">
         <DashboardWorkspaceCombobox />
       </Column>
       <Spacer height={8} />
+
+      {/* Separator */}
+      <Spacer aria-hidden className="mx-16 border-t border-border" height={8} />
 
       {/* Agents */}
       <Column as="nav" className="gap-y-4 overflow-y-auto px-8">
