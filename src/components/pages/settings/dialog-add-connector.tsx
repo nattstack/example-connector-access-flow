@@ -18,7 +18,10 @@ import {
   Row,
   Select,
   SelectContent,
+  SelectGroup,
+  SelectGroupLabel,
   SelectItem,
+  SelectSeparator,
   SelectTrigger,
   SelectValue,
   Spacer,
@@ -248,11 +251,19 @@ export function DialogAddConnector(props: DialogAddConnectorProps): JSX.Element 
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value={ACCESS_EVERYBODY}>Everybody</SelectItem>
-                    {teams.map((team) => (
-                      <SelectItem key={team.id} value={team.id}>
-                        {team.name}
-                      </SelectItem>
-                    ))}
+                    {teams.length > 0 && (
+                      <>
+                        <SelectSeparator />
+                        <SelectGroup>
+                          <SelectGroupLabel>Team</SelectGroupLabel>
+                          {teams.map((team) => (
+                            <SelectItem key={team.id} value={team.id}>
+                              {team.name}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </>
+                    )}
                   </SelectContent>
                 </Select>
                 <Spacer height={16} />

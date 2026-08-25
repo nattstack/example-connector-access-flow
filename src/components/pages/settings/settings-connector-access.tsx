@@ -3,7 +3,10 @@ import {
   Row,
   Select,
   SelectContent,
+  SelectGroup,
+  SelectGroupLabel,
   SelectItem,
+  SelectSeparator,
   SelectTrigger,
   SelectValue,
   Spacer,
@@ -101,11 +104,19 @@ export function SettingsConnectorAccess(props: SettingsConnectorAccessProps): JS
           </SelectTrigger>
           <SelectContent>
             <SelectItem value={ACCESS_EVERYBODY}>Everybody</SelectItem>
-            {teams.map((team) => (
-              <SelectItem key={team.id} value={team.id}>
-                {team.name}
-              </SelectItem>
-            ))}
+            {teams.length > 0 && (
+              <>
+                <SelectSeparator />
+                <SelectGroup>
+                  <SelectGroupLabel>Team</SelectGroupLabel>
+                  {teams.map((team) => (
+                    <SelectItem key={team.id} value={team.id}>
+                      {team.name}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </>
+            )}
           </SelectContent>
         </Select>
       </Column>
