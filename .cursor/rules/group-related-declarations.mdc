@@ -1,0 +1,37 @@
+---
+description: Blank line between logical groups of related declarations; keep siblings in a group tight.
+globs: "**/*.{tsx}"
+alwaysApply: false
+---
+
+# Group Related Declarations
+
+Separate logical groups of related variable declarations with a blank line. Keep declarations in the same group adjacent (no blank line between them).
+
+Typical groups in React components:
+
+- Data / query hooks
+- Local state (`useState`, etc.)
+- Derived values / plain consts
+- Event handlers / callbacks
+- Effects (already usually separated)
+
+```tsx
+// Bad — one packed block, or blank lines inside a group
+const { data: isAuthenticated, isLoading } = useQueryAuthenticated()
+const [isMounted, setIsMounted] = useState(false)
+const [isScrolled, setIsScrolled] = useState(false)
+const x = 5
+const y = 10
+
+// Good — blank line between groups; siblings stay tight
+const { data: isAuthenticated, isLoading } = useQueryAuthenticated()
+
+const [isMounted, setIsMounted] = useState(false)
+const [isScrolled, setIsScrolled] = useState(false)
+
+const x = 5
+const y = 10
+```
+
+Do not insert a blank line between two declarations that belong to the same group. Prefer grouping by purpose over sorting every `const` into one list.

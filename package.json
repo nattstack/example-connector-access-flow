@@ -1,7 +1,7 @@
 {
   "type": "module",
   "scripts": {
-    "build": "tsc -b && vite build",
+    "build": "bun run check:type && vite build",
     "check": "bun run check:format && bun run check:lint && bun run check:type",
     "check:fix": "bun run check:format:fix && bun run check:lint:fix && bun run check:type",
     "check:format": "oxfmt --check",
@@ -21,6 +21,7 @@
   "devDependencies": {
     "@babel/core": "7.29.7",
     "@rolldown/plugin-babel": "0.2.3",
+    "@tailwindcss/vite": "4.3.3",
     "@types/babel__core": "7.20.5",
     "@types/node": "24.13.3",
     "@types/react": "19.2.18",
@@ -32,6 +33,7 @@
     "lefthook": "2.1.10",
     "oxfmt": "0.62.0",
     "oxlint": "1.76.0",
+    "tailwindcss": "4.3.3",
     "typescript": "~6.0.2",
     "vite": "8.2.2"
   }

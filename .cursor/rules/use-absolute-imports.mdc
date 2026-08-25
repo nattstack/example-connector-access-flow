@@ -1,0 +1,21 @@
+---
+description: Prefer project absolute imports over relative imports.
+globs: "**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# Absolute Imports
+
+Use the `#/*` project import alias instead of relative imports for files inside `apps/web/src`.
+
+```typescript
+// Bad
+import { LogoLink } from "../components/logo-link"
+import { mdxComponentShowcases } from "./mdx-component-showcases"
+
+// Good
+import { LogoLink } from "#/components/logo-link"
+import { mdxComponentShowcases } from "#/mdx-component-showcases"
+```
+
+Keep package imports unchanged, and only use relative imports when importing files outside the `#/*` alias scope.

@@ -1,0 +1,22 @@
+---
+description: Install bun packages with exact pinned versions
+globs: "**/package.json"
+alwaysApply: false
+---
+
+# Exact Dependency Versions
+
+Pin exact versions when adding or updating dependencies. Never use ranges (`^`, `~`, `>=`, `*`) or `latest`.
+
+```bash
+# ✅ GOOD
+bun add react@19.1.0
+bun add -d vitest@3.2.4
+
+# ❌ BAD — writes a range into package.json
+bun add react
+bun add react@latest
+bun add react@^19.1.0
+```
+
+After installing, confirm `package.json` entries are exact semver strings (`"1.2.3"`), matching the rest of this repo.

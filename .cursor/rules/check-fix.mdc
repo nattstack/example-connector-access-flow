@@ -1,0 +1,17 @@
+---
+description: Run bun run check:fix after editing TypeScript
+globs: "**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# Check Fix
+
+After editing TypeScript in this repo, run from the repo root until it passes:
+
+```bash
+bun run check:fix
+```
+
+Runs format (`oxfmt`), lint autofix (`oxlint --fix`), and typecheck (`tsc`). Fix any failures, then re-run. Treat the task as done only after it passes (or before commit, if asked).
+
+Skip when the user explicitly says not to run checks.
