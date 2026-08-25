@@ -1,6 +1,5 @@
 import {
   Button,
-  Column,
   Combobox,
   ComboboxContent,
   ComboboxEmpty,
@@ -10,11 +9,11 @@ import {
   ComboboxTrigger,
   ComboboxValue,
   Row,
-  Spacer,
 } from "@nattstack/ui"
 import { useRouter } from "@tanstack/react-router"
 import { useMemo, useState, type JSX } from "react"
 import { AvatarConnector } from "#/components/avatar-connector"
+import { SettingsRow, SettingsSection } from "#/components/pages/settings/settings-section"
 import {
   listConnectorApps,
   setAppBlocked,
@@ -71,92 +70,81 @@ export function SettingsConnectorApps(props: SettingsConnectorAppsProps): JSX.El
   }
 
   return (
-    <Column
-      as="section"
-      className="
-        rounded-16 border border-border bg-bg-shell-inner p-24 shadow-2
-      "
-    >
-      <h2 className="text-24">Connector apps</h2>
-      <Spacer height={8} />
-
-      <p className="text-14 text-text-secondary">
-        {isAdmin
-          ? `
-            Apps are allowed unless you block them. Search to add an app to the
-            block list. Blocked apps cannot be added, and agents cannot use
-            existing connections.
-          `
-          : `
-            Apps are allowed unless a workspace admin blocks them. Blocked apps
-            cannot be added, and agents cannot use existing connections.
-          `}
-      </p>
-      <Spacer height={16} />
-
-      <Combobox<BlockableAppOption>
-        disabled={!isAdmin}
-        items={items}
-        onOpenChange={setIsComboboxOpen}
-        onValueChange={async (nextValue) => {
-          if (nextValue !== null) {
-            await onBlock(nextValue.value)
-          }
-        }}
-        open={isComboboxOpen}
-        value={selectedValue}
+    <SettingsSection title="Connector apps">
+      <SettingsRow
+        description={
+          isAdmin
+            ? "Apps are allowed unless you block them. Blocked apps cannot be added, and agents cannot use existing connections."
+            : "Apps are allowed unless a workspace admin blocks them. Blocked apps cannot be added, and agents cannot use existing connections."
+        }
+        label="Block an app"
       >
-        <ComboboxTrigger
-          className="
-            w-full
-            data-disabled:cursor-default data-disabled:opacity-50
-          "
-          size={36}
-        >
-          <ComboboxValue
-            placeholder={
-              isAdmin ? "Search an app to block" : "Only workspace admins can block apps"
+        <Combobox<BlockableAppOption>
+          disabled={!isAdmin}
+          items={items}
+          onOpenChange={setIsComboboxOpen}
+          onValueChange={async (nextValue) => {
+            if (nextValue !== null) {
+              await onBlock(nextValue.value)
             }
-          />
-        </ComboboxTrigger>
-        <ComboboxContent>
-          <ComboboxSearch placeholder="Search apps" />
-          <ComboboxEmpty>
-            {items.length === 0 ? "Every app is already blocked." : "No apps found."}
-          </ComboboxEmpty>
-          <ComboboxList>
-            {(item: BlockableAppOption) => (
-              <ComboboxItem key={item.value} value={item}>
-                <Row className="items-center gap-8">
-                  <AvatarConnector appId={item.value} />
-                  <span className="truncate">{item.label}</span>
-                </Row>
-              </ComboboxItem>
-            )}
-          </ComboboxList>
-        </ComboboxContent>
-      </Combobox>
-      <Spacer height={16} />
-
-      {blockedApps.length === 0 ? (
-        <p className="text-14 text-text-secondary">
-          {isAdmin
-            ? "No apps are blocked. Search to add one to the block list."
-            : "No apps are blocked."}
-        </p>
-      ) : (
-        <Column as="ul" className="gap-y-4">
-          {blockedApps.map((app) => (
-            <SettingsConnectorAppRow
-              app={app}
-              canUnblock={isAdmin}
-              key={app.id}
-              onUnblock={() => onUnblock(app)}
+          }}
+          open={isComboboxOpen}
+          value={selectedValue}
+        >
+          <ComboboxTrigger
+            className="
+              w-240
+              data-disabled:cursor-default data-disabled:opacity-50
+              max-768:w-full
+            "
+            size={36}
+          >
+            <ComboboxValue
+              placeholder={
+                isAdmin ? "Search an app to block" : "Only workspace admins can block apps"
+              }
             />
-          ))}
-        </Column>
+          </ComboboxTrigger>
+          <ComboboxContent>
+            <ComboboxSearch placeholder="Search apps" />
+            <ComboboxEmpty>
+              {items.length === 0 ? "Every app is already blocked." : "No apps found."}
+            </ComboboxEmpty>
+            <ComboboxList>
+              {(item: BlockableAppOption) => (
+                <ComboboxItem key={item.value} value={item}>
+                  <Row className="items-center gap-8">
+                    <AvatarConnector appId={item.value} />
+                    <span className="truncate">{item.label}</span>
+                  </Row>
+                </ComboboxItem>
+              )}
+            </ComboboxList>
+          </ComboboxContent>
+        </Combobox>
+      </SettingsRow>
+      {blockedApps.length === 0 ? (
+        <SettingsRow
+          description={
+            isAdmin
+              ? "Search to add an app to the block list."
+              : "No connector apps are blocked in this workspace."
+          }
+          label="Blocked apps"
+        >
+          <span className="text-14 text-text-secondary">None</span>
+        </SettingsRow>
+      ) : (
+        blockedApps.map((app) => (
+          <SettingsConnectorAppRow
+            app={app}
+            canUnblock={isAdmin}
+            key={app.id}
+            onUnblock={() => onUnblock(app)}
+          />
+        ))
       )}
-    </Column>
+    </SettingsSection>
   )
 }
 
@@ -164,16 +152,7 @@ function SettingsConnectorAppRow(props: SettingsConnectorAppRowProps): JSX.Eleme
   const { app, canUnblock, onUnblock } = props
 
   return (
-    <li className="flex min-h-56 items-center rounded-12 px-12">
-      <AvatarConnector appId={app.id} />
-      <Spacer width={12} />
-
-      <Column className="min-w-0 flex-1">
-        <span className="truncate text-14 font-500 text-text-primary">{app.name}</span>
-        <span className="truncate text-13 text-text-secondary">
-          Blocked from the connectors list
-        </span>
-      </Column>
+    <SettingsRow description="Blocked from the connectors list" label={app.name}>
       <Button
         disabled={!canUnblock}
         label="Unblock"
@@ -181,6 +160,6 @@ function SettingsConnectorAppRow(props: SettingsConnectorAppRowProps): JSX.Eleme
         size={32}
         variant="ghost"
       />
-    </li>
+    </SettingsRow>
   )
 }

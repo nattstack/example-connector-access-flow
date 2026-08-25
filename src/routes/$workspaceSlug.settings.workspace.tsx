@@ -1,4 +1,4 @@
-import { Spacer } from "@nattstack/ui"
+import { Column, Spacer } from "@nattstack/ui"
 import { createFileRoute } from "@tanstack/react-router"
 import type { JSX } from "react"
 import { SettingsConnectorApps } from "#/components/pages/settings/settings-connector-apps"
@@ -12,12 +12,12 @@ export const Route = createFileRoute("/$workspaceSlug/settings/workspace")({
     return (
       <>
         <h1 className="text-30">Workspace</h1>
-        <Spacer height={16} />
+        <Spacer height={24} />
 
-        <SettingsWorkspaceName />
-        <Spacer height={16} />
-
-        <SettingsConnectorApps blockedApps={blockedApps} workspaceId={workspaceId} />
+        <Column className="gap-y-32">
+          <SettingsWorkspaceName />
+          <SettingsConnectorApps blockedApps={blockedApps} workspaceId={workspaceId} />
+        </Column>
       </>
     )
   },
