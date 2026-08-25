@@ -233,6 +233,21 @@ function appFilterLabel(filter: AppFilter): string {
   return getConnectorApp(filter)?.name ?? filter
 }
 
+function listConnectorAccessTeams(connector: Connector): Team[] {
+  const ownerTeam = getTeamById(connector.workspaceId, connector.ownerTeamId)
+  const grantedTeams = connector.grantedTeamIds.flatMap((teamId) => {
+    const team = getTeamById(connector.workspaceId, teamId)
+
+    return team === undefined ? [] : [team]
+  })
+
+  if (ownerTeam === undefined) {
+    return grantedTeams
+  }
+
+  return [ownerTeam, ...grantedTeams]
+}
+
 function SettingsConnectorRow(props: SettingsConnectorRowProps): JSX.Element {
   const { connector } = props
   const { workspaceSlug } = useParams({ from: "/$workspaceSlug" })
@@ -271,8 +286,8 @@ function SettingsConnectorRow(props: SettingsConnectorRowProps): JSX.Element {
           {extraAgentCount > 0 && (
             <span
               className="
-                inline-flex h-18 shrink-0 items-center rounded-4 bg-gray-4 px-4
-                text-12 text-text-secondary
+                inline-flex h-[18px] shrink-0 items-center rounded-4 bg-gray-4
+                px-4 text-12 text-text-secondary
               "
             >
               {extraAgentCount === 1 ? "1 agent" : `${String(extraAgentCount)} agents`}
@@ -292,19 +307,4 @@ function SettingsConnectorRow(props: SettingsConnectorRowProps): JSX.Element {
       </td>
     </tr>
   )
-}
-
-function listConnectorAccessTeams(connector: Connector): Team[] {
-  const ownerTeam = getTeamById(connector.workspaceId, connector.ownerTeamId)
-  const grantedTeams = connector.grantedTeamIds.flatMap((teamId) => {
-    const team = getTeamById(connector.workspaceId, teamId)
-
-    return team === undefined ? [] : [team]
-  })
-
-  if (ownerTeam === undefined) {
-    return grantedTeams
-  }
-
-  return [ownerTeam, ...grantedTeams]
 }
