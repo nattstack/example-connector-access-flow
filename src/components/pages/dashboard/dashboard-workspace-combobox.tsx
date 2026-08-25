@@ -22,11 +22,17 @@ import { AvatarWorkspace } from "#/components/avatar-workspace"
 import { DialogCreateWorkspace } from "#/components/pages/dashboard/dialog-create-workspace"
 import { DialogRenameWorkspace } from "#/components/pages/dashboard/dialog-rename-workspace"
 import { listAgentsByWorkspaceId } from "#/data/agents"
-import { createWorkspace, listWorkspaces, renameWorkspace } from "#/data/workspaces"
+import {
+  createWorkspace,
+  listWorkspaces,
+  renameWorkspace,
+  type WorkspaceLogo,
+} from "#/data/workspaces"
 
 interface WorkspaceOption {
   agentCount: number
   label: string
+  logo?: WorkspaceLogo
   value: string
 }
 
@@ -47,6 +53,7 @@ export function DashboardWorkspaceCombobox(): JSX.Element {
       workspaces.map((candidate) => ({
         agentCount: listAgentsByWorkspaceId(candidate.id).length,
         label: candidate.name,
+        logo: candidate.logo,
         value: candidate.slug,
       })),
     [workspaces],
@@ -103,7 +110,7 @@ export function DashboardWorkspaceCombobox(): JSX.Element {
           <ComboboxValue className="flex min-w-0 flex-1" placeholder="Select a workspace">
             {(item: WorkspaceOption) => (
               <Row alignItems="center" className="w-full min-w-0" gap={10}>
-                <AvatarWorkspace name={item.label} size={32} />
+                <AvatarWorkspace logo={item.logo} name={item.label} size={32} />
                 <Column className="min-w-0">
                   <span className="truncate text-14 font-500 text-text-primary">{item.label}</span>
                   <span className="truncate text-12 text-text-secondary">
@@ -122,7 +129,7 @@ export function DashboardWorkspaceCombobox(): JSX.Element {
             {(item: WorkspaceOption) => (
               <ComboboxItem key={item.value} value={item}>
                 <Row className="items-center gap-8">
-                  <AvatarWorkspace name={item.label} />
+                  <AvatarWorkspace logo={item.logo} name={item.label} />
                   <span className="truncate">{item.label}</span>
                 </Row>
               </ComboboxItem>

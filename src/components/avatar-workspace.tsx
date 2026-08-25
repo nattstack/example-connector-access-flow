@@ -1,41 +1,24 @@
+import { SiFigma, SiLinear, SiNotion, SiVercel } from "@icons-pack/react-simple-icons"
 import type { JSX } from "react"
+import type { WorkspaceLogo } from "#/data/workspaces"
 
 interface AvatarWorkspaceProps {
+  logo?: WorkspaceLogo
   name: string
   size?: number
 }
 
-interface FruitAvatar {
-  background: string
-  emoji: string
-}
-
 const SIZE = 16
-const EMOJI_SCALE = 0.75
+const ICON_SCALE = 0.55
 const HASH_PRIME = 31
 const VIEWBOX = "0 0 16 16"
 
-const FRUIT_AVATARS: Record<string, FruitAvatar> = {
-  apple: { background: "#FEE2E2", emoji: "🍎" },
-  banana: { background: "#FEF3C7", emoji: "🍌" },
-  blueberry: { background: "#DBEAFE", emoji: "🫐" },
-  cherries: { background: "#FCE7F3", emoji: "🍒" },
-  cherry: { background: "#FCE7F3", emoji: "🍒" },
-  coconut: { background: "#E7E5E4", emoji: "🥥" },
-  "dragon fruit": { background: "#FCE7F3", emoji: "🐉" },
-  grape: { background: "#EDE9FE", emoji: "🍇" },
-  grapes: { background: "#EDE9FE", emoji: "🍇" },
-  kiwi: { background: "#D1FAE5", emoji: "🥝" },
-  lemon: { background: "#FEF9C3", emoji: "🍋" },
-  mango: { background: "#FFEDD5", emoji: "🥭" },
-  melon: { background: "#D1FAE5", emoji: "🍈" },
-  orange: { background: "#FFEDD5", emoji: "🍊" },
-  peach: { background: "#FFE4E6", emoji: "🍑" },
-  pear: { background: "#ECFCCB", emoji: "🍐" },
-  pineapple: { background: "#FEF3C7", emoji: "🍍" },
-  strawberry: { background: "#FEE2E2", emoji: "🍓" },
-  watermelon: { background: "#D1FAE5", emoji: "🍉" },
-}
+const BRAND_AVATARS = {
+  figma: { Icon: SiFigma, background: "#FDE8E3" },
+  linear: { Icon: SiLinear, background: "#EEEFFB" },
+  notion: { Icon: SiNotion, background: "#F4F4F5" },
+  vercel: { Icon: SiVercel, background: "#F4F4F5" },
+} as const satisfies Record<WorkspaceLogo, { background: string; Icon: typeof SiFigma }>
 
 const GENERATED_PALETTES = [
   ["#DBEAFE", "#60A5FA", "#1D4ED8"],
@@ -49,10 +32,12 @@ const GENERATED_PALETTES = [
 ] as const
 
 export function AvatarWorkspace(props: AvatarWorkspaceProps): JSX.Element {
-  const { name, size = SIZE } = props
-  const fruit = fruitAvatarFromName(name)
+  const { logo, name, size = SIZE } = props
+  const brand = brandAvatarFromWorkspace(logo, name)
 
-  if (fruit !== undefined) {
+  if (brand !== undefined) {
+    const { Icon } = brand
+
     return (
       <span
         aria-hidden
@@ -60,13 +45,12 @@ export function AvatarWorkspace(props: AvatarWorkspaceProps): JSX.Element {
           flex shrink-0 items-center justify-center rounded-4 leading-none
         "
         style={{
-          backgroundColor: fruit.background,
-          fontSize: size * EMOJI_SCALE,
+          backgroundColor: brand.background,
           height: size,
           width: size,
         }}
       >
-        {fruit.emoji}
+        <Icon color="default" size={size * ICON_SCALE} title="" />
       </span>
     )
   }
@@ -74,10 +58,27 @@ export function AvatarWorkspace(props: AvatarWorkspaceProps): JSX.Element {
   return <GeneratedAvatar name={name} size={size} />
 }
 
-function fruitAvatarFromName(name: string): FruitAvatar | undefined {
+function brandAvatarFromWorkspace(
+  logo: undefined | WorkspaceLogo,
+  name: string,
+): (typeof BRAND_AVATARS)[WorkspaceLogo] | undefined {
+  if (logo !== undefined) {
+    return BRAND_AVATARS[logo]
+  }
+
   const normalized = normalizeAvatarName(name)
 
-  return FRUIT_AVATARS[normalized] ?? FRUIT_AVATARS[normalized.split(/[\s-]+/u)[0] ?? ""]
+  if (isWorkspaceLogo(normalized)) {
+    return BRAND_AVATARS[normalized]
+  }
+
+  const firstWord = normalized.split(/[\s-]+/u)[0] ?? ""
+
+  if (isWorkspaceLogo(firstWord)) {
+    return BRAND_AVATARS[firstWord]
+  }
+
+  return undefined
 }
 
 function GeneratedAvatar(props: { name: string; size: number }): JSX.Element {
@@ -105,6 +106,10 @@ function hashName(name: string): number {
   }
 
   return Math.abs(hash)
+}
+
+function isWorkspaceLogo(value: string): value is WorkspaceLogo {
+  return Object.hasOwn(BRAND_AVATARS, value)
 }
 
 function normalizeAvatarName(name: string): string {

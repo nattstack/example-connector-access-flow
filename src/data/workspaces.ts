@@ -1,29 +1,36 @@
 export interface Workspace {
   id: number
+  logo?: WorkspaceLogo
   name: string
   slug: string
 }
 
+export type WorkspaceLogo = "figma" | "linear" | "notion" | "vercel"
+
 const workspaces: Workspace[] = [
   {
     id: 1,
-    name: "Apple (Flow #1)",
-    slug: "apple",
+    logo: "figma",
+    name: "Figma (Flow #1)",
+    slug: "figma",
   },
   {
     id: 2,
-    name: "Banana (Flow #2)",
-    slug: "banana",
+    logo: "linear",
+    name: "Linear (Flow #2)",
+    slug: "linear",
   },
   {
     id: 3,
-    name: "Cherry (Flow #3)",
-    slug: "cherry",
+    logo: "notion",
+    name: "Notion (Flow #3)",
+    slug: "notion",
   },
   {
     id: 4,
-    name: "Grapes (Flow #4)",
-    slug: "Grapes",
+    logo: "vercel",
+    name: "Vercel (Flow #4)",
+    slug: "vercel",
   },
 ]
 
