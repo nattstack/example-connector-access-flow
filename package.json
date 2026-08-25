@@ -9,9 +9,9 @@
     "check:lint": "oxlint",
     "check:lint:fix": "oxlint --fix --fix-suggestions --fix-dangerously",
     "check:type": "tsc --build",
-    "dev": "vite",
+    "dev": "portless connector vite",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "portless connector vite preview"
   },
   "dependencies": {
     "@nattstack/ui": "0.1.2",
@@ -33,6 +33,7 @@
     "lefthook": "2.1.10",
     "oxfmt": "0.62.0",
     "oxlint": "1.76.0",
+    "portless": "0.15.5",
     "tailwindcss": "4.3.3",
     "typescript": "~6.0.2",
     "vite": "8.2.2"
