@@ -20,7 +20,7 @@ export function DashboardSidebar(): JSX.Element {
       "
     >
       {/* Logo */}
-      <Row className="mt-8 ml-8">
+      <Row as="header" className="mt-8 ml-8">
         <LogoLink />
       </Row>
       <Spacer height={8} />

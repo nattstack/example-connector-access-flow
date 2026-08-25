@@ -9,40 +9,58 @@ export const Route = createFileRoute("/dashboard/agents/$agentId")({
     const { agent } = Route.useLoaderData()
 
     return (
-      <Column className="w-full max-w-768">
-        <Spacer height={32} />
-
-        <Row alignItems="center" className="gap-12">
-          <AvatarAgent alt={agent.name} size={40} src={agent.logo} />
-          <h1 className="text-24 font-500 text-text-primary">{agent.name}</h1>
-        </Row>
-
-        <Spacer height={8} />
-
-        <p className="text-14 text-text-secondary">Latest chat from this agent.</p>
-
-        <Spacer height={24} />
-
-        <Column className="rounded-12 border border-border bg-bg-primary p-20">
-          <p className="text-12 font-500 text-text-secondary">Chat</p>
-
-          <Spacer height={8} />
-
-          <p className="text-16 font-500 text-text-primary">{agent.chat}</p>
-        </Column>
-
-        <Spacer height={16} />
-
-        <div
+      <>
+        {/* Header */}
+        <Row
+          as="header"
           className="
-            grid grid-cols-2 gap-16
-            max-1024:grid-cols-1
+            sticky top-0 left-0 isolate z-30 h-44 items-center gap-x-8
+            bg-bg-shell-outer px-16
+            shadow-[inset_0_-1px_0_0_var(--color-border)]
           "
         >
-          <DetailCard label="Created" value={agent.createdAt} />
-          <DetailCard label="Updated" value={agent.updatedAt} />
-        </div>
-      </Column>
+          <AvatarAgent alt={agent.name} size={20} src={agent.logo} />
+          <span className="text-14 font-500 text-text-primary">{agent.name}</span>
+        </Row>
+
+        {/* Content */}
+        <Column className="px-16">
+          <Column className="mx-auto w-full max-w-768">
+            <Spacer height={32} />
+
+            <Row alignItems="center" className="gap-12">
+              <AvatarAgent alt={agent.name} size={40} src={agent.logo} />
+              <h1 className="text-24 font-500 text-text-primary">{agent.name}</h1>
+            </Row>
+
+            <Spacer height={8} />
+
+            <p className="text-14 text-text-secondary">Latest chat from this agent.</p>
+
+            <Spacer height={24} />
+
+            <Column className="rounded-12 border border-border bg-bg-primary p-20">
+              <p className="text-12 font-500 text-text-secondary">Chat</p>
+
+              <Spacer height={8} />
+
+              <p className="text-16 font-500 text-text-primary">{agent.chat}</p>
+            </Column>
+
+            <Spacer height={16} />
+
+            <div
+              className="
+                grid grid-cols-2 gap-16
+                max-1024:grid-cols-1
+              "
+            >
+              <DetailCard label="Created" value={agent.createdAt} />
+              <DetailCard label="Updated" value={agent.updatedAt} />
+            </div>
+          </Column>
+        </Column>
+      </>
     )
   },
   loader: ({ params }) => {

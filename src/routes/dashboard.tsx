@@ -1,4 +1,4 @@
-import { Row } from "@nattstack/ui"
+import { Column, Row } from "@nattstack/ui"
 import { Outlet, createFileRoute } from "@tanstack/react-router"
 import type { JSX } from "react"
 import { DashboardSidebar } from "#/components/pages/dashboard/dashboard-sidebar"
@@ -9,9 +9,9 @@ export const Route = createFileRoute("/dashboard")({
       <Row className="min-h-dvh">
         <DashboardSidebar />
 
-        <Row as="main" className="w-full justify-center px-16">
+        <Column as="main" className="w-full">
           <Outlet />
-        </Row>
+        </Column>
       </Row>
     )
   },
