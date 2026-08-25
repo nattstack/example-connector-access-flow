@@ -1,0 +1,12 @@
+---
+description: Use subagents wherever parallel work would help
+alwaysApply: true
+---
+
+# Use subagents for parallel work
+
+Use subagents wherever parallel work would help.
+
+- Launch multiple Task/explore/shell subagents in one message when searches, investigations, or independent edits can run at the same time.
+- Prefer explore subagents for broad codebase searches instead of sequential Grep/Glob loops.
+- Keep sequential work in the parent agent when later steps depend on earlier results.

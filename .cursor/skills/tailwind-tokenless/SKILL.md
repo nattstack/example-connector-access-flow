@@ -3,7 +3,7 @@ name: tailwind-tokenless
 description: Use the @nattstack/ui tailwind-tokenless-10 design scale when editing Tailwind classes, component styling, layout, spacing, sizing, typography, borders, or CSS in this project.
 ---
 
-# Tailwind Tokenless Scale
+# Tailwind tokenless scale
 
 ## Instructions
 

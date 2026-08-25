@@ -3,7 +3,7 @@ name: nattui-react-components
 description: Use @nattstack/ui React components when building or editing UI, forms, menus, tabs, tooltips, dialogs, layout primitives, and shared controls in this project.
 ---
 
-# Nattstack UI Components
+# Nattstack UI components
 
 ## Instructions
 

@@ -4,7 +4,7 @@ globs: "**/*.{tsx}"
 alwaysApply: false
 ---
 
-# Group Related Declarations
+# Group related declarations
 
 Separate logical groups of related variable declarations with a blank line. Keep declarations in the same group adjacent (no blank line between them).
 

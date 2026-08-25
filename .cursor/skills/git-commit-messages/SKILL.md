@@ -3,7 +3,7 @@ name: git-commit-messages
 description: Generate and review high-quality git commit messages using Conventional Commits and repository history. Use when writing commit messages, reviewing staged changes, preparing commits, or when the user mentions git commit, commit message, Conventional Commits, changelog, or release notes.
 ---
 
-# Git Commit Messages
+# Git commit messages
 
 ## Instructions
 
@@ -23,7 +23,7 @@ When writing a commit message:
 
 Do not run `git commit` unless the user explicitly asks you to create the commit.
 
-## Conventional Commit Format
+## Conventional commit format
 
 Use this structure:
 
@@ -51,7 +51,7 @@ Choose the type by intent:
 
 Use a scope when it adds useful context, such as `auth`, `home`, `todos`, `api`, `ui`, `deps`, or `ci`. Keep scopes short, lowercase, and noun-based.
 
-## Subject Guidelines
+## Subject guidelines
 
 - Target 50 characters when practical; keep it under 72 characters.
 - Start with a lowercase verb after the prefix: `fix(auth): handle expired sessions`.
@@ -60,7 +60,7 @@ Use a scope when it adds useful context, such as `auth`, `home`, `todos`, `api`,
 - Do not end the subject with a period.
 - Describe the externally meaningful outcome when possible.
 
-## Body Guidelines
+## Body guidelines
 
 Use a body when the subject cannot carry the full context. Explain why the change was needed and what behavior changed. Wrap prose around 72 characters.
 
@@ -92,7 +92,7 @@ fix(todos): preserve completed filter on refresh
 Closes #123
 ```
 
-## Output Patterns
+## Output patterns
 
 When the user asks for one commit message, return only the message unless they ask for explanation.
 
@@ -137,7 +137,7 @@ Chore:
 chore(deps): update TanStack packages
 ```
 
-## Quality Checklist
+## Quality checklist
 
 Before finalizing a commit message, verify:
 

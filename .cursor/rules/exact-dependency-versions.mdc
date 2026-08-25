@@ -4,7 +4,7 @@ globs: "**/package.json"
 alwaysApply: false
 ---
 
-# Exact Dependency Versions
+# Exact dependency versions
 
 Pin exact versions when adding or updating dependencies. Never use ranges (`^`, `~`, `>=`, `*`) or `latest`.
 

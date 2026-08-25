@@ -3,7 +3,7 @@ name: spacer-over-margin
 description: Prefer @nattstack/ui Spacer components over Tailwind margin utilities when adding vertical or horizontal spacing between sibling UI elements in this project.
 ---
 
-# Spacer Over Margin
+# Spacer over margin
 
 ## Instructions
 
