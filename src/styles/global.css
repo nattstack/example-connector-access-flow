@@ -11,39 +11,9 @@
 }
 
 body {
-  @apply text-18 leading-1-375 max-1024:text-16;
+  @apply bg-bg-shell-outer text-14 leading-1-5 text-text-primary;
 }
 
 #root {
-  @apply mx-auto flex min-h-svh w-[1126px] max-w-full flex-col border-x border-border text-center;
-}
-
-h1 {
-  @apply my-32 text-60 font-500 tracking-[-1.68px] max-1024:my-20 max-1024:text-36;
-}
-
-h2 {
-  @apply mb-8 text-24 leading-1-125 font-500 tracking-[-0.24px] max-1024:text-20;
-}
-
-code {
-  @apply inline-flex rounded-4 bg-gray-3 px-8 py-4 font-code text-15 leading-1-375 text-text-primary;
-}
-
-@utility ticks {
-  @apply relative w-full;
-
-  &::before,
-  &::after {
-    content: "";
-    @apply absolute top-[-4.5px] border-[5px] border-transparent;
-  }
-
-  &::before {
-    @apply left-0 border-l-border;
-  }
-
-  &::after {
-    @apply right-0 border-r-border;
-  }
+  @apply min-h-svh;
 }

@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@nattstack/ui": "0.1.2",
+    "@tanstack/react-router": "1.170.32",
     "react": "19.2.8",
     "react-dom": "19.2.8"
   },
@@ -22,6 +23,8 @@
     "@babel/core": "7.29.7",
     "@rolldown/plugin-babel": "0.2.3",
     "@tailwindcss/vite": "4.3.3",
+    "@tanstack/react-router-devtools": "1.167.1",
+    "@tanstack/router-plugin": "1.168.35",
     "@types/babel__core": "7.20.5",
     "@types/node": "24.13.3",
     "@types/react": "19.2.18",

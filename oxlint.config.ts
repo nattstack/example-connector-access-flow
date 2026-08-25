@@ -16,7 +16,7 @@ export default defineConfig({
     node: true,
   },
   globals: {},
-  ignorePatterns: ["src/db/migrations", "src/routeTree.gen.ts"],
+  ignorePatterns: ["src/routeTree.gen.ts"],
   jsPlugins: [
     {
       name: "better-tailwindcss",
@@ -25,6 +25,14 @@ export default defineConfig({
     {
       name: "perfectionist",
       specifier: "eslint-plugin-perfectionist",
+    },
+  ],
+  overrides: [
+    {
+      files: ["src/routes/**/$*.tsx"],
+      rules: {
+        "unicorn/filename-case": "allow",
+      },
     },
   ],
   plugins: [
