@@ -2,6 +2,7 @@ import { Column, Row } from "@nattstack/ui"
 import { createFileRoute, notFound } from "@tanstack/react-router"
 import type { JSX } from "react"
 import { AvatarAgent } from "#/components/avatar-agent"
+import { BadgeTeam } from "#/components/badge-team"
 import { AgentChat } from "#/components/pages/dashboard/agent-chat"
 import { AgentComposer } from "#/components/pages/dashboard/agent-composer"
 import { getAgentChatById } from "#/data/agent-chat.ts"
@@ -24,6 +25,7 @@ export const Route = createFileRoute("/$workspaceSlug/agents/$agentId")({
         >
           <AvatarAgent alt={agent.name} size={20} src={agent.avatar} />
           <span className="text-14 font-500 text-text-primary">{agent.name}</span>
+          {agent.team && <BadgeTeam team={agent.team} />}
         </Row>
 
         {/* Content */}

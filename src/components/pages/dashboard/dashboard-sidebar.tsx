@@ -2,6 +2,7 @@ import { Column, Row, Spacer } from "@nattstack/ui"
 import { Link, useParams, useRouteContext } from "@tanstack/react-router"
 import type { JSX } from "react"
 import { AvatarAgent } from "#/components/avatar-agent"
+import { BadgeTeam } from "#/components/badge-team"
 import { LogoLink } from "#/components/logo-link"
 import { DashboardWorkspaceCombobox } from "#/components/pages/dashboard/dashboard-workspace-combobox"
 import { listAgentsByWorkspaceId, type Agent } from "#/data/agents"
@@ -78,14 +79,7 @@ function LinkAgent(props: LinkAgentProps): JSX.Element {
         <Row className="min-w-0 items-center">
           {agent.team && (
             <>
-              <span
-                className="
-                  flex h-[18px] shrink-0 items-center rounded-4 bg-gray-4 px-4
-                  text-12 text-text-secondary
-                "
-              >
-                {agent.team}
-              </span>
+              <BadgeTeam team={agent.team} />
               <Spacer width={6} />
             </>
           )}
