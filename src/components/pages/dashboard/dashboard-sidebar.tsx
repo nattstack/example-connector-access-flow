@@ -43,6 +43,7 @@ function LinkAgent(props: LinkAgentProps): JSX.Element {
       activeProps={{ className: "bg-gray-3" }}
       className="
         flex h-56 w-full shrink-0 items-center gap-x-8 rounded-8 px-8
+        select-none
         hover:bg-gray-3
       "
       params={{ agentId: agent.id }}

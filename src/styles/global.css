@@ -9,6 +9,9 @@
   --font-body: body, sans-serif;
   --font-code: code, monospace;
   --font-heading: heading, serif;
+
+  --color-code: var(--color-primitive-red-11);
+  --color-code-bg: var(--color-primitive-red-3);
 }
 
 @font-face {

@@ -14,7 +14,8 @@ export function AvatarAgent(props: AvatarAgentProps): JSX.Element {
   return (
     <img
       alt={alt}
-      className="shrink-0 rounded-full object-cover"
+      className="shrink-0 rounded-full object-cover select-none"
+      draggable={false}
       src={src}
       style={{
         height: size,
