@@ -291,8 +291,8 @@ function SettingsConnectorRow(props: SettingsConnectorRowProps): JSX.Element {
           {blocked && (
             <span
               className="
-                inline-flex h-24 shrink-0 items-center rounded-6 bg-gray-4 px-8
-                text-12 font-500 text-text-secondary
+                flex h-[18px] shrink-0 items-center rounded-4 bg-gray-4 px-4
+                text-12 text-text-secondary
               "
             >
               Blocked

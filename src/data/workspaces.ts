@@ -1,3 +1,5 @@
+import { isCurrentUserWorkspaceAdmin } from "#/data/members"
+
 export interface Workspace {
   id: number
   logo?: WorkspaceLogo
@@ -57,6 +59,10 @@ export function renameWorkspace(workspaceSlug: string, name: string): Workspace 
 
   if (workspace === undefined) {
     throw new Error(`Expected workspace ${workspaceSlug}`)
+  }
+
+  if (!isCurrentUserWorkspaceAdmin(workspace.id)) {
+    throw new Error("Only workspace admins can edit this workspace")
   }
 
   workspace.name = name
