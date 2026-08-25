@@ -6,6 +6,7 @@ export interface Agent {
   name: string
   team?: string
   updatedAt: string
+  workspaceId: number
 }
 
 export const MOCK_AGENTS: Agent[] = [
@@ -17,6 +18,7 @@ export const MOCK_AGENTS: Agent[] = [
     name: "Email summary",
     team: "Operations",
     updatedAt: "2026-08-25T01:10:00",
+    workspaceId: 1,
   },
   {
     avatar: "/avatars/bear.webp",
@@ -25,6 +27,7 @@ export const MOCK_AGENTS: Agent[] = [
     id: 1,
     name: "Daily priority bot",
     updatedAt: "2026-08-25T00:57:00",
+    workspaceId: 1,
   },
   {
     avatar: "/avatars/headphones.webp",
@@ -33,6 +36,7 @@ export const MOCK_AGENTS: Agent[] = [
     id: 2,
     name: "Summarize podcasts",
     updatedAt: "2026-08-21T16:48:00",
+    workspaceId: 2,
   },
   {
     avatar: "/avatars/mailbox.webp",
@@ -42,6 +46,7 @@ export const MOCK_AGENTS: Agent[] = [
     name: "Email responding",
     team: "Operations",
     updatedAt: "2026-08-20T18:22:00",
+    workspaceId: 1,
   },
   {
     avatar: "/avatars/raccoon.webp",
@@ -51,6 +56,7 @@ export const MOCK_AGENTS: Agent[] = [
     name: "Github fixer",
     team: "Engineering",
     updatedAt: "2026-08-20T17:05:00",
+    workspaceId: 2,
   },
   {
     avatar: "/avatars/paintbrush.webp",
@@ -59,6 +65,7 @@ export const MOCK_AGENTS: Agent[] = [
     id: 5,
     name: "Design portfolio analysis",
     updatedAt: "2026-08-20T15:41:00",
+    workspaceId: 3,
   },
   {
     avatar: "/avatars/cat.webp",
@@ -67,6 +74,7 @@ export const MOCK_AGENTS: Agent[] = [
     id: 6,
     name: "Virtual assistant bot",
     updatedAt: "2026-08-20T14:09:00",
+    workspaceId: 3,
   },
   {
     avatar: "/avatars/robot.webp",
@@ -76,6 +84,7 @@ export const MOCK_AGENTS: Agent[] = [
     name: "UI bot",
     team: "Design",
     updatedAt: "2026-08-20T12:33:00",
+    workspaceId: 3,
   },
   {
     avatar: "/avatars/owl.webp",
@@ -85,6 +94,7 @@ export const MOCK_AGENTS: Agent[] = [
     name: "Product research",
     team: "Product",
     updatedAt: "2026-08-20T11:27:00",
+    workspaceId: 4,
   },
   {
     avatar: "/avatars/magnifying-glass.webp",
@@ -94,6 +104,7 @@ export const MOCK_AGENTS: Agent[] = [
     name: "Competitor analysis",
     team: "Product",
     updatedAt: "2026-08-20T10:16:00",
+    workspaceId: 4,
   },
   {
     avatar: "/avatars/rocket.webp",
@@ -103,19 +114,18 @@ export const MOCK_AGENTS: Agent[] = [
     name: "GTM bot",
     team: "Marketing",
     updatedAt: "2026-08-20T09:44:00",
+    workspaceId: 4,
   },
 ]
 
-export function getAgentById(agentId: number): Agent | undefined {
-  return MOCK_AGENTS.find((agent) => agent.id === agentId)
+export function getAgentById(workspaceId: number, agentId: number): Agent | undefined {
+  return MOCK_AGENTS.find((agent) => agent.id === agentId && agent.workspaceId === workspaceId)
 }
 
-export function getFirstAgent(): Agent {
-  const [agent] = MOCK_AGENTS
+export function getFirstAgent(workspaceId: number): Agent | undefined {
+  return listAgentsByWorkspaceId(workspaceId)[0]
+}
 
-  if (agent === undefined) {
-    throw new Error("Expected at least one mock agent")
-  }
-
-  return agent
+export function listAgentsByWorkspaceId(workspaceId: number): Agent[] {
+  return MOCK_AGENTS.filter((agent) => agent.workspaceId === workspaceId)
 }

@@ -1,10 +1,10 @@
 import { Column, Row, Spacer } from "@nattstack/ui"
-import { Link, useParams } from "@tanstack/react-router"
+import { Link, useParams, useRouteContext } from "@tanstack/react-router"
 import type { JSX } from "react"
 import { AvatarAgent } from "#/components/avatar-agent"
 import { LogoLink } from "#/components/logo-link"
 import { DashboardWorkspaceCombobox } from "#/components/pages/dashboard/dashboard-workspace-combobox"
-import { MOCK_AGENTS, type Agent } from "#/data/agents"
+import { listAgentsByWorkspaceId, type Agent } from "#/data/agents"
 import { formatRelativeTimestamp } from "#/utils/date"
 
 interface LinkAgentProps {
@@ -12,6 +12,10 @@ interface LinkAgentProps {
 }
 
 export function DashboardSidebar(): JSX.Element {
+  const { workspace } = useRouteContext({ from: "/$workspaceSlug" })
+
+  const agents = listAgentsByWorkspaceId(workspace.id)
+
   return (
     <Column
       as="aside"
@@ -33,7 +37,7 @@ export function DashboardSidebar(): JSX.Element {
 
       {/* Agents */}
       <Column as="nav" className="gap-y-4 overflow-y-auto px-8">
-        {MOCK_AGENTS.map((agent) => (
+        {agents.map((agent) => (
           <LinkAgent agent={agent} key={agent.id} />
         ))}
       </Column>

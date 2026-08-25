@@ -36,9 +36,11 @@ export const Route = createFileRoute("/$workspaceSlug/agents/$agentId")({
       </>
     )
   },
-  loader: ({ params }) => {
+  loader: ({ context, params }) => {
     const agentId = Number(params.agentId)
-    const agent = Number.isInteger(agentId) ? getAgentById(agentId) : undefined
+    const agent = Number.isInteger(agentId)
+      ? getAgentById(context.workspace.id, agentId)
+      : undefined
 
     if (agent === undefined) {
       throw notFound()
