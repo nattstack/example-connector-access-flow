@@ -24,7 +24,7 @@ export function DashboardSidebarLink(props: DashboardSidebarLinkProps): JSX.Elem
       activeProps={{ className: "bg-gray-3 text-text-primary" }}
       className="
         flex h-36 w-full shrink-0 cursor-pointer items-center overflow-hidden
-        rounded-8 px-8 select-none
+        rounded-8 px-8 text-text-secondary select-none
         hover:bg-gray-3 hover:text-text-primary
       "
       params={{ workspaceSlug }}
