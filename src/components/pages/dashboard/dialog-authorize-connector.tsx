@@ -165,11 +165,13 @@ export function DialogAuthorizeConnector(props: DialogAuthorizeConnectorProps): 
   )
 }
 
-function IconCheck(): JSX.Element {
+function IconCheck(props: { className?: string }): JSX.Element {
+  const { className = "size-12" } = props
+
   return (
     <svg
       aria-hidden="true"
-      className="size-12"
+      className={className}
       fill="none"
       viewBox="0 0 16 16"
       xmlns="http://www.w3.org/2000/svg"
@@ -212,10 +214,24 @@ function PermissionOption(props: {
         type="radio"
         value={value}
       />
-      <p className="text-14 font-500 text-text-primary">{label}</p>
-      <Spacer height={4} />
+      <Row alignItems="center" className="justify-between">
+        <Column className="min-w-0">
+          <p className="text-14 font-500 text-text-primary">{label}</p>
+          <Spacer height={4} />
 
-      <p className="text-13 text-text-secondary">{description}</p>
+          <p className="text-13 text-text-secondary">{description}</p>
+        </Column>
+
+        {checked && (
+          <>
+            <Spacer width={12} />
+
+            <span className="shrink-0 text-text-primary">
+              <IconCheck className="size-16" />
+            </span>
+          </>
+        )}
+      </Row>
     </label>
   )
 }
