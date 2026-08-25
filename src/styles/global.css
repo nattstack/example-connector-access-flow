@@ -2,6 +2,7 @@
 @import "@nattstack/ui/tailwind-colors";
 @import "@nattstack/ui/tailwind-tokenless-10";
 @import "@nattstack/ui/baseline";
+@import "@nattstack/ui/components";
 
 @theme {
   --font-\*: initial;
