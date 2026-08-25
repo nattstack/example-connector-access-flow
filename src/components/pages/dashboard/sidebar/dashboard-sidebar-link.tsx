@@ -12,9 +12,11 @@ interface DashboardSidebarLinkProps {
 type DashboardSidebarLinkTo =
   | "/$workspaceSlug"
   | "/$workspaceSlug/settings/account"
+  | "/$workspaceSlug/settings/members"
   | "/$workspaceSlug/settings/profile"
   | "/$workspaceSlug/settings/security"
   | "/$workspaceSlug/settings/teams"
+  | "/$workspaceSlug/settings/workspace"
 
 export function DashboardSidebarLink(props: DashboardSidebarLinkProps): JSX.Element {
   const { exact = true, icon, label, to } = props

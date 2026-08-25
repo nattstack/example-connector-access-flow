@@ -1,4 +1,4 @@
-export const ICON_SIZE = 20
+export const ICON_SIZE = 18
 
 export const ANIMATION_DIRECTION_BACK = -1
 export const ANIMATION_DIRECTION_FORWARD = 1

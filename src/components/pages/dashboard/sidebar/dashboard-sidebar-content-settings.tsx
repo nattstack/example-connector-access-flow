@@ -1,7 +1,9 @@
 import {
   IconArrowLeftOutline18,
   IconGearOutline18,
+  IconGridLayoutOutline18,
   IconShieldOutline18,
+  IconUserGroupOutline18,
   IconUserOutline18,
   IconUsersOutline18,
 } from "@nattstack/icons"
@@ -13,6 +15,7 @@ import {
   ANIMATION_DIRECTION_FORWARD,
   ICON_SIZE,
 } from "#/components/pages/dashboard/sidebar/dashboard-sidebar-content-constants"
+import { DashboardSidebarLabel } from "#/components/pages/dashboard/sidebar/dashboard-sidebar-label"
 import { DashboardSidebarLink } from "#/components/pages/dashboard/sidebar/dashboard-sidebar-link"
 
 interface DashboardSidebarContentSettingsProps extends Pick<ComponentProps<"div">, "ref"> {}
@@ -41,10 +44,28 @@ export function DashboardSidebarContentSettings(
         />
         <Spacer height={8} />
 
+        <DashboardSidebarLabel label="Personal" />
+        <Spacer height={8} />
+
         <DashboardSidebarLink
           icon={<IconUserOutline18 size={ICON_SIZE} />}
           label="Profile"
           to="/$workspaceSlug/settings/profile"
+        />
+        <DashboardSidebarLink
+          icon={<IconGearOutline18 size={ICON_SIZE} />}
+          label="Account"
+          to="/$workspaceSlug/settings/account"
+        />
+        <Spacer height={16} />
+
+        <DashboardSidebarLabel label="Administration" />
+        <Spacer height={8} />
+
+        <DashboardSidebarLink
+          icon={<IconGridLayoutOutline18 size={ICON_SIZE} />}
+          label="Workspace"
+          to="/$workspaceSlug/settings/workspace"
         />
         <DashboardSidebarLink
           exact={false}
@@ -53,14 +74,14 @@ export function DashboardSidebarContentSettings(
           to="/$workspaceSlug/settings/teams"
         />
         <DashboardSidebarLink
+          icon={<IconUserGroupOutline18 size={ICON_SIZE} />}
+          label="Members"
+          to="/$workspaceSlug/settings/members"
+        />
+        <DashboardSidebarLink
           icon={<IconShieldOutline18 size={ICON_SIZE} />}
           label="Security"
           to="/$workspaceSlug/settings/security"
-        />
-        <DashboardSidebarLink
-          icon={<IconGearOutline18 size={ICON_SIZE} />}
-          label="Account"
-          to="/$workspaceSlug/settings/account"
         />
       </Column>
     </motion.div>
