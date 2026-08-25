@@ -655,36 +655,16 @@ export function getAgentRequestAccessReply(agentId: string): ChatItem[] {
 
   return [
     {
-      content: ["Sent. Alex will get a request to unblock Gmail on Company support."],
+      content: [
+        "Sent. A workspace admin will get a request to update the policy and unblock Gmail.",
+      ],
       id: "21-agent-requested",
       role: "agent",
       type: "message",
     },
     {
-      content: ["I can't clear anything until they approve. Here's the last 24 hours read-only."],
-      id: "21-agent-read-only",
-      role: "agent",
-      type: "message",
-    },
-    {
-      content: [
-        "On a clock: Acme can't ship after the 1.4 rollout — they left a thread on ",
-        { href: "https://vercel.com", text: "the failed deploy", type: "link" },
-        ". Priya says the billing portal is looping people back to login. Legal wants a yes on the ",
-        { href: "https://docs.google.com", text: "DPA", type: "link" },
-        " before Friday.",
-      ],
-      id: "21-agent-on-a-clock",
-      role: "agent",
-      type: "message",
-    },
-    {
-      content: [
-        "Still sitting in the inbox: 4 Google security alerts to ",
-        { href: "mailto:sam@example.com", text: "sam@example.com", type: "link" },
-        ", TLDR, and a Substack. Press and legal were quiet. Product inbox only has a Linear ping you already saw.",
-      ],
-      id: "21-agent-the-rest",
+      content: ["I can't use Company support until they change it."],
+      id: "21-agent-waiting",
       role: "agent",
       type: "message",
     },
@@ -695,30 +675,30 @@ export function getAgentSendReply(agentId: string): ChatItem[] {
   if (agentId === "c8e4a1b0-3d72-4f19-8a56-2b9c0e7d4f31") {
     return [
       {
-        content: ["On it. Checking Company support for anything from the last 24 hours."],
+        content: ["I can't get into Company support. The connection is blocked."],
         id: "21-agent-on-it",
         role: "agent",
         type: "message",
       },
       {
         content: [
-          "Gmail is already connected: Company support, press, legal, business, and Product inbox. Workspace policy has Gmail blocked, so I can't use any of them.",
+          "Company support is connected, but Gmail is blocked by workspace policy. I can't read or delete anything until an admin updates it.",
         ],
         id: "21-agent-existing-gmail",
         role: "agent",
         type: "message",
       },
       {
-        content: ["Request access on the card and I'll ping Alex to unblock Gmail."],
+        content: ["Contact an admin on the card and ask them to update the policy."],
         id: "21-agent-need-delete",
         role: "agent",
         type: "message",
       },
       {
         action: "request",
-        actionLabel: "Request Access",
+        actionLabel: "Contact admin",
         appId: "gmail",
-        description: "Blocked by workspace policy",
+        description: "Connection blocked · Ask an admin to update the policy",
         id: "21-connect-gmail",
         title: "Company support",
         type: "connect",
