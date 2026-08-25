@@ -7,11 +7,12 @@ import { AgentChat } from "#/components/pages/dashboard/agent-chat"
 import { AgentComposer } from "#/components/pages/dashboard/agent-composer"
 import { getAgentChatById } from "#/data/agent-chat.ts"
 import { getAgentById } from "#/data/agents.ts"
+import { listConnectorsForAgent } from "#/data/connectors"
 import { RouteAgentHead } from "#/routes/-route-agent-head"
 
 export const Route = createFileRoute("/$workspaceSlug/agents/$agentId")({
   component: function AgentDetailPage(): JSX.Element {
-    const { agent, chat } = Route.useLoaderData()
+    const { agent, chat, connectors } = Route.useLoaderData()
 
     return (
       <>
@@ -35,7 +36,7 @@ export const Route = createFileRoute("/$workspaceSlug/agents/$agentId")({
         </Column>
 
         {/* Composer */}
-        <AgentComposer />
+        <AgentComposer connectors={connectors} />
       </>
     )
   },
@@ -47,6 +48,10 @@ export const Route = createFileRoute("/$workspaceSlug/agents/$agentId")({
       throw notFound()
     }
 
-    return { agent, chat: getAgentChatById(agent.id) }
+    return {
+      agent,
+      chat: getAgentChatById(agent.id),
+      connectors: listConnectorsForAgent(context.workspace.id, agent),
+    }
   },
 })

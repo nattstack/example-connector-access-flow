@@ -2,6 +2,7 @@ import {
   IconArrowLeftOutline18,
   IconGearOutline18,
   IconGridLayoutOutline18,
+  IconPlugOutline18,
   IconShieldOutline18,
   IconUserGroupOutline18,
   IconUserOutline18,
@@ -63,10 +64,15 @@ export function DashboardSidebarContentSettings(
         <DashboardSidebarLabel label="Administration" />
 
         <DashboardSidebarLink
-          disabled
           icon={<IconGridLayoutOutline18 size={ICON_SIZE} />}
           label="Workspace"
           to="/$workspaceSlug/settings/workspace"
+        />
+        <DashboardSidebarLink
+          exact={false}
+          icon={<IconPlugOutline18 size={ICON_SIZE} />}
+          label="Connectors"
+          to="/$workspaceSlug/settings/connectors"
         />
         <DashboardSidebarLink
           exact={false}

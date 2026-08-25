@@ -507,7 +507,9 @@ const CHAT_EMAIL_SUMMARY: ChatItem[] = [
     type: "message",
   },
   {
-    content: ["47 unread. 6 need a reply, 4 are FYI, the rest is noise or already handled."],
+    content: [
+      "I used Gmail · Read on the Operations inbox. 47 unread. 6 need a reply, 4 are FYI, the rest is noise or already handled.",
+    ],
     id: "11-agent-count",
     role: "agent",
     type: "message",

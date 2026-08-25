@@ -13,6 +13,7 @@ interface DashboardSidebarLinkProps {
 type DashboardSidebarLinkTo =
   | "/$workspaceSlug"
   | "/$workspaceSlug/settings/account"
+  | "/$workspaceSlug/settings/connectors"
   | "/$workspaceSlug/settings/members"
   | "/$workspaceSlug/settings/profile"
   | "/$workspaceSlug/settings/security"

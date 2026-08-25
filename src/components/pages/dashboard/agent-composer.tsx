@@ -1,10 +1,19 @@
 import { Column, IconButton, Row, Spacer, Textarea } from "@nattstack/ui"
 import type { JSX } from "react"
+import { AvatarConnector } from "#/components/avatar-connector"
+import { formatConnectorTitle, type Connector } from "#/data/connectors"
 
+interface AgentComposerProps {
+  connectors: Connector[]
+}
+
+const CHIP_AVATAR_SIZE = 14
 const ICON_SIZE = 16
 const ICON_STROKE_WIDTH = 1.6
 
-export function AgentComposer(): JSX.Element {
+export function AgentComposer(props: AgentComposerProps): JSX.Element {
+  const { connectors } = props
+
   return (
     <Column className="shrink-0 px-16 pb-16">
       <Column
@@ -26,10 +35,32 @@ export function AgentComposer(): JSX.Element {
 
         <Spacer height={12} />
 
-        <Row justifyContent="flex-end">
+        <Row className="items-end justify-end">
+          {connectors.length > 0 && (
+            <>
+              <Row className="min-w-0 flex-1 flex-wrap items-center" gap={6}>
+                {connectors.map((connector) => (
+                  <span
+                    className="
+                      inline-flex h-24 max-w-full items-center rounded-6
+                      bg-gray-3 px-8 text-12 font-500 text-text-secondary
+                    "
+                    key={connector.id}
+                  >
+                    <AvatarConnector appId={connector.appId} size={CHIP_AVATAR_SIZE} />
+                    <Spacer width={6} />
+
+                    <span className="truncate">{formatConnectorTitle(connector)}</span>
+                  </span>
+                ))}
+              </Row>
+              <Spacer width={8} />
+            </>
+          )}
+
           <IconButton
             aria-label="Send message"
-            className="bg-primary text-gray-1"
+            className="shrink-0 bg-primary text-gray-1"
             icon={<IconArrowUp />}
             rounded
             size={32}

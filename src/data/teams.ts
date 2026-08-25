@@ -72,6 +72,10 @@ const MOCK_TEAMS: Team[] = [
   },
 ]
 
+export function getTeamById(workspaceId: number, teamId: string): Team | undefined {
+  return MOCK_TEAMS.find((team) => team.workspaceId === workspaceId && team.id === teamId)
+}
+
 export function getTeamBySlug(workspaceId: number, teamSlug: string): Team | undefined {
   return MOCK_TEAMS.find((team) => team.workspaceId === workspaceId && team.slug === teamSlug)
 }
