@@ -1,6 +1,7 @@
 import { Column, Row, Spacer } from "@nattstack/ui"
 import { Link, type LinkComponentProps } from "@tanstack/react-router"
 import type { JSX } from "react"
+import { AgentAvatar } from "#/components/agent-avatar"
 import { LogoLink } from "#/components/logo-link"
 import { MOCK_AGENTS, type Agent } from "#/data/agents"
 
@@ -54,8 +55,7 @@ function LinkAgent(props: LinkAgentProps): JSX.Element {
       params={{ agentId: agent.id }}
       to="/dashboard/agents/$agentId"
     >
-      {/* Avatar */}
-      <Row className="aspect-1-1 h-40 rounded-full bg-gray-4" />
+      <AgentAvatar seed={agent.id} />
 
       <Column className="w-full min-w-0">
         {/* Name */}

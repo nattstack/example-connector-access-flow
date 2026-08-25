@@ -6,13 +6,44 @@
 
 @theme {
   --font-\*: initial;
-  --font-body: system-ui, "Segoe UI", Roboto, sans-serif;
-  --font-code: ui-monospace, Consolas, monospace;
-  --font-heading: system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-body: body, sans-serif;
+  --font-code: code, monospace;
+  --font-heading: heading, serif;
+}
+
+@font-face {
+  font-display: swap;
+  font-family: body;
+  font-style: normal;
+  font-weight: 100 900;
+  src: url("/fonts/body.woff2") format("woff2");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: code;
+  font-style: normal;
+  font-weight: 400;
+  src: url("/fonts/code.woff2") format("woff2");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: heading;
+  font-style: normal;
+  font-weight: 100 900;
+  src: url("/fonts/body.woff2") format("woff2");
 }
 
 body {
   @apply bg-bg-shell-outer text-14 leading-1-5 text-text-primary;
+
+  /*
+      calt: Contextual alternates
+      cv01: Alternate one
+      cv05: Lower-case L with tail
+  */
+  font-feature-settings: "calt", "cv01", "cv05";
 }
 
 #root {
