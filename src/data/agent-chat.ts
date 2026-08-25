@@ -646,12 +646,20 @@ const MOCK_AGENT_CHATS: Record<string, ChatItem[]> = {
   "fdf33ec7-4f10-4865-8b53-f8f55115f65c": CHAT_EMAIL_RESPONDING,
 }
 
+const CHAT_PLACEHOLDER: ChatItem[] = [
+  {
+    id: "placeholder-meta",
+    text: "Tue, Aug 25 12:40 AM",
+    type: "meta",
+  },
+  {
+    content: ["Hey. What should we work on?"],
+    id: "placeholder-hello",
+    role: "agent",
+    type: "message",
+  },
+]
+
 export function getAgentChatById(agentId: string): ChatItem[] {
-  const chat = MOCK_AGENT_CHATS[agentId]
-
-  if (chat === undefined) {
-    throw new Error(`Expected mock chat for agent ${agentId}`)
-  }
-
-  return chat
+  return MOCK_AGENT_CHATS[agentId] ?? CHAT_PLACEHOLDER
 }

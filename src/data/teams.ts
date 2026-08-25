@@ -22,6 +22,13 @@ const MOCK_TEAMS: Team[] = [
     workspaceId: 1,
   },
   {
+    description: "File reviews, component audits, and design-system support.",
+    id: "7955dd9a-c8f4-4faf-9103-a054ed33789e",
+    name: "Design",
+    slug: "design",
+    workspaceId: 1,
+  },
+  {
     description: "Code changes, reviews, and repository maintenance.",
     id: "b4e2d9f3-5c8e-4f02-ad3b-2e7c9e1f4b22",
     name: "Engineering",
@@ -29,10 +36,24 @@ const MOCK_TEAMS: Team[] = [
     workspaceId: 2,
   },
   {
+    description: "Specs, cycles, and roadmap planning.",
+    id: "a9361bc3-4c13-4ad2-a242-c861b085560d",
+    name: "Product",
+    slug: "product",
+    workspaceId: 2,
+  },
+  {
     description: "Visual work, UI reviews, and design support.",
     id: "c5f3e0a4-6d9f-4013-be4c-3f8d0f2a5c33",
     name: "Design",
     slug: "design",
+    workspaceId: 3,
+  },
+  {
+    description: "Wiki upkeep, recaps, and day-to-day coordination.",
+    id: "cac5d6b9-444d-4f69-973a-04a0fd2781df",
+    name: "Operations",
+    slug: "operations",
     workspaceId: 3,
   },
   {
