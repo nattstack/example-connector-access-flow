@@ -45,7 +45,6 @@ export function DashboardSidebarContentSettings(
         <Spacer height={8} />
 
         <DashboardSidebarLabel label="Personal" />
-        <Spacer height={8} />
 
         <DashboardSidebarLink
           icon={<IconUserOutline18 size={ICON_SIZE} />}
@@ -60,7 +59,6 @@ export function DashboardSidebarContentSettings(
         <Spacer height={16} />
 
         <DashboardSidebarLabel label="Administration" />
-        <Spacer height={8} />
 
         <DashboardSidebarLink
           icon={<IconGridLayoutOutline18 size={ICON_SIZE} />}
