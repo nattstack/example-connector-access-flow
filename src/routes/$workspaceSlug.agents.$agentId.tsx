@@ -6,14 +6,14 @@ import { BadgeTeam } from "#/components/badge-team"
 import { AgentChat } from "#/components/pages/dashboard/agent-chat"
 import { AgentComposer } from "#/components/pages/dashboard/agent-composer"
 import {
-  getAgentAuthorizeDeniedReply,
   getAgentAuthorizeReply,
   getAgentChatById,
+  getAgentRequestAccessReply,
   getAgentSendReply,
   type ChatItem,
 } from "#/data/agent-chat.ts"
 import { getAgentById } from "#/data/agents.ts"
-import { addConnector, grantConnectorScopes } from "#/data/connectors.ts"
+import { addConnector } from "#/data/connectors.ts"
 import { RouteAgentHead } from "#/routes/-route-agent-head"
 
 export const Route = createFileRoute("/$workspaceSlug/agents/$agentId")({
@@ -38,27 +38,16 @@ export const Route = createFileRoute("/$workspaceSlug/agents/$agentId")({
         return
       }
 
-      if (agent.id === "d28c5b88-901f-4df0-b5b1-c6b9cab1b420") {
-        addConnector({
-          appId: "gmail",
-          label: "Connected inbox",
-          scopeIds,
-          workspaceId: agent.workspaceId,
-        })
-      } else if (agent.id === "c8e4a1b0-3d72-4f19-8a56-2b9c0e7d4f31") {
-        if (!scopeIds.includes("delete")) {
-          setItems((current) => [...current, ...getAgentAuthorizeDeniedReply(agent.id)])
-          return
-        }
-
-        grantConnectorScopes({
-          connectorId: "682b4e5c-07a9-441d-38bf-c57f81a3d4cb",
-          scopeIds,
-          workspaceId: agent.workspaceId,
-        })
-      } else {
+      if (agent.id !== "d28c5b88-901f-4df0-b5b1-c6b9cab1b420") {
         return
       }
+
+      addConnector({
+        appId: "gmail",
+        label: "Connected inbox",
+        scopeIds,
+        workspaceId: agent.workspaceId,
+      })
 
       await router.invalidate()
 
@@ -77,6 +66,28 @@ export const Route = createFileRoute("/$workspaceSlug/agents/$agentId")({
         })
 
         return [...next, ...getAgentAuthorizeReply(agent.id)]
+      })
+    }
+
+    function onRequestAccess(itemId: string): void {
+      if (items.some((item) => item.type === "connect" && item.status === "requested")) {
+        return
+      }
+
+      setItems((current) => {
+        const next = current.map((item) => {
+          if (item.id !== itemId || item.type !== "connect") {
+            return item
+          }
+
+          return {
+            ...item,
+            actionLabel: "Requested",
+            status: "requested" as const,
+          }
+        })
+
+        return [...next, ...getAgentRequestAccessReply(agent.id)]
       })
     }
 
@@ -115,7 +126,12 @@ export const Route = createFileRoute("/$workspaceSlug/agents/$agentId")({
 
         {/* Content */}
         <Column className="min-h-0 flex-1 overflow-y-auto" ref={scrollRef}>
-          <AgentChat items={items} key={agent.id} onAuthorize={onAuthorize} />
+          <AgentChat
+            items={items}
+            key={agent.id}
+            onAuthorize={onAuthorize}
+            onRequestAccess={onRequestAccess}
+          />
         </Column>
 
         {/* Composer */}

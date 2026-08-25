@@ -13,12 +13,13 @@ const ICON_STROKE_WIDTH = 1.6
 interface AgentChatProps {
   items: ChatItem[]
   onAuthorize?: (itemId: string, scopeIds: string[]) => void
+  onRequestAccess?: (itemId: string) => void
 }
 
 type ChatSide = "agent" | "meta" | "user"
 
 export function AgentChat(props: AgentChatProps): JSX.Element {
-  const { items, onAuthorize } = props
+  const { items, onAuthorize, onRequestAccess } = props
 
   return (
     <Column className="px-16">
@@ -33,7 +34,7 @@ export function AgentChat(props: AgentChatProps): JSX.Element {
             <Fragment key={item.id}>
               {gap > 0 && <Spacer height={gap} />}
 
-              <ChatEntry item={item} onAuthorize={onAuthorize} />
+              <ChatEntry item={item} onAuthorize={onAuthorize} onRequestAccess={onRequestAccess} />
             </Fragment>
           )
         })}
@@ -112,10 +113,13 @@ function ChatChoice(props: { item: Extract<ChatItem, { type: "choice" }> }): JSX
 function ChatConnect(props: {
   item: Extract<ChatItem, { type: "connect" }>
   onAuthorize?: (itemId: string, scopeIds: string[]) => void
+  onRequestAccess?: (itemId: string) => void
 }): JSX.Element {
-  const { item, onAuthorize } = props
+  const { item, onAuthorize, onRequestAccess } = props
   const [isAuthorizeOpen, setIsAuthorizeOpen] = useState(false)
   const isAdded = item.status === "added"
+  const isRequested = item.status === "requested"
+  const isRequest = item.action === "request"
 
   return (
     <>
@@ -139,39 +143,30 @@ function ChatConnect(props: {
           </Column>
         </Row>
 
-        {isAdded ? (
-          <Row
-            alignItems="center"
-            className="
-              shrink-0 rounded-full bg-success/15 px-8 py-4 text-success
-            "
-          >
-            <IconCheck />
+        <ConnectStatus
+          actionLabel={item.actionLabel}
+          isAdded={isAdded}
+          isRequested={isRequested}
+          onAction={() => {
+            if (isRequest) {
+              onRequestAccess?.(item.id)
+              return
+            }
 
-            <Spacer width={4} />
-
-            <span className="text-12 font-500">Added</span>
-          </Row>
-        ) : (
-          <Button
-            className="shrink-0"
-            label={item.actionLabel}
-            onClick={() => setIsAuthorizeOpen(true)}
-            rounded
-            size={32}
-            type="button"
-            variant="secondary"
-          />
-        )}
+            setIsAuthorizeOpen(true)
+          }}
+        />
       </Row>
 
-      <DialogAuthorizeConnector
-        appId={item.appId}
-        description={item.dialogDescription}
-        isOpen={isAuthorizeOpen}
-        onAuthorize={(scopeIds) => onAuthorize?.(item.id, scopeIds)}
-        onIsOpenChange={setIsAuthorizeOpen}
-      />
+      {isRequest ? undefined : (
+        <DialogAuthorizeConnector
+          appId={item.appId}
+          description={item.dialogDescription}
+          isOpen={isAuthorizeOpen}
+          onAuthorize={(scopeIds) => onAuthorize?.(item.id, scopeIds)}
+          onIsOpenChange={setIsAuthorizeOpen}
+        />
+      )}
     </>
   )
 }
@@ -191,8 +186,9 @@ function ChatContent(props: { content: ChatText[]; role: "agent" | "user" }): JS
 function ChatEntry(props: {
   item: ChatItem
   onAuthorize?: (itemId: string, scopeIds: string[]) => void
+  onRequestAccess?: (itemId: string) => void
 }): JSX.Element {
-  const { item, onAuthorize } = props
+  const { item, onAuthorize, onRequestAccess } = props
 
   switch (item.type) {
     case "choice": {
@@ -200,7 +196,7 @@ function ChatEntry(props: {
     }
 
     case "connect": {
-      return <ChatConnect item={item} onAuthorize={onAuthorize} />
+      return <ChatConnect item={item} onAuthorize={onAuthorize} onRequestAccess={onRequestAccess} />
     }
 
     case "message": {
@@ -305,6 +301,59 @@ function ChatSecret(props: { item: Extract<ChatItem, { type: "secret" }> }): JSX
         <span className="text-12 font-500">Saved</span>
       </Row>
     </Row>
+  )
+}
+
+function ConnectStatus(props: {
+  actionLabel: string
+  isAdded: boolean
+  isRequested: boolean
+  onAction: () => void
+}): JSX.Element {
+  const { actionLabel, isAdded, isRequested, onAction } = props
+
+  if (isAdded) {
+    return (
+      <Row
+        alignItems="center"
+        className="shrink-0 rounded-full bg-success/15 px-8 py-4 text-success"
+      >
+        <IconCheck />
+
+        <Spacer width={4} />
+
+        <span className="text-12 font-500">Added</span>
+      </Row>
+    )
+  }
+
+  if (isRequested) {
+    return (
+      <Row
+        alignItems="center"
+        className="
+          shrink-0 rounded-full bg-gray-4 px-8 py-4 text-text-secondary
+        "
+      >
+        <IconCheck />
+
+        <Spacer width={4} />
+
+        <span className="text-12 font-500">Requested</span>
+      </Row>
+    )
+  }
+
+  return (
+    <Button
+      className="shrink-0"
+      label={actionLabel}
+      onClick={onAction}
+      rounded
+      size={32}
+      type="button"
+      variant="secondary"
+    />
   )
 }
 

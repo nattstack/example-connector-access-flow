@@ -49,7 +49,7 @@ const CONNECTOR_APPS: ConnectorApp[] = CONNECTOR_APP_CATALOG.map((app) => ({
   scopes: app.id === "gmail" ? GMAIL_SCOPES : [],
 }))
 
-const MOCK_BLOCKED_APPS: BlockedApp[] = [{ appId: "github", workspaceId: 2 }]
+const MOCK_BLOCKED_APPS: BlockedApp[] = [{ appId: "gmail", workspaceId: 2 }]
 
 const MOCK_CONNECTORS: Connector[] = [
   {
@@ -83,7 +83,7 @@ const MOCK_CONNECTORS: Connector[] = [
   {
     appId: "github",
     id: "35f81b29-d476-41ea-058c-924d5e70a198",
-    label: "vercel",
+    label: "Web repo",
     scopeIds: [],
     teamId: "d6a4f1b5-7e0a-4124-cf5d-4a9e1a3b6d44",
     workspaceId: 2,
@@ -91,7 +91,7 @@ const MOCK_CONNECTORS: Connector[] = [
   {
     appId: "slack",
     id: "46092c3a-e587-42fb-169d-a35e6f81b2a9",
-    label: "Vercel Marketing",
+    label: "Slack",
     scopeIds: [],
     teamId: "e7b5a2c6-8f1b-4235-da6e-5b0f2b4c7e55",
     workspaceId: 2,
@@ -252,23 +252,6 @@ export function getConnectorById(workspaceId: number, connectorId: string): Conn
   return MOCK_CONNECTORS.find(
     (connector) => connector.workspaceId === workspaceId && connector.id === connectorId,
   )
-}
-
-export function grantConnectorScopes(input: {
-  connectorId: string
-  scopeIds: string[]
-  workspaceId: number
-}): Connector {
-  const connector = requireConnector(input.workspaceId, input.connectorId)
-  const app = getConnectorApp(connector.appId)
-
-  if (app === undefined) {
-    throw new Error("Expected a connector app")
-  }
-
-  connector.scopeIds = uniqueScopeIds(app, [...connector.scopeIds, ...input.scopeIds])
-
-  return connector
 }
 
 export function isAppBlocked(workspaceId: number, appId: ConnectorAppId): boolean {

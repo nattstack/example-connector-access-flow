@@ -7,12 +7,13 @@ export type ChatInline =
 
 export type ChatItem =
   | {
+      action?: "authorize" | "request"
       actionLabel: string
       appId: ConnectorAppId
       description: string
       dialogDescription?: string
       id: string
-      status?: "added"
+      status?: "added" | "requested"
       title: string
       toolCount?: number
       type: "connect"
@@ -584,77 +585,7 @@ const CHAT_PLACEHOLDER: ChatItem[] = [
   },
 ]
 
-export function getAgentAuthorizeDeniedReply(agentId: string): ChatItem[] {
-  if (agentId !== "c8e4a1b0-3d72-4f19-8a56-2b9c0e7d4f31") {
-    return []
-  }
-
-  return [
-    {
-      content: [
-        "Still missing Delete on Company support. Grant it on the card and I'll clear the noise.",
-      ],
-      id: "21-agent-still-missing-delete",
-      role: "agent",
-      type: "message",
-    },
-  ]
-}
-
 export function getAgentAuthorizeReply(agentId: string): ChatItem[] {
-  if (agentId === "c8e4a1b0-3d72-4f19-8a56-2b9c0e7d4f31") {
-    return [
-      {
-        content: ["Delete's on. Pulling the last 24 hours from Company support."],
-        id: "21-agent-gmail-reconnected",
-        role: "agent",
-        type: "message",
-      },
-      {
-        content: ["11 threads since yesterday morning. I deleted 6 I could ignore."],
-        id: "21-agent-thread-count",
-        role: "agent",
-        type: "message",
-      },
-      {
-        content: [
-          "On a clock: Acme can't ship after the 1.4 rollout — they left a thread on ",
-          { href: "https://vercel.com", text: "the failed deploy", type: "link" },
-          ". Priya says the billing portal is looping people back to login. Legal wants a yes on the ",
-          { href: "https://docs.google.com", text: "DPA", type: "link" },
-          " before Friday.",
-        ],
-        id: "21-agent-on-a-clock",
-        role: "agent",
-        type: "message",
-      },
-      {
-        content: [
-          "Deleted: 4 Google security alerts to ",
-          { href: "mailto:sam@example.com", text: "sam@example.com", type: "link" },
-          ", TLDR, and a Substack. Press and legal were quiet. Product inbox only has a Linear ping you already saw.",
-        ],
-        id: "21-agent-the-rest",
-        role: "agent",
-        type: "message",
-      },
-      {
-        content: [
-          "Go to ",
-          {
-            href: "/vercel/settings/connectors",
-            text: "/vercel/settings/connectors",
-            type: "link",
-          },
-          " to see Company support at 2/2.",
-        ],
-        id: "21-agent-see-connector",
-        role: "agent",
-        type: "message",
-      },
-    ]
-  }
-
   if (agentId !== "d28c5b88-901f-4df0-b5b1-c6b9cab1b420") {
     return []
   }
@@ -717,6 +648,49 @@ export function getAgentChatById(agentId: string): ChatItem[] {
   return MOCK_AGENT_CHATS[agentId] ?? CHAT_PLACEHOLDER
 }
 
+export function getAgentRequestAccessReply(agentId: string): ChatItem[] {
+  if (agentId !== "c8e4a1b0-3d72-4f19-8a56-2b9c0e7d4f31") {
+    return []
+  }
+
+  return [
+    {
+      content: ["Sent. Alex will get a request to unblock Gmail on Company support."],
+      id: "21-agent-requested",
+      role: "agent",
+      type: "message",
+    },
+    {
+      content: ["I can't clear anything until they approve. Here's the last 24 hours read-only."],
+      id: "21-agent-read-only",
+      role: "agent",
+      type: "message",
+    },
+    {
+      content: [
+        "On a clock: Acme can't ship after the 1.4 rollout — they left a thread on ",
+        { href: "https://vercel.com", text: "the failed deploy", type: "link" },
+        ". Priya says the billing portal is looping people back to login. Legal wants a yes on the ",
+        { href: "https://docs.google.com", text: "DPA", type: "link" },
+        " before Friday.",
+      ],
+      id: "21-agent-on-a-clock",
+      role: "agent",
+      type: "message",
+    },
+    {
+      content: [
+        "Still sitting in the inbox: 4 Google security alerts to ",
+        { href: "mailto:sam@example.com", text: "sam@example.com", type: "link" },
+        ", TLDR, and a Substack. Press and legal were quiet. Product inbox only has a Linear ping you already saw.",
+      ],
+      id: "21-agent-the-rest",
+      role: "agent",
+      type: "message",
+    },
+  ]
+}
+
 export function getAgentSendReply(agentId: string): ChatItem[] {
   if (agentId === "c8e4a1b0-3d72-4f19-8a56-2b9c0e7d4f31") {
     return [
@@ -728,26 +702,23 @@ export function getAgentSendReply(agentId: string): ChatItem[] {
       },
       {
         content: [
-          "Gmail is already connected: Company support, press, legal, business, and Product inbox. All of them are Read only, so I can summarize but I can't delete.",
+          "Gmail is already connected: Company support, press, legal, business, and Product inbox. Workspace policy has Gmail blocked, so I can't use any of them.",
         ],
         id: "21-agent-existing-gmail",
         role: "agent",
         type: "message",
       },
       {
-        content: [
-          "Reconnect Company support on the card, grant Delete, and I'll clear the noise right after.",
-        ],
+        content: ["Request access on the card and I'll ping Alex to unblock Gmail."],
         id: "21-agent-need-delete",
         role: "agent",
         type: "message",
       },
       {
-        actionLabel: "Reconnect",
+        action: "request",
+        actionLabel: "Request Access",
         appId: "gmail",
-        description: "Read granted · Delete required",
-        dialogDescription:
-          "Company support already has Read. Grant Delete so I can clear the mail you don't need.",
+        description: "Blocked by workspace policy",
         id: "21-connect-gmail",
         title: "Company support",
         type: "connect",
