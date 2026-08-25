@@ -16,6 +16,7 @@ interface DashboardSidebarContentHomeProps extends Pick<ComponentProps<"div">, "
 
 interface LinkAgentProps {
   agent: Agent
+  disabled?: boolean
 }
 
 export function DashboardSidebarContentHome(props: DashboardSidebarContentHomeProps): JSX.Element {
@@ -43,8 +44,8 @@ export function DashboardSidebarContentHome(props: DashboardSidebarContentHomePr
       <Spacer aria-hidden className="mx-16 border-t border-border" height={8} />
 
       <Column as="nav" className="min-h-0 flex-1 gap-y-4 overflow-y-auto px-8">
-        {agents.map((agent) => (
-          <LinkAgent agent={agent} key={agent.id} />
+        {agents.map((agent, index) => (
+          <LinkAgent agent={agent} disabled={index > 0} key={agent.id} />
         ))}
       </Column>
     </motion.div>
@@ -52,20 +53,11 @@ export function DashboardSidebarContentHome(props: DashboardSidebarContentHomePr
 }
 
 function LinkAgent(props: LinkAgentProps): JSX.Element {
-  const { agent } = props
+  const { agent, disabled = false } = props
   const { workspaceSlug } = useParams({ from: "/$workspaceSlug" })
 
-  return (
-    <Link
-      activeProps={{ className: "bg-gray-3" }}
-      className="
-        flex h-56 w-full shrink-0 items-center gap-x-8 rounded-12 px-8
-        select-none
-        hover:bg-gray-3
-      "
-      params={{ agentId: agent.id, workspaceSlug }}
-      to="/$workspaceSlug/agents/$agentId"
-    >
+  const content = (
+    <>
       <AvatarAgent alt={agent.name} src={agent.avatar} />
 
       <Column className="w-full min-w-0">
@@ -88,6 +80,35 @@ function LinkAgent(props: LinkAgentProps): JSX.Element {
           <span className="truncate text-13 text-text-secondary">{agent.chat}</span>
         </Row>
       </Column>
+    </>
+  )
+
+  if (disabled) {
+    return (
+      <div
+        aria-disabled
+        className="
+          flex h-56 w-full shrink-0 cursor-default items-center gap-x-8
+          rounded-12 px-8 opacity-50 select-none
+        "
+      >
+        {content}
+      </div>
+    )
+  }
+
+  return (
+    <Link
+      activeProps={{ className: "bg-gray-3" }}
+      className="
+        flex h-56 w-full shrink-0 items-center gap-x-8 rounded-12 px-8
+        select-none
+        hover:bg-gray-3
+      "
+      params={{ agentId: agent.id, workspaceSlug }}
+      to="/$workspaceSlug/agents/$agentId"
+    >
+      {content}
     </Link>
   )
 }
