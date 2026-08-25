@@ -21,7 +21,7 @@ export function DashboardSidebar(): JSX.Element {
 
       {/* Navigation */}
       <Column as="nav" className="gap-y-2 px-8">
-        <NavLink activeOptions={{ exact: true }} label="Dashboard" to="/dashboard" />
+        <NavLink activeOptions={{ exact: true }} label="Home" to="/dashboard" />
       </Column>
       <Spacer height={24} />
 
