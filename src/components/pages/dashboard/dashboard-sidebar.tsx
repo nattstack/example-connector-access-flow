@@ -1,7 +1,7 @@
 import { Column, Spacer } from "@nattstack/ui"
 import { Link } from "@tanstack/react-router"
 import type { JSX } from "react"
-import { projects } from "#/data/projects.ts"
+import { projects } from "#/data/projects"
 
 const navLinkClassName = `
   rounded-8 px-12 py-8 text-14 text-text-secondary no-underline
@@ -12,47 +12,49 @@ const navLinkActiveClassName = "bg-gray-3 font-500 text-text-primary"
 export function DashboardSidebar(): JSX.Element {
   return (
     <Column
-      as="nav"
+      as="aside"
       className="
-        h-svh w-240 shrink-0 border-r border-border bg-bg-shell-inner px-16
-        py-24
+        sticky top-0 left-0 isolate z-30 h-dvh w-256 shrink-0
+        shadow-[inset_-1px_0_0_0_var(--color-border)]
       "
     >
-      <Link className="px-12 text-16 font-500 text-text-primary no-underline" to="/dashboard">
-        Connector Access
-      </Link>
-
-      <Spacer className="h-24" />
-
-      <Column className="gap-4">
-        <Link
-          activeOptions={{ exact: true }}
-          activeProps={{ className: navLinkActiveClassName }}
-          className={navLinkClassName}
-          to="/dashboard"
-        >
-          Dashboard
+      <Column className="px-16 py-24">
+        <Link className="px-12 text-16 font-500 text-text-primary no-underline" to="/dashboard">
+          Connector Access
         </Link>
-      </Column>
 
-      <Spacer className="h-24" />
+        <Spacer className="h-24" />
 
-      <p className="px-12 text-12 font-500 text-text-secondary uppercase">Projects</p>
-
-      <Spacer className="h-8" />
-
-      <Column className="gap-4">
-        {projects.map((project) => (
+        <Column className="gap-4">
           <Link
+            activeOptions={{ exact: true }}
             activeProps={{ className: navLinkActiveClassName }}
             className={navLinkClassName}
-            key={project.id}
-            params={{ projectId: project.id }}
-            to="/dashboard/projects/$projectId"
+            to="/dashboard"
           >
-            {project.name}
+            Dashboard
           </Link>
-        ))}
+        </Column>
+
+        <Spacer className="h-24" />
+
+        <p className="px-12 text-12 font-500 text-text-secondary uppercase">Projects</p>
+
+        <Spacer className="h-8" />
+
+        <Column className="gap-4">
+          {projects.map((project) => (
+            <Link
+              activeProps={{ className: navLinkActiveClassName }}
+              className={navLinkClassName}
+              key={project.id}
+              params={{ projectId: project.id }}
+              to="/dashboard/projects/$projectId"
+            >
+              {project.name}
+            </Link>
+          ))}
+        </Column>
       </Column>
     </Column>
   )

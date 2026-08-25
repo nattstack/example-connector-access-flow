@@ -6,7 +6,7 @@ import { DashboardSidebar } from "#/components/pages/dashboard/dashboard-sidebar
 export const Route = createFileRoute("/dashboard")({
   component: function DashboardLayout(): JSX.Element {
     return (
-      <Row className="min-h-svh bg-bg-shell-outer">
+      <Row className="min-h-dvh">
         <DashboardSidebar />
 
         <main className="min-w-0 flex-1 bg-bg-shell-inner">

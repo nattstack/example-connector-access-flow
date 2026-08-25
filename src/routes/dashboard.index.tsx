@@ -59,6 +59,8 @@ export const Route = createFileRoute("/dashboard/")({
             </Link>
           ))}
         </div>
+
+        <Spacer className="h-[1000px]" />
       </Column>
     )
   },
