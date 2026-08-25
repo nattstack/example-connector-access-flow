@@ -1,7 +1,7 @@
 import { Column, Row, Spacer } from "@nattstack/ui"
 import { createFileRoute, notFound } from "@tanstack/react-router"
 import type { JSX } from "react"
-import { AgentAvatar } from "#/components/agent-avatar"
+import { AvatarAgent } from "#/components/avatar-agent"
 import { getAgentById } from "#/data/agents.ts"
 
 export const Route = createFileRoute("/dashboard/agents/$agentId")({
@@ -13,7 +13,7 @@ export const Route = createFileRoute("/dashboard/agents/$agentId")({
         <Spacer height={32} />
 
         <Row alignItems="center" className="gap-12">
-          <AgentAvatar alt={agent.name} src={agent.logo} />
+          <AvatarAgent alt={agent.name} size={40} src={agent.logo} />
           <h1 className="text-24 font-500 text-text-primary">{agent.name}</h1>
         </Row>
 

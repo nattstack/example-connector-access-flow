@@ -1,7 +1,7 @@
 import { Column, Row, Spacer } from "@nattstack/ui"
 import { Link } from "@tanstack/react-router"
 import type { JSX } from "react"
-import { AgentAvatar } from "#/components/agent-avatar"
+import { AvatarAgent } from "#/components/avatar-agent"
 import { LogoLink } from "#/components/logo-link"
 import { MOCK_AGENTS, type Agent } from "#/data/agents"
 import { formatRelativeTimestamp } from "#/utils/date"
@@ -49,7 +49,7 @@ function LinkAgent(props: LinkAgentProps): JSX.Element {
       to="/dashboard/agents/$agentId"
     >
       {/* Avatar */}
-      <AgentAvatar alt={agent.name} src={agent.logo} />
+      <AvatarAgent alt={agent.name} src={agent.logo} />
 
       <Column className="w-full min-w-0">
         <Row className="items-baseline justify-between gap-x-8">
