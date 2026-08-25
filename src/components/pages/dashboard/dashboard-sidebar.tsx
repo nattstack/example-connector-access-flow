@@ -1,13 +1,8 @@
-import { Column, Spacer } from "@nattstack/ui"
-import { Link } from "@tanstack/react-router"
+import { Column, Row, Spacer } from "@nattstack/ui"
+import { Link, type LinkComponentProps } from "@tanstack/react-router"
 import type { JSX } from "react"
+import { LogoLink } from "#/components/logo-link"
 import { projects } from "#/data/projects"
-
-const navLinkClassName = `
-  rounded-8 px-12 py-8 text-14 text-text-secondary no-underline
-  hover:bg-gray-3 hover:text-text-primary
-`
-const navLinkActiveClassName = "bg-gray-3 font-500 text-text-primary"
 
 export function DashboardSidebar(): JSX.Element {
   return (
@@ -18,44 +13,47 @@ export function DashboardSidebar(): JSX.Element {
         shadow-[inset_-1px_0_0_0_var(--color-border)]
       "
     >
-      <Column className="px-16 py-24">
-        <Link className="px-12 text-16 font-500 text-text-primary no-underline" to="/dashboard">
-          Connector Access
-        </Link>
+      <Row className="mt-8 ml-8">
+        <LogoLink />
+      </Row>
+      <Spacer height={8} />
 
-        <Spacer className="h-24" />
+      <Column className="gap-y-2 px-8">
+        <NavLink activeOptions={{ exact: true }} label="Dashboard" to="/dashboard" />
+      </Column>
+      <Spacer height={24} />
 
-        <Column className="gap-4">
-          <Link
-            activeOptions={{ exact: true }}
-            activeProps={{ className: navLinkActiveClassName }}
-            className={navLinkClassName}
-            to="/dashboard"
-          >
-            Dashboard
-          </Link>
-        </Column>
+      <p className="px-12 text-12 font-500 text-text-secondary uppercase">Projects</p>
+      <Spacer className="h-8" />
 
-        <Spacer className="h-24" />
-
-        <p className="px-12 text-12 font-500 text-text-secondary uppercase">Projects</p>
-
-        <Spacer className="h-8" />
-
-        <Column className="gap-4">
-          {projects.map((project) => (
-            <Link
-              activeProps={{ className: navLinkActiveClassName }}
-              className={navLinkClassName}
-              key={project.id}
-              params={{ projectId: project.id }}
-              to="/dashboard/projects/$projectId"
-            >
-              {project.name}
-            </Link>
-          ))}
-        </Column>
+      <Column className="gap-y-2 px-8">
+        {projects.map((project) => (
+          <NavLink
+            key={project.id}
+            label={project.name}
+            params={{ projectId: project.id }}
+            to="/dashboard/projects/$projectId"
+          />
+        ))}
       </Column>
     </Column>
+  )
+}
+
+function NavLink(props: { label: string } & LinkComponentProps): JSX.Element {
+  const { label = "", to = "/dashboard", ...rest } = props
+
+  return (
+    <Link
+      activeProps={{ className: "bg-gray-3 text-text-primary!" }}
+      className="
+        flex h-36 items-center rounded-8 px-8 text-14 text-text-secondary
+        hover:bg-gray-3 hover:text-text-primary
+      "
+      to={to}
+      {...rest}
+    >
+      {label}
+    </Link>
   )
 }
