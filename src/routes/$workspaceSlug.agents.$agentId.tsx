@@ -12,6 +12,7 @@ import {
   type ChatItem,
 } from "#/data/agent-chat.ts"
 import { getAgentById } from "#/data/agents.ts"
+import { addConnector } from "#/data/connectors.ts"
 import { RouteAgentHead } from "#/routes/-route-agent-head"
 
 export const Route = createFileRoute("/$workspaceSlug/agents/$agentId")({
@@ -30,12 +31,19 @@ export const Route = createFileRoute("/$workspaceSlug/agents/$agentId")({
       node.scrollTo({ top: node.scrollHeight })
     }, [items])
 
-    function onAuthorize(itemId: string): void {
-      setItems((current) => {
-        if (current.some((item) => item.id === "11-agent-gmail-connected")) {
-          return current
-        }
+    function onAuthorize(itemId: string, scopeIds: string[]): void {
+      if (items.some((item) => item.id === "11-agent-gmail-connected")) {
+        return
+      }
 
+      addConnector({
+        appId: "gmail",
+        label: "Connected inbox",
+        scopeIds,
+        workspaceId: agent.workspaceId,
+      })
+
+      setItems((current) => {
         const next = current.map((item) => {
           if (item.id !== itemId || item.type !== "connect") {
             return item

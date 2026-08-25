@@ -1,4 +1,5 @@
 import { Button, Column, Row, Spacer } from "@nattstack/ui"
+import { Link } from "@tanstack/react-router"
 import { Fragment, useState, type JSX } from "react"
 import { AvatarConnector } from "#/components/avatar-connector"
 import { DialogAuthorizeConnector } from "#/components/pages/dashboard/dialog-authorize-connector"
@@ -253,14 +254,18 @@ function ChatInlinePart(props: { part: ChatInline; role: "agent" | "user" }): JS
 
 function ChatLink(props: { href: string; role: "agent" | "user"; text: string }): JSX.Element {
   const { href, role, text } = props
+  const className = role === "user" ? "text-primary-8" : "text-primary"
+
+  if (href.startsWith("/")) {
+    return (
+      <Link className={className} to={href}>
+        {text}
+      </Link>
+    )
+  }
 
   return (
-    <a
-      className={role === "user" ? "text-primary-8" : "text-primary"}
-      href={href}
-      rel="noreferrer"
-      target="_blank"
-    >
+    <a className={className} href={href} rel="noreferrer" target="_blank">
       {text}
     </a>
   )

@@ -1295,6 +1295,20 @@ export function getAgentAuthorizeReply(agentId: string): ChatItem[] {
       role: "agent",
       type: "message",
     },
+    {
+      content: [
+        "Go to ",
+        {
+          href: "/figma/settings/connectors",
+          text: "/figma/settings/connectors",
+          type: "link",
+        },
+        " to see the new connector.",
+      ],
+      id: "11-agent-see-connector",
+      role: "agent",
+      type: "message",
+    },
   ]
 }
 
