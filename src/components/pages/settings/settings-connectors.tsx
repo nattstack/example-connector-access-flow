@@ -51,6 +51,12 @@ export function SettingsConnectors(props: SettingsConnectorsProps): JSX.Element 
   const [search, setSearch] = useState("")
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc")
 
+  const filterApps = useMemo(() => {
+    const appIds = new Set(connectors.map((connector) => connector.appId))
+
+    return listConnectorApps().filter((app) => appIds.has(app.id))
+  }, [connectors])
+
   const visibleConnectors = useMemo(() => {
     const query = search.trim().toLowerCase()
 
@@ -119,7 +125,7 @@ export function SettingsConnectors(props: SettingsConnectorsProps): JSX.Element 
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="All">All</SelectItem>
-              {listConnectorApps().map((app) => (
+              {filterApps.map((app) => (
                 <SelectItem key={app.id} value={app.id}>
                   {app.name}
                 </SelectItem>

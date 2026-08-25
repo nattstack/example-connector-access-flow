@@ -1,6 +1,6 @@
 import { SiGithub, SiGmail } from "@icons-pack/react-simple-icons"
 import type { JSX } from "react"
-import type { ConnectorAppId } from "#/data/connectors"
+import { getConnectorApp, type ConnectorAppId } from "#/data/connectors"
 
 interface AvatarConnectorProps {
   appId: ConnectorAppId
@@ -15,8 +15,9 @@ interface BrandAvatar {
 
 const SIZE = 32
 const ICON_SCALE = 0.55
+const FALLBACK_INITIAL_SCALE = 0.42
 
-const BRAND_AVATARS: Record<ConnectorAppId, BrandAvatar> = {
+const BRAND_AVATARS: Partial<Record<ConnectorAppId, BrandAvatar>> = {
   github: { Icon: GithubMark, background: "#F4F4F5", color: "#181717" },
   gmail: { Icon: GmailMark, background: "#FCE8E6", color: "#EA4335" },
   slack: { Icon: SlackMark, background: "#F4E8F5", color: "#4A154B" },
@@ -25,6 +26,11 @@ const BRAND_AVATARS: Record<ConnectorAppId, BrandAvatar> = {
 export function AvatarConnector(props: AvatarConnectorProps): JSX.Element {
   const { appId, size = SIZE } = props
   const brand = BRAND_AVATARS[appId]
+
+  if (brand === undefined) {
+    return <FallbackMark appId={appId} size={size} />
+  }
+
   const { Icon } = brand
 
   return (
@@ -40,6 +46,29 @@ export function AvatarConnector(props: AvatarConnectorProps): JSX.Element {
       }}
     >
       <Icon color={brand.color} size={size * ICON_SCALE} />
+    </span>
+  )
+}
+
+function FallbackMark(props: { appId: ConnectorAppId; size: number }): JSX.Element {
+  const { appId, size } = props
+  const name = getConnectorApp(appId)?.name ?? appId
+  const initial = [...name][0]?.toUpperCase() ?? "?"
+
+  return (
+    <span
+      aria-hidden
+      className="
+        flex shrink-0 items-center justify-center rounded-8 bg-gray-4
+        leading-none font-500 text-text-secondary
+      "
+      style={{
+        fontSize: size * FALLBACK_INITIAL_SCALE,
+        height: size,
+        width: size,
+      }}
+    >
+      {initial}
     </span>
   )
 }

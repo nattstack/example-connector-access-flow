@@ -1,7 +1,16 @@
+import { IconChevronExpandYOutline18 } from "@nattstack/icons"
 import {
   Button,
   Checkbox,
   Column,
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxItem,
+  ComboboxList,
+  ComboboxSearch,
+  ComboboxTrigger,
+  ComboboxValue,
   DialogResponsive,
   DialogResponsivePopup,
   Input,
@@ -14,11 +23,16 @@ import {
   SelectValue,
   Spacer,
 } from "@nattstack/ui"
-import { useState, type FormEvent, type JSX } from "react"
+import { useMemo, useState, type FormEvent, type JSX } from "react"
 import { AvatarConnector } from "#/components/avatar-connector"
 import { getConnectorApp, listAvailableConnectorApps, type ConnectorAppId } from "#/data/connectors"
 import type { Team } from "#/data/teams"
 import { getCurrentUser } from "#/data/user"
+
+interface AppOption {
+  label: string
+  value: ConnectorAppId
+}
 
 interface DialogAddConnectorProps {
   isOpen: boolean
@@ -38,14 +52,25 @@ const LABEL_INPUT_ID = "settings-add-connector-label"
 export function DialogAddConnector(props: DialogAddConnectorProps): JSX.Element {
   const { isOpen, onAdd, onIsOpenChange, teams, workspaceId } = props
   const apps = listAvailableConnectorApps(workspaceId)
-  const [firstApp] = apps
+  const defaultApp = apps.find((app) => app.id === "gmail") ?? apps[0]
   const [firstTeam] = teams
 
-  const [appId, setAppId] = useState<ConnectorAppId | undefined>(firstApp?.id)
+  const [appId, setAppId] = useState<ConnectorAppId | undefined>(defaultApp?.id)
   const [errorMessage, setErrorMessage] = useState<string>()
-  const [label, setLabel] = useState(defaultLabelForApp(firstApp?.id))
+  const [isAppComboboxOpen, setIsAppComboboxOpen] = useState(false)
+  const [label, setLabel] = useState(defaultLabelForApp(defaultApp?.id))
   const [ownerTeamId, setOwnerTeamId] = useState(firstTeam?.id ?? "")
-  const [scopeIds, setScopeIds] = useState<string[]>(defaultScopeIds(firstApp?.id))
+  const [scopeIds, setScopeIds] = useState<string[]>(defaultScopeIds(defaultApp?.id))
+  const appItems: AppOption[] = useMemo(
+    () =>
+      apps.map((app) => ({
+        label: app.name,
+        value: app.id,
+      })),
+    [apps],
+  )
+  // oxlint-disable-next-line unicorn/no-null -- Base UI Combobox treats undefined as uncontrolled; null means "no selection".
+  const selectedAppItem = appItems.find((item) => item.value === appId) ?? null
 
   const selectedApp = appId === undefined ? undefined : getConnectorApp(appId)
   const selectedOwnerTeam = teams.find((team) => team.id === ownerTeamId)
@@ -60,11 +85,13 @@ export function DialogAddConnector(props: DialogAddConnectorProps): JSX.Element 
     onIsOpenChange(nextOpen)
 
     if (!nextOpen) {
-      const [nextApp] = listAvailableConnectorApps(workspaceId)
+      const nextApps = listAvailableConnectorApps(workspaceId)
+      const nextApp = nextApps.find((app) => app.id === "gmail") ?? nextApps[0]
       const [nextTeam] = teams
 
       setAppId(nextApp?.id)
       setErrorMessage(undefined)
+      setIsAppComboboxOpen(false)
       setLabel(defaultLabelForApp(nextApp?.id))
       setOwnerTeamId(nextTeam?.id ?? "")
       setScopeIds(defaultScopeIds(nextApp?.id))
@@ -122,35 +149,58 @@ export function DialogAddConnector(props: DialogAddConnectorProps): JSX.Element 
                 <Label>App</Label>
                 <Spacer height={8} />
 
-                <Select
-                  onValueChange={(nextAppId) => {
-                    if (nextAppId === null) {
+                <Combobox<AppOption>
+                  items={appItems}
+                  onOpenChange={setIsAppComboboxOpen}
+                  onValueChange={(nextApp) => {
+                    if (nextApp === null) {
                       return
                     }
 
-                    setAppId(nextAppId)
+                    setAppId(nextApp.value)
                     setErrorMessage(undefined)
-                    setLabel(defaultLabelForApp(nextAppId))
-                    setScopeIds(defaultScopeIds(nextAppId))
+                    setIsAppComboboxOpen(false)
+                    setLabel(defaultLabelForApp(nextApp.value))
+                    setScopeIds(defaultScopeIds(nextApp.value))
                   }}
-                  value={appId}
+                  open={isAppComboboxOpen}
+                  value={selectedAppItem}
                 >
-                  <SelectTrigger className="w-full">
-                    <SelectValue>{selectedApp?.name}</SelectValue>
-                  </SelectTrigger>
-                  <SelectContent>
-                    {apps.map((app) => (
-                      <SelectItem key={app.id} value={app.id}>
-                        <Row className="items-center">
-                          <AvatarConnector appId={app.id} size={18} />
+                  <ComboboxTrigger
+                    className="
+                      w-full
+                      **:data-[component=combobox-icon]:hidden
+                    "
+                  >
+                    <ComboboxValue className="flex min-w-0 flex-1" placeholder="Search an app">
+                      {(item: AppOption) => (
+                        <Row className="min-w-0 items-center">
+                          <AvatarConnector appId={item.value} size={18} />
                           <Spacer width={8} />
 
-                          <span>{app.name}</span>
+                          <span className="truncate">{item.label}</span>
                         </Row>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                      )}
+                    </ComboboxValue>
+                    <IconChevronExpandYOutline18 className="shrink-0 text-gray-9" />
+                  </ComboboxTrigger>
+                  <ComboboxContent>
+                    <ComboboxSearch placeholder="Search apps" />
+                    <ComboboxEmpty>No apps found.</ComboboxEmpty>
+                    <ComboboxList>
+                      {(item: AppOption) => (
+                        <ComboboxItem key={item.value} value={item}>
+                          <Row className="items-center">
+                            <AvatarConnector appId={item.value} size={18} />
+                            <Spacer width={8} />
+
+                            <span className="truncate">{item.label}</span>
+                          </Row>
+                        </ComboboxItem>
+                      )}
+                    </ComboboxList>
+                  </ComboboxContent>
+                </Combobox>
                 <Spacer height={16} />
 
                 {hasScopes && selectedApp !== undefined && (

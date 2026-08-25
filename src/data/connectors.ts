@@ -1,4 +1,6 @@
 import { getAgentById, listUnteamedAgentsByWorkspaceId, type Agent } from "#/data/agents"
+import { CONNECTOR_APP_CATALOG, type ConnectorAppId } from "#/data/connector-apps"
+export { type ConnectorAppId } from "#/data/connector-apps"
 import { getTeamById, listTeamsByWorkspaceId, type Team } from "#/data/teams"
 
 const SCOPE_PAIR_COUNT = 2
@@ -20,8 +22,6 @@ export interface ConnectorApp {
   scopes: ConnectorScope[]
 }
 
-export type ConnectorAppId = "github" | "gmail" | "slack"
-
 export interface ConnectorScope {
   id: string
   label: string
@@ -32,26 +32,16 @@ interface BlockedApp {
   workspaceId: number
 }
 
-const CONNECTOR_APPS: ConnectorApp[] = [
-  {
-    id: "gmail",
-    name: "Gmail",
-    scopes: [
-      { id: "read", label: "Read" },
-      { id: "delete", label: "Delete" },
-    ],
-  },
-  {
-    id: "github",
-    name: "GitHub",
-    scopes: [],
-  },
-  {
-    id: "slack",
-    name: "Slack",
-    scopes: [],
-  },
+const GMAIL_SCOPES: ConnectorScope[] = [
+  { id: "read", label: "Read" },
+  { id: "delete", label: "Delete" },
 ]
+
+const CONNECTOR_APPS: ConnectorApp[] = CONNECTOR_APP_CATALOG.map((app) => ({
+  id: app.id,
+  name: app.name,
+  scopes: app.id === "gmail" ? GMAIL_SCOPES : [],
+}))
 
 const MOCK_BLOCKED_APPS: BlockedApp[] = [
   { appId: "slack", workspaceId: 2 },
