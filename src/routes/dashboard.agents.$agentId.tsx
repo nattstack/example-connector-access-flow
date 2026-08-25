@@ -1,5 +1,5 @@
-import { ButtonLink, Column, Row, Spacer } from "@nattstack/ui"
-import { Link, createFileRoute, notFound } from "@tanstack/react-router"
+import { Column, Row, Spacer } from "@nattstack/ui"
+import { createFileRoute, notFound } from "@tanstack/react-router"
 import type { JSX } from "react"
 import { AgentAvatar } from "#/components/agent-avatar"
 import { getAgentById } from "#/data/agents.ts"
@@ -10,10 +10,6 @@ export const Route = createFileRoute("/dashboard/agents/$agentId")({
 
     return (
       <Column className="px-32 py-32">
-        <ButtonLink as={Link} label="Back to dashboard" size={32} to="/dashboard" variant="ghost" />
-
-        <Spacer height={16} />
-
         <Row alignItems="center" className="gap-12">
           <AgentAvatar alt={agent.name} src={agent.logo} />
           <h1 className="text-24 font-500 text-text-primary">{agent.name}</h1>

@@ -25,7 +25,7 @@ export function DashboardSidebar(): JSX.Element {
       <Spacer height={8} />
 
       {/* Agents */}
-      <Column as="nav" className="gap-y-2 px-8">
+      <Column as="nav" className="gap-y-2 overflow-y-auto px-8">
         {MOCK_AGENTS.map((agent) => (
           <LinkAgent agent={agent} key={agent.id} />
         ))}
@@ -41,7 +41,7 @@ function LinkAgent(props: LinkAgentProps): JSX.Element {
     <Link
       activeProps={{ className: "bg-gray-3" }}
       className="
-        flex h-56 w-full items-center gap-x-8 rounded-8 px-8
+        flex h-56 w-full shrink-0 items-center gap-x-8 rounded-8 px-8
         hover:bg-gray-3
       "
       params={{ agentId: agent.id }}

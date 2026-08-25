@@ -45,7 +45,3 @@ body {
   */
   font-feature-settings: "calt", "cv01", "cv05";
 }
-
-#root {
-  @apply min-h-svh;
-}
