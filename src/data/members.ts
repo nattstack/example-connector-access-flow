@@ -93,10 +93,62 @@ const MOCK_MEMBERS: Member[] = [
   },
 ]
 
+export function inviteMember(input: {
+  email: string
+  name: string
+  role: MemberRole
+  workspaceId: number
+}): Member {
+  const email = input.email.trim().toLowerCase()
+  const name = input.name.trim()
+
+  if (name.length === 0) {
+    throw new Error("Expected a member name")
+  }
+
+  if (!isMemberEmail(email)) {
+    throw new Error("Expected a valid member email")
+  }
+
+  const alreadyInvited = listMembersByWorkspaceId(input.workspaceId).some(
+    (member) => member.email === email,
+  )
+
+  if (alreadyInvited) {
+    throw new Error("A member with this email is already in the workspace")
+  }
+
+  const member: Member = {
+    email,
+    id: crypto.randomUUID(),
+    name,
+    role: input.role,
+    workspaceId: input.workspaceId,
+  }
+
+  MOCK_MEMBERS.push(member)
+
+  return member
+}
+
 export function listMembersByWorkspaceId(workspaceId: number): Member[] {
   const workspaceMembers = MOCK_MEMBERS.filter((member) => member.workspaceId === workspaceId)
 
   return [memberFromCurrentUser(getCurrentUser(), workspaceId), ...workspaceMembers]
+}
+
+export function memberHandle(member: Member): string {
+  const [localPart] = member.email.split("@")
+
+  return localPart ?? member.name.toLowerCase()
+}
+
+export function memberRoleLabel(role: MemberRole): string {
+  return role === "Admin" ? "Workspace admin" : "Member"
+}
+
+function isMemberEmail(email: string): boolean {
+  return /^[^\s@]+@[^\s@]+$/u.test(email)
 }
 
 function memberFromCurrentUser(user: User, workspaceId: number): Member {
