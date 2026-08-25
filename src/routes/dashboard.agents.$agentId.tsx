@@ -1,8 +1,9 @@
-import { Row } from "@nattstack/ui"
+import { Column, Row } from "@nattstack/ui"
 import { createFileRoute, notFound } from "@tanstack/react-router"
 import type { JSX } from "react"
 import { AvatarAgent } from "#/components/avatar-agent"
 import { AgentChat } from "#/components/pages/dashboard/agent-chat"
+import { AgentComposer } from "#/components/pages/dashboard/agent-composer"
 import { getAgentById } from "#/data/agents.ts"
 
 export const Route = createFileRoute("/dashboard/agents/$agentId")({
@@ -20,14 +21,17 @@ export const Route = createFileRoute("/dashboard/agents/$agentId")({
             shadow-[inset_0_-1px_0_0_var(--color-border)]
           "
         >
-          <AvatarAgent alt={agent.name} size={20} src={agent.logo} />
+          <AvatarAgent alt={agent.name} size={20} src={agent.avatar} />
           <span className="text-14 font-500 text-text-primary">{agent.name}</span>
         </Row>
 
         {/* Content */}
-        <AgentChat />
+        <Column className="min-h-0 flex-1 overflow-y-auto">
+          <AgentChat />
+        </Column>
 
         {/* Composer */}
+        <AgentComposer />
       </>
     )
   },

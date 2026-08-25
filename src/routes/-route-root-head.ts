@@ -1,4 +1,5 @@
 import type { JSX } from "react"
+import { ENVIRONMENT } from "#/utils/environment"
 
 interface RouteRootHead {
   links?: JSX.IntrinsicElements["link"][]
@@ -35,9 +36,9 @@ export function RouteRootHead(): RouteRootHead {
         type: "font/woff2",
       },
       {
-        href: "/favicon.svg",
+        href: ENVIRONMENT.IS_PRODUCTION ? "/favicon/production.ico" : "/favicon/development.ico",
         rel: "icon",
-        type: "image/svg+xml",
+        type: "image/x-icon",
       },
     ],
     meta: [

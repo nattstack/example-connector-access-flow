@@ -50,7 +50,7 @@ function LinkAgent(props: LinkAgentProps): JSX.Element {
       to="/dashboard/agents/$agentId"
     >
       {/* Avatar */}
-      <AvatarAgent alt={agent.name} src={agent.logo} />
+      <AvatarAgent alt={agent.name} src={agent.avatar} />
 
       <Column className="w-full min-w-0">
         <Row className="items-baseline justify-between gap-x-8">

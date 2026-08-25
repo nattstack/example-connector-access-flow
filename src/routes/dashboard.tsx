@@ -9,7 +9,7 @@ export const Route = createFileRoute("/dashboard")({
       <Row className="min-h-dvh">
         <DashboardSidebar />
 
-        <Column as="main" className="w-full">
+        <Column as="main" className="h-dvh min-h-0 w-full overflow-hidden">
           <Outlet />
         </Column>
       </Row>
