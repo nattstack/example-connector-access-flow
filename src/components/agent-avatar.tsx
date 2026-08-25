@@ -1,30 +1,17 @@
-import { Avatar, Style } from "@dicebear/core"
-import voxelBot from "@dicebear/styles/voxel-bot.json" with { type: "json" }
-import { useMemo, type JSX } from "react"
-
-const voxelBotStyle = new Style(voxelBot)
+import type { JSX } from "react"
 
 interface AgentAvatarProps {
   alt?: string
-  seed: string
+  src: string
 }
 
 export function AgentAvatar(props: AgentAvatarProps): JSX.Element {
-  const { alt = "", seed } = props
-
-  const src = useMemo(
-    () =>
-      new Avatar(voxelBotStyle, {
-        seed,
-        size: 40,
-      }).toDataUri(),
-    [seed],
-  )
+  const { alt = "", src } = props
 
   return (
     <img
       alt={alt}
-      className="aspect-1-1 h-40 shrink-0 rounded-full bg-gray-4"
+      className="aspect-1-1 size-40 shrink-0 rounded-8"
       height={40}
       src={src}
       width={40}

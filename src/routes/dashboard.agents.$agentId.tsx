@@ -15,7 +15,7 @@ export const Route = createFileRoute("/dashboard/agents/$agentId")({
         <Spacer height={16} />
 
         <Row alignItems="center" className="gap-12">
-          <AgentAvatar alt={agent.name} seed={agent.id} />
+          <AgentAvatar alt={agent.name} src={agent.logo} />
           <h1 className="text-24 font-500 text-text-primary">{agent.name}</h1>
         </Row>
 

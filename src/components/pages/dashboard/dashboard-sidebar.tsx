@@ -47,7 +47,7 @@ function LinkAgent(props: LinkAgentProps): JSX.Element {
       params={{ agentId: agent.id }}
       to="/dashboard/agents/$agentId"
     >
-      <AgentAvatar seed={agent.id} />
+      <AgentAvatar alt={agent.name} src={agent.logo} />
 
       <Column className="w-full min-w-0">
         {/* Name */}

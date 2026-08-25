@@ -14,8 +14,6 @@
     "preview": "portless connector vite preview"
   },
   "dependencies": {
-    "@dicebear/core": "10.6.1",
-    "@dicebear/styles": "10.5.0",
     "@nattstack/ui": "0.1.2",
     "@tanstack/react-router": "1.170.32",
     "react": "19.2.8",
