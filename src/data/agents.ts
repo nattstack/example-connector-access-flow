@@ -4,6 +4,7 @@ export interface Agent {
   id: string
   logo: string
   name: string
+  team: string
   updatedAt: string
 }
 
@@ -14,6 +15,7 @@ export const MOCK_AGENTS: Agent[] = [
     id: "11",
     logo: "/logos/cloud.webp",
     name: "Email summary",
+    team: "Operations",
     updatedAt: "2026-08-25T01:10:00",
   },
   {
@@ -22,6 +24,7 @@ export const MOCK_AGENTS: Agent[] = [
     id: "1",
     logo: "/logos/bear.webp",
     name: "Daily priority bot",
+    team: "Personal",
     updatedAt: "2026-08-25T00:57:00",
   },
   {
@@ -30,6 +33,7 @@ export const MOCK_AGENTS: Agent[] = [
     id: "2",
     logo: "/logos/headphones.webp",
     name: "Summarize podcasts",
+    team: "Content",
     updatedAt: "2026-08-21T16:48:00",
   },
   {
@@ -38,6 +42,7 @@ export const MOCK_AGENTS: Agent[] = [
     id: "3",
     logo: "/logos/mailbox.webp",
     name: "Email responding",
+    team: "Operations",
     updatedAt: "2026-08-20T18:22:00",
   },
   {
@@ -46,6 +51,7 @@ export const MOCK_AGENTS: Agent[] = [
     id: "4",
     logo: "/logos/raccoon.webp",
     name: "Github fixer",
+    team: "Engineering",
     updatedAt: "2026-08-20T17:05:00",
   },
   {
@@ -54,6 +60,7 @@ export const MOCK_AGENTS: Agent[] = [
     id: "5",
     logo: "/logos/paintbrush.webp",
     name: "Design portfolio analysis",
+    team: "Design",
     updatedAt: "2026-08-20T15:41:00",
   },
   {
@@ -62,6 +69,7 @@ export const MOCK_AGENTS: Agent[] = [
     id: "6",
     logo: "/logos/cat.webp",
     name: "Virtual assistant bot",
+    team: "Personal",
     updatedAt: "2026-08-20T14:09:00",
   },
   {
@@ -70,6 +78,7 @@ export const MOCK_AGENTS: Agent[] = [
     id: "7",
     logo: "/logos/robot.webp",
     name: "UI bot",
+    team: "Design",
     updatedAt: "2026-08-20T12:33:00",
   },
   {
@@ -78,6 +87,7 @@ export const MOCK_AGENTS: Agent[] = [
     id: "8",
     logo: "/logos/owl.webp",
     name: "Product research",
+    team: "Product",
     updatedAt: "2026-08-20T11:27:00",
   },
   {
@@ -86,6 +96,7 @@ export const MOCK_AGENTS: Agent[] = [
     id: "9",
     logo: "/logos/magnifying-glass.webp",
     name: "Competitor analysis",
+    team: "Product",
     updatedAt: "2026-08-20T10:16:00",
   },
   {
@@ -94,6 +105,7 @@ export const MOCK_AGENTS: Agent[] = [
     id: "10",
     logo: "/logos/rocket.webp",
     name: "GTM bot",
+    team: "Marketing",
     updatedAt: "2026-08-20T09:44:00",
   },
 ]

@@ -62,8 +62,10 @@ function LinkAgent(props: LinkAgentProps): JSX.Element {
           </time>
         </Row>
 
-        {/* Chat */}
-        <span className="truncate text-13 text-text-secondary">{agent.chat}</span>
+        {/* Team and chat */}
+        <span className="truncate text-13 text-text-secondary">
+          {agent.team} · {agent.chat}
+        </span>
       </Column>
     </Link>
   )
