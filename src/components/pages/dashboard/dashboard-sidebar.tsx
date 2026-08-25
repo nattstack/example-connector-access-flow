@@ -4,6 +4,7 @@ import type { JSX } from "react"
 import { AvatarAgent } from "#/components/avatar-agent"
 import { BadgeTeam } from "#/components/badge-team"
 import { LogoLink } from "#/components/logo-link"
+import { DashboardUserMenu } from "#/components/pages/dashboard/dashboard-user-menu"
 import { DashboardWorkspaceCombobox } from "#/components/pages/dashboard/dashboard-workspace-combobox"
 import { listAgentsByWorkspaceId, type Agent } from "#/data/agents"
 import { formatRelativeTimestamp } from "#/utils/date"
@@ -41,10 +42,15 @@ export function DashboardSidebar(): JSX.Element {
       <Spacer aria-hidden className="mx-16 border-t border-border" height={8} />
 
       {/* Agents */}
-      <Column as="nav" className="gap-y-4 overflow-y-auto px-8">
+      <Column as="nav" className="min-h-0 flex-1 gap-y-4 overflow-y-auto px-8">
         {agents.map((agent) => (
           <LinkAgent agent={agent} key={agent.id} />
         ))}
+      </Column>
+
+      {/* Footer */}
+      <Column className="px-8 pb-8">
+        <DashboardUserMenu />
       </Column>
     </Column>
   )
