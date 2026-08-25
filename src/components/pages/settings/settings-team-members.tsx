@@ -10,7 +10,6 @@ import {
   ComboboxValue,
   Row,
 } from "@nattstack/ui"
-import { useRouter } from "@tanstack/react-router"
 import { useMemo, useState, type JSX } from "react"
 import { AvatarUser } from "#/components/avatar-user"
 import { SettingsRow, SettingsSection } from "#/components/pages/settings/settings-section"
@@ -21,7 +20,7 @@ import {
   setMemberTeam,
   type Member,
 } from "#/data/members"
-import { getTeamById, listMembersAvailableForTeam, type Team } from "#/data/teams"
+import { listMembersAvailableForTeam, listTeamMembers, type Team } from "#/data/teams"
 
 interface MemberOption {
   label: string
@@ -35,45 +34,46 @@ interface SettingsTeamMemberRowProps {
 }
 
 interface SettingsTeamMembersProps {
-  members: Member[]
   team: Team
 }
 
 export function SettingsTeamMembers(props: SettingsTeamMembersProps): JSX.Element {
-  const { members, team } = props
-  const router = useRouter()
+  const { team } = props
   const [isComboboxOpen, setIsComboboxOpen] = useState(false)
+  const [members, setMembers] = useState(() => listTeamMembers(team.workspaceId, team.id))
   const isAdmin = isCurrentUserWorkspaceAdmin(team.workspaceId)
   const availableMembers = listMembersAvailableForTeam(team.workspaceId, team.id)
   const items: MemberOption[] = useMemo(
     () =>
-      availableMembers.map((member) => ({
-        label: member.name,
-        value: member.id,
-      })),
-    [availableMembers],
+      listMembersAvailableForTeam(team.workspaceId, team.id)
+        .filter((member) => members.every((onTeam) => onTeam.id !== member.id))
+        .map((member) => ({
+          label: member.name,
+          value: member.id,
+        })),
+    [members, team.id, team.workspaceId],
   )
 
   // oxlint-disable-next-line unicorn/no-null -- Base UI Combobox treats undefined as uncontrolled; null means "no selection".
   const selectedValue: MemberOption | null = null
 
-  async function onAdd(memberId: string): Promise<void> {
+  function onAdd(memberId: string): void {
     setMemberTeam({
       memberId,
       teamId: team.id,
       workspaceId: team.workspaceId,
     })
     setIsComboboxOpen(false)
-    await router.invalidate()
+    setMembers(listTeamMembers(team.workspaceId, team.id))
   }
 
-  async function onRemove(member: Member): Promise<void> {
+  function onRemove(member: Member): void {
     setMemberTeam({
       memberId: member.id,
       teamId: undefined,
       workspaceId: team.workspaceId,
     })
-    await router.invalidate()
+    setMembers(listTeamMembers(team.workspaceId, team.id))
   }
 
   return (
@@ -86,9 +86,9 @@ export function SettingsTeamMembers(props: SettingsTeamMembersProps): JSX.Elemen
           <Combobox<MemberOption>
             items={items}
             onOpenChange={setIsComboboxOpen}
-            onValueChange={async (nextValue) => {
+            onValueChange={(nextValue) => {
               if (nextValue !== null) {
-                await onAdd(nextValue.value)
+                onAdd(nextValue.value)
               }
             }}
             open={isComboboxOpen}
@@ -109,24 +109,14 @@ export function SettingsTeamMembers(props: SettingsTeamMembersProps): JSX.Elemen
                 {items.length === 0 ? "Every member is already on this team." : "No members found."}
               </ComboboxEmpty>
               <ComboboxList>
-                {(item: MemberOption) => {
-                  const member = availableMembers.find((entry) => entry.id === item.value)
-
-                  if (member === undefined) {
-                    return <></>
-                  }
-
-                  return (
-                    <ComboboxItem key={item.value} value={item}>
-                      <Row className="items-center gap-8">
-                        <MemberAvatar member={member} />
-                        <span className="truncate">
-                          {item.label} · {memberTeamLabel(member)}
-                        </span>
-                      </Row>
-                    </ComboboxItem>
-                  )
-                }}
+                {(item: MemberOption) => (
+                  <ComboboxItem key={item.value} value={item}>
+                    <Row className="items-center gap-8">
+                      <MemberOptionAvatar memberId={item.value} members={availableMembers} />
+                      <span className="truncate">{item.label}</span>
+                    </Row>
+                  </ComboboxItem>
+                )}
               </ComboboxList>
             </ComboboxContent>
           </Combobox>
@@ -178,12 +168,14 @@ function memberInitials(name: string): string {
   return `${first}${last}`.toUpperCase()
 }
 
-function memberTeamLabel(member: Member): string {
-  if (member.teamId === undefined) {
-    return "No team"
+function MemberOptionAvatar(props: { memberId: string; members: Member[] }): JSX.Element {
+  const member = props.members.find((entry) => entry.id === props.memberId)
+
+  if (member === undefined) {
+    return <></>
   }
 
-  return getTeamById(member.workspaceId, member.teamId)?.name ?? "No team"
+  return <MemberAvatar member={member} />
 }
 
 function SettingsTeamMemberRow(props: SettingsTeamMemberRowProps): JSX.Element {

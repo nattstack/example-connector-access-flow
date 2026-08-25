@@ -11,7 +11,7 @@ import {
   ComboboxValue,
   Row,
 } from "@nattstack/ui"
-import { useParams, useRouter } from "@tanstack/react-router"
+import { useParams } from "@tanstack/react-router"
 import { useMemo, useState, type JSX } from "react"
 import { AvatarAgent } from "#/components/avatar-agent"
 import {
@@ -21,7 +21,7 @@ import {
 } from "#/components/pages/settings/settings-section"
 import { setAgentTeam, type Agent } from "#/data/agents"
 import { isCurrentUserWorkspaceAdmin } from "#/data/members"
-import { listAgentsAvailableForTeam, type Team } from "#/data/teams"
+import { listAgentsAvailableForTeam, listTeamAgents, type Team } from "#/data/teams"
 
 interface AgentOption {
   label: string
@@ -35,45 +35,46 @@ interface SettingsTeamAgentRowProps {
 }
 
 interface SettingsTeamAgentsProps {
-  agents: Agent[]
   team: Team
 }
 
 export function SettingsTeamAgents(props: SettingsTeamAgentsProps): JSX.Element {
-  const { agents, team } = props
-  const router = useRouter()
+  const { team } = props
   const [isComboboxOpen, setIsComboboxOpen] = useState(false)
+  const [agents, setAgents] = useState(() => listTeamAgents(team.workspaceId, team.name))
   const isAdmin = isCurrentUserWorkspaceAdmin(team.workspaceId)
   const availableAgents = listAgentsAvailableForTeam(team.workspaceId, team.name)
   const items: AgentOption[] = useMemo(
     () =>
-      availableAgents.map((agent) => ({
-        label: agent.name,
-        value: agent.id,
-      })),
-    [availableAgents],
+      listAgentsAvailableForTeam(team.workspaceId, team.name)
+        .filter((agent) => agents.every((onTeam) => onTeam.id !== agent.id))
+        .map((agent) => ({
+          label: agent.name,
+          value: agent.id,
+        })),
+    [agents, team.name, team.workspaceId],
   )
 
   // oxlint-disable-next-line unicorn/no-null -- Base UI Combobox treats undefined as uncontrolled; null means "no selection".
   const selectedValue: AgentOption | null = null
 
-  async function onAdd(agentId: string): Promise<void> {
+  function onAdd(agentId: string): void {
     setAgentTeam({
       agentId,
       teamName: team.name,
       workspaceId: team.workspaceId,
     })
     setIsComboboxOpen(false)
-    await router.invalidate()
+    setAgents(listTeamAgents(team.workspaceId, team.name))
   }
 
-  async function onRemove(agent: Agent): Promise<void> {
+  function onRemove(agent: Agent): void {
     setAgentTeam({
       agentId: agent.id,
       teamName: undefined,
       workspaceId: team.workspaceId,
     })
-    await router.invalidate()
+    setAgents(listTeamAgents(team.workspaceId, team.name))
   }
 
   return (
@@ -86,9 +87,9 @@ export function SettingsTeamAgents(props: SettingsTeamAgentsProps): JSX.Element 
           <Combobox<AgentOption>
             items={items}
             onOpenChange={setIsComboboxOpen}
-            onValueChange={async (nextValue) => {
+            onValueChange={(nextValue) => {
               if (nextValue !== null) {
-                await onAdd(nextValue.value)
+                onAdd(nextValue.value)
               }
             }}
             open={isComboboxOpen}
@@ -109,24 +110,14 @@ export function SettingsTeamAgents(props: SettingsTeamAgentsProps): JSX.Element 
                 {items.length === 0 ? "Every agent is already on this team." : "No agents found."}
               </ComboboxEmpty>
               <ComboboxList>
-                {(item: AgentOption) => {
-                  const agent = availableAgents.find((entry) => entry.id === item.value)
-
-                  if (agent === undefined) {
-                    return <></>
-                  }
-
-                  return (
-                    <ComboboxItem key={item.value} value={item}>
-                      <Row className="items-center gap-8">
-                        <AvatarAgent alt={agent.name} src={agent.avatar} />
-                        <span className="truncate">
-                          {item.label} · {agent.team ?? "No team"}
-                        </span>
-                      </Row>
-                    </ComboboxItem>
-                  )
-                }}
+                {(item: AgentOption) => (
+                  <ComboboxItem key={item.value} value={item}>
+                    <Row className="items-center gap-8">
+                      <AgentOptionAvatar agentId={item.value} agents={availableAgents} />
+                      <span className="truncate">{item.label}</span>
+                    </Row>
+                  </ComboboxItem>
+                )}
               </ComboboxList>
             </ComboboxContent>
           </Combobox>
@@ -148,6 +139,16 @@ export function SettingsTeamAgents(props: SettingsTeamAgentsProps): JSX.Element 
       )}
     </SettingsSection>
   )
+}
+
+function AgentOptionAvatar(props: { agentId: string; agents: Agent[] }): JSX.Element {
+  const agent = props.agents.find((entry) => entry.id === props.agentId)
+
+  if (agent === undefined) {
+    return <></>
+  }
+
+  return <AvatarAgent alt={agent.name} src={agent.avatar} />
 }
 
 function SettingsTeamAgentRow(props: SettingsTeamAgentRowProps): JSX.Element {

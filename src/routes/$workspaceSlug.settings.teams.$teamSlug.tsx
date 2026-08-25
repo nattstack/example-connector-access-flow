@@ -10,7 +10,7 @@ import {
 import { SettingsTeamMembers } from "#/components/pages/settings/settings-team-members"
 import { listConnectorsForTeam } from "#/data/connectors"
 import { isCurrentUserWorkspaceAdmin } from "#/data/members"
-import { getTeamBySlug, listTeamAgents, listTeamMembers } from "#/data/teams"
+import { getTeamBySlug } from "#/data/teams"
 import { getWorkspaceBySlug } from "#/data/workspaces"
 
 export const Route = createFileRoute("/$workspaceSlug/settings/teams/$teamSlug")({
@@ -37,8 +37,8 @@ export const Route = createFileRoute("/$workspaceSlug/settings/teams/$teamSlug")
 
         <Column className="gap-y-32">
           <SettingsTeamGeneral key={team.id} team={team} />
-          <SettingsTeamMembers members={listTeamMembers(workspace.id, team.id)} team={team} />
-          <SettingsTeamAgents agents={listTeamAgents(workspace.id, team.name)} team={team} />
+          <SettingsTeamMembers team={team} />
+          <SettingsTeamAgents team={team} />
           <SettingsTeamConnectors connectors={listConnectorsForTeam(workspace.id, team.id)} />
           {isCurrentUserWorkspaceAdmin(workspace.id) && <SettingsTeamDelete team={team} />}
         </Column>
