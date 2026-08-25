@@ -27,7 +27,6 @@ import { useMemo, useState, type FormEvent, type JSX } from "react"
 import { AvatarConnector } from "#/components/avatar-connector"
 import { getConnectorApp, listAvailableConnectorApps, type ConnectorAppId } from "#/data/connectors"
 import type { Team } from "#/data/teams"
-import { getCurrentUser } from "#/data/user"
 
 interface AppOption {
   label: string
@@ -58,7 +57,7 @@ export function DialogAddConnector(props: DialogAddConnectorProps): JSX.Element 
   const [appId, setAppId] = useState<ConnectorAppId | undefined>(defaultApp?.id)
   const [errorMessage, setErrorMessage] = useState<string>()
   const [isAppComboboxOpen, setIsAppComboboxOpen] = useState(false)
-  const [label, setLabel] = useState(defaultLabelForApp(defaultApp?.id))
+  const [label, setLabel] = useState("")
   const [ownerTeamId, setOwnerTeamId] = useState(firstTeam?.id ?? "")
   const [scopeIds, setScopeIds] = useState<string[]>(defaultScopeIds(defaultApp?.id))
   const appItems: AppOption[] = useMemo(
@@ -92,7 +91,7 @@ export function DialogAddConnector(props: DialogAddConnectorProps): JSX.Element 
       setAppId(nextApp?.id)
       setErrorMessage(undefined)
       setIsAppComboboxOpen(false)
-      setLabel(defaultLabelForApp(nextApp?.id))
+      setLabel("")
       setOwnerTeamId(nextTeam?.id ?? "")
       setScopeIds(defaultScopeIds(nextApp?.id))
     }
@@ -160,7 +159,6 @@ export function DialogAddConnector(props: DialogAddConnectorProps): JSX.Element 
                     setAppId(nextApp.value)
                     setErrorMessage(undefined)
                     setIsAppComboboxOpen(false)
-                    setLabel(defaultLabelForApp(nextApp.value))
                     setScopeIds(defaultScopeIds(nextApp.value))
                   }}
                   open={isAppComboboxOpen}
@@ -263,7 +261,7 @@ export function DialogAddConnector(props: DialogAddConnectorProps): JSX.Element 
                 </Select>
                 <Spacer height={16} />
 
-                <Label htmlFor={LABEL_INPUT_ID}>Account</Label>
+                <Label htmlFor={LABEL_INPUT_ID}>Label</Label>
                 <Spacer height={8} />
 
                 <Input
@@ -272,7 +270,7 @@ export function DialogAddConnector(props: DialogAddConnectorProps): JSX.Element 
                     setLabel(event.target.value)
                     setErrorMessage(undefined)
                   }}
-                  placeholder="Account or workspace name"
+                  placeholder="Work inbox"
                   value={label}
                 />
               </>
@@ -293,22 +291,6 @@ export function DialogAddConnector(props: DialogAddConnectorProps): JSX.Element 
       </DialogResponsivePopup>
     </DialogResponsive>
   )
-}
-
-function defaultLabelForApp(appId: ConnectorAppId | undefined): string {
-  if (appId === "gmail") {
-    return getCurrentUser().email
-  }
-
-  if (appId === "github") {
-    return "nattstack"
-  }
-
-  if (appId === "slack") {
-    return "Workspace"
-  }
-
-  return ""
 }
 
 function defaultScopeIds(appId: ConnectorAppId | undefined): string[] {

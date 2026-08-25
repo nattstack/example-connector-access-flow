@@ -83,10 +83,10 @@ export function SettingsConnectors(props: SettingsConnectorsProps): JSX.Element 
         )
       })
       .toSorted((left, right) => {
-        const titleResult = formatConnectorTitle(left).localeCompare(formatConnectorTitle(right))
+        const typeResult = connectorTypeName(left).localeCompare(connectorTypeName(right))
 
-        if (titleResult !== 0) {
-          return sortDirection === "asc" ? titleResult : -titleResult
+        if (typeResult !== 0) {
+          return sortDirection === "asc" ? typeResult : -typeResult
         }
 
         return left.label.localeCompare(right.label)
@@ -108,7 +108,7 @@ export function SettingsConnectors(props: SettingsConnectorsProps): JSX.Element 
               aria-label="Search connectors"
               className="w-full pl-36"
               onChange={(event) => setSearch(event.target.value)}
-              placeholder="Search by app, account, or team"
+              placeholder="Search by app, label, or team"
               size={36}
               value={search}
             />
@@ -154,8 +154,8 @@ export function SettingsConnectors(props: SettingsConnectorsProps): JSX.Element 
               <button
                 aria-label={
                   sortDirection === "asc"
-                    ? "Sort by connector descending"
-                    : "Sort by connector ascending"
+                    ? "Sort by connector type descending"
+                    : "Sort by connector type ascending"
                 }
                 className="
                   inline-flex cursor-pointer items-center border-0
@@ -233,6 +233,10 @@ function appFilterLabel(filter: AppFilter): string {
   return getConnectorApp(filter)?.name ?? filter
 }
 
+function connectorTypeName(connector: Connector): string {
+  return getConnectorApp(connector.appId)?.name ?? connector.appId
+}
+
 function listConnectorAccessTeams(connector: Connector): Team[] {
   const ownerTeam = getTeamById(connector.workspaceId, connector.ownerTeamId)
   const grantedTeams = connector.grantedTeamIds.flatMap((teamId) => {
@@ -270,9 +274,7 @@ function SettingsConnectorRow(props: SettingsConnectorRowProps): JSX.Element {
           <AvatarConnector appId={connector.appId} />
           <Spacer width={12} />
 
-          <span className="truncate text-14 font-500 text-text-primary">
-            {formatConnectorTitle(connector)}
-          </span>
+          <span className="truncate text-14 font-500 text-text-primary">{connector.label}</span>
         </Link>
       </td>
       <td className="truncate py-12 text-14 text-text-secondary">
