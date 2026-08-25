@@ -9,7 +9,7 @@ export const Route = createFileRoute("/dashboard/agents/$agentId")({
     const { agent } = Route.useLoaderData()
 
     return (
-      <Column className="mx-auto w-full max-w-768">
+      <Column className="w-full max-w-768">
         <Spacer height={32} />
 
         <Row alignItems="center" className="gap-12">
