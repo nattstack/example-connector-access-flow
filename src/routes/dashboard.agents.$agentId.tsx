@@ -26,6 +26,8 @@ export const Route = createFileRoute("/dashboard/agents/$agentId")({
 
         {/* Content */}
         <AgentChat />
+
+        {/* Composer */}
       </>
     )
   },
