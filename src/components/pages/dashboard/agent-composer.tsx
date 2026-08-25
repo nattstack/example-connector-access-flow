@@ -10,7 +10,7 @@ export function AgentComposer(): JSX.Element {
       <Column
         className="
           mx-auto w-full max-w-768 rounded-20 border border-border bg-bg-primary
-          p-16 shadow-[0_2px_12px_0_rgb(0_0_0_/_0.06)]
+          p-16
         "
       >
         <Textarea

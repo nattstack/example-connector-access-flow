@@ -1,15 +1,20 @@
 import { Column, IconButton, Row, Spacer } from "@nattstack/ui"
 import { Fragment, useRef, type JSX } from "react"
-import { MOCK_AGENT_CHAT, type ChatInline, type ChatItem, type ChatText } from "#/data/agent-chat"
+import type { ChatInline, ChatItem, ChatText } from "#/data/agent-chat"
 
 const GAP_CLUSTER = 8
 const GAP_TURN = 20
 const ICON_SIZE = 16
 const ICON_STROKE_WIDTH = 1.6
 
+interface AgentChatProps {
+  items: ChatItem[]
+}
+
 type ChatSide = "agent" | "meta" | "user"
 
-export function AgentChat(): JSX.Element {
+export function AgentChat(props: AgentChatProps): JSX.Element {
+  const { items } = props
   const endRef = useRef<HTMLDivElement>(null)
 
   return (
@@ -17,8 +22,8 @@ export function AgentChat(): JSX.Element {
       <Column className="mx-auto w-full max-w-768">
         <Spacer height={32} />
 
-        {MOCK_AGENT_CHAT.map((item, index) => {
-          const previous = index === 0 ? undefined : MOCK_AGENT_CHAT[index - 1]
+        {items.map((item, index) => {
+          const previous = index === 0 ? undefined : items[index - 1]
           const gap = getItemGap(previous, item)
 
           return (

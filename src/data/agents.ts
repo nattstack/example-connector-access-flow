@@ -11,7 +11,7 @@ export interface Agent {
 export const MOCK_AGENTS: Agent[] = [
   {
     avatar: "/avatars/cloud.webp",
-    chat: "That’s the whole catalog. syntax-summaries.md is 18,514 lines, newest-first #1031 through #1. Only gap is #625 (404 on syntax.fm). Official transcripts were empty from about #225 back, so those older cards are notes-only.",
+    chat: "3 need a reply today. The other 3 can wait until Thursday.",
     createdAt: "2026-08-25T01:02:00",
     id: "11",
     name: "Email summary",

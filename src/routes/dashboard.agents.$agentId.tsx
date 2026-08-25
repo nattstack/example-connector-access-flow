@@ -4,11 +4,12 @@ import type { JSX } from "react"
 import { AvatarAgent } from "#/components/avatar-agent"
 import { AgentChat } from "#/components/pages/dashboard/agent-chat"
 import { AgentComposer } from "#/components/pages/dashboard/agent-composer"
+import { getAgentChatById } from "#/data/agent-chat.ts"
 import { getAgentById } from "#/data/agents.ts"
 
 export const Route = createFileRoute("/dashboard/agents/$agentId")({
   component: function AgentDetailPage(): JSX.Element {
-    const { agent } = Route.useLoaderData()
+    const { agent, chat } = Route.useLoaderData()
 
     return (
       <>
@@ -27,7 +28,7 @@ export const Route = createFileRoute("/dashboard/agents/$agentId")({
 
         {/* Content */}
         <Column className="min-h-0 flex-1 overflow-y-auto">
-          <AgentChat />
+          <AgentChat items={chat} key={agent.id} />
         </Column>
 
         {/* Composer */}
@@ -42,6 +43,6 @@ export const Route = createFileRoute("/dashboard/agents/$agentId")({
       throw notFound()
     }
 
-    return { agent }
+    return { agent, chat: getAgentChatById(agent.id) }
   },
 })
