@@ -115,10 +115,12 @@ function LinkAgent(props: LinkAgentProps): JSX.Element {
         params={{ agentId: agent.id, workspaceSlug }}
         to="/$workspaceSlug/agents/$agentId"
       />
-      <div className="
-        pointer-events-none relative z-1 flex min-w-0 flex-1 items-center
-        gap-x-8
-      ">
+      <div
+        className="
+          pointer-events-none relative z-1 flex min-w-0 flex-1 items-center
+          gap-x-8
+        "
+      >
         {content}
       </div>
     </div>
