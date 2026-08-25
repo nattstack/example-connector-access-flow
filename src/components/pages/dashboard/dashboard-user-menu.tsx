@@ -19,7 +19,7 @@ export function DashboardUserMenu(): JSX.Element {
           data-popup-open:bg-gray-3
         "
       >
-        <AvatarUser name={user.name} />
+        <AvatarUser alt={user.name} src={user.avatar} />
         <span className="min-w-0 truncate text-14 font-500 text-text-primary">{user.name}</span>
       </MenuTrigger>
       <MenuContent
