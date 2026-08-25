@@ -10,7 +10,9 @@ export const Route = createFileRoute("/dashboard/")({
 
         <Spacer height={8} />
 
-        <p className="text-14 text-text-secondary">Choose an agent from the sidebar to open a chat.</p>
+        <p className="text-14 text-text-secondary">
+          Choose an agent from the sidebar to open a chat.
+        </p>
       </Column>
     )
   },
