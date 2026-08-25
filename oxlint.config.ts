@@ -27,14 +27,6 @@ export default defineConfig({
       specifier: "eslint-plugin-perfectionist",
     },
   ],
-  overrides: [
-    {
-      files: ["src/routes/**/$*.tsx"],
-      rules: {
-        "unicorn/filename-case": "allow",
-      },
-    },
-  ],
   plugins: [
     "eslint",
     "jsdoc",

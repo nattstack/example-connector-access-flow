@@ -11,8 +11,8 @@
 import { Route as rootRouteImport } from "./routes/__root"
 import { Route as IndexRouteImport } from "./routes/index"
 import { Route as DashboardRouteImport } from "./routes/dashboard"
-import { Route as DashboardIndexRouteImport } from "./routes/dashboard/index"
-import { Route as DashboardProjectsProjectIdRouteImport } from "./routes/dashboard/projects/$projectId"
+import { Route as DashboardIndexRouteImport } from "./routes/dashboard.index"
+import { Route as DashboardProjectsProjectIdRouteImport } from "./routes/dashboard.projects.$projectId"
 
 const IndexRoute = IndexRouteImport.update({
   id: "/",
