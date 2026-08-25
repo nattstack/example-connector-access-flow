@@ -48,6 +48,7 @@ export function DialogAddConnector(props: DialogAddConnectorProps): JSX.Element 
   const [scopeIds, setScopeIds] = useState<string[]>(defaultScopeIds(firstApp?.id))
 
   const selectedApp = appId === undefined ? undefined : getConnectorApp(appId)
+  const selectedOwnerTeam = teams.find((team) => team.id === ownerTeamId)
   const hasScopes = selectedApp !== undefined && selectedApp.scopes.length > 0
   const isSubmitDisabled =
     appId === undefined ||
@@ -135,7 +136,7 @@ export function DialogAddConnector(props: DialogAddConnectorProps): JSX.Element 
                   value={appId}
                 >
                   <SelectTrigger className="w-full">
-                    <SelectValue />
+                    <SelectValue>{selectedApp?.name}</SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {apps.map((app) => (
@@ -200,7 +201,7 @@ export function DialogAddConnector(props: DialogAddConnectorProps): JSX.Element 
                   value={ownerTeamId.length === 0 ? undefined : ownerTeamId}
                 >
                   <SelectTrigger className="w-full">
-                    <SelectValue />
+                    <SelectValue>{selectedOwnerTeam?.name}</SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {teams.map((team) => (

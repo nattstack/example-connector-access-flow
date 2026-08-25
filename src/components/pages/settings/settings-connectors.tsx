@@ -1,7 +1,18 @@
-import { IconChevronRightOutline18 } from "@nattstack/icons"
-import { Button, Column, Row, Spacer } from "@nattstack/ui"
+import { IconChevronDownOutline18, IconMagnifierOutline18 } from "@nattstack/icons"
+import {
+  Button,
+  Column,
+  Input,
+  Row,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  Spacer,
+} from "@nattstack/ui"
 import { Link, useParams, useRouter } from "@tanstack/react-router"
-import { useState, type JSX } from "react"
+import { useMemo, useState, type JSX } from "react"
 import { AvatarConnector } from "#/components/avatar-connector"
 import { DialogAddConnector } from "#/components/pages/settings/dialog-add-connector"
 import {
@@ -9,10 +20,15 @@ import {
   formatConnectorGrantSummary,
   formatConnectorScopeLabel,
   formatConnectorTitle,
+  getConnectorApp,
   isAppBlocked,
+  listConnectorApps,
   type Connector,
+  type ConnectorAppId,
 } from "#/data/connectors"
 import type { Team } from "#/data/teams"
+
+type AppFilter = "All" | ConnectorAppId
 
 interface SettingsConnectorRowProps {
   connector: Connector
@@ -24,25 +40,93 @@ interface SettingsConnectorsProps {
   workspaceId: number
 }
 
+type SortDirection = "asc" | "desc"
+
 export function SettingsConnectors(props: SettingsConnectorsProps): JSX.Element {
   const { connectors, teams, workspaceId } = props
   const router = useRouter()
+
+  const [appFilter, setAppFilter] = useState<AppFilter>("All")
   const [isAddOpen, setIsAddOpen] = useState(false)
+  const [search, setSearch] = useState("")
+  const [sortDirection, setSortDirection] = useState<SortDirection>("asc")
+
+  const visibleConnectors = useMemo(() => {
+    const query = search.trim().toLowerCase()
+
+    return connectors
+      .filter((connector) => {
+        if (appFilter !== "All" && connector.appId !== appFilter) {
+          return false
+        }
+
+        if (query.length === 0) {
+          return true
+        }
+
+        const app = getConnectorApp(connector.appId)
+        const title = formatConnectorTitle(connector).toLowerCase()
+        const grantSummary = formatConnectorGrantSummary(connector).toLowerCase()
+
+        return (
+          title.includes(query) ||
+          connector.label.toLowerCase().includes(query) ||
+          (app?.name.toLowerCase().includes(query) ?? false) ||
+          grantSummary.includes(query)
+        )
+      })
+      .toSorted((left, right) => {
+        const titleResult = formatConnectorTitle(left).localeCompare(formatConnectorTitle(right))
+
+        if (titleResult !== 0) {
+          return sortDirection === "asc" ? titleResult : -titleResult
+        }
+
+        return left.label.localeCompare(right.label)
+      })
+  }, [appFilter, connectors, search, sortDirection])
 
   return (
     <Column as="section">
-      <Row className="items-start justify-between">
-        <Column className="min-w-0">
-          <h2 className="text-24">Connections</h2>
-          <Spacer height={8} />
-
-          <p className="text-14 text-text-secondary">
-            Team-owned apps that agents can use in chat. Multiple connections of the same app can
-            have different scopes.
-          </p>
-        </Column>
-        <Spacer width={16} />
-
+      <Row className="items-center" flexWrap="wrap" gap={8}>
+        <Row className="min-w-0 flex-1 items-center" gap={8}>
+          <div className="relative min-w-0 flex-1">
+            <IconMagnifierOutline18
+              className="
+                pointer-events-none absolute top-1/2 left-12 -translate-y-1/2
+                text-gray-9
+              "
+            />
+            <Input
+              aria-label="Search connectors"
+              className="w-full pl-36"
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Search by app, account, or team"
+              size={36}
+              value={search}
+            />
+          </div>
+          <Select
+            onValueChange={(nextFilter) => {
+              if (nextFilter !== null) {
+                setAppFilter(nextFilter)
+              }
+            }}
+            value={appFilter}
+          >
+            <SelectTrigger className="w-auto shrink-0" size={36}>
+              <SelectValue>{appFilterLabel(appFilter)}</SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="All">All</SelectItem>
+              {listConnectorApps().map((app) => (
+                <SelectItem key={app.id} value={app.id}>
+                  {app.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </Row>
         <Button
           disabled={teams.length === 0}
           label="Add a connector"
@@ -51,23 +135,71 @@ export function SettingsConnectors(props: SettingsConnectorsProps): JSX.Element 
           variant="primary"
         />
       </Row>
-      <Spacer height={16} />
+      <Spacer height={24} />
 
-      <Column
-        className="
-          rounded-16 border border-border bg-bg-shell-inner p-24 shadow-2
-        "
-      >
-        {connectors.length === 0 ? (
-          <p className="text-14 text-text-secondary">No connectors in this workspace yet.</p>
-        ) : (
-          <Column as="ul" className="gap-y-4">
-            {connectors.map((connector) => (
+      <table className="w-full table-fixed border-collapse">
+        <thead>
+          <tr className="border-b border-border">
+            <th
+              aria-sort={sortDirection === "asc" ? "ascending" : "descending"}
+              className="w-[40%] py-12 text-left"
+            >
+              <button
+                aria-label={
+                  sortDirection === "asc"
+                    ? "Sort by connector descending"
+                    : "Sort by connector ascending"
+                }
+                className="
+                  inline-flex cursor-pointer items-center border-0
+                  bg-transparent p-0 text-12 font-500 text-text-secondary
+                "
+                onClick={() =>
+                  setSortDirection((direction) => (direction === "asc" ? "desc" : "asc"))
+                }
+                type="button"
+              >
+                Connector
+                <Spacer width={4} />
+                <IconChevronDownOutline18
+                  className={sortDirection === "desc" ? "rotate-180" : undefined}
+                  size={12}
+                  strokeWidth={2}
+                />
+              </button>
+            </th>
+            <th
+              className="
+                w-[28%] py-12 text-left text-12 font-500 text-text-secondary
+              "
+            >
+              Scopes
+            </th>
+            <th
+              className="
+                w-[32%] py-12 text-left text-12 font-500 text-text-secondary
+              "
+            >
+              Access
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {visibleConnectors.length === 0 ? (
+            <tr>
+              <td className="py-24 text-14 text-text-secondary" colSpan={3}>
+                {connectors.length === 0
+                  ? "No connectors in this workspace yet."
+                  : "No connectors match your search."}
+              </td>
+            </tr>
+          ) : (
+            visibleConnectors.map((connector) => (
               <SettingsConnectorRow connector={connector} key={connector.id} />
-            ))}
-          </Column>
-        )}
-      </Column>
+            ))
+          )}
+        </tbody>
+      </table>
 
       <DialogAddConnector
         isOpen={isAddOpen}
@@ -86,56 +218,67 @@ export function SettingsConnectors(props: SettingsConnectorsProps): JSX.Element 
   )
 }
 
+function appFilterLabel(filter: AppFilter): string {
+  if (filter === "All") {
+    return "All"
+  }
+
+  return getConnectorApp(filter)?.name ?? filter
+}
+
 function SettingsConnectorRow(props: SettingsConnectorRowProps): JSX.Element {
   const { connector } = props
   const { workspaceSlug } = useParams({ from: "/$workspaceSlug" })
   const blocked = isAppBlocked(connector.workspaceId, connector.appId)
 
   return (
-    <li>
-      <Link
-        className="
-          flex min-h-56 w-full items-center rounded-12 px-12 select-none
-          hover:bg-gray-3
-        "
-        params={{ connectorId: connector.id, workspaceSlug }}
-        to="/$workspaceSlug/settings/connectors/$connectorId"
-      >
-        <AvatarConnector appId={connector.appId} />
-        <Spacer width={12} />
+    <tr
+      className="
+        border-b border-border
+        last:border-b-0
+      "
+    >
+      <td className="py-12">
+        <Link
+          className="flex min-w-0 items-center rounded-8 select-none"
+          params={{ connectorId: connector.id, workspaceSlug }}
+          to="/$workspaceSlug/settings/connectors/$connectorId"
+        >
+          <AvatarConnector appId={connector.appId} />
+          <Spacer width={12} />
 
-        <Column className="min-w-0 flex-1">
-          <Row className="min-w-0 items-center">
+          <Column className="min-w-0">
             <span className="truncate text-14 font-500 text-text-primary">
               {formatConnectorTitle(connector)}
             </span>
-            {blocked && (
-              <>
-                <Spacer width={8} />
-
-                <span
-                  className="
-                    inline-flex h-24 shrink-0 items-center rounded-6 bg-gray-4
-                    px-8 text-12 font-500 text-text-secondary
-                  "
-                >
-                  Blocked
-                </span>
-              </>
-            )}
-          </Row>
-          <span className="truncate text-13 text-text-secondary">
-            {connector.label}
-            {" · "}
-            {formatConnectorScopeLabel(connector)}
-            {" · "}
+            <span className="truncate text-13 text-text-secondary">{connector.label}</span>
+          </Column>
+        </Link>
+      </td>
+      <td className="truncate py-12 text-14 text-text-secondary">
+        {formatConnectorScopeLabel(connector)}
+      </td>
+      <td className="py-12">
+        <Row className="min-w-0 items-center">
+          <span className="truncate text-14 text-text-secondary">
             {formatConnectorGrantSummary(connector)}
           </span>
-        </Column>
-        <Spacer width={8} />
+          {blocked && (
+            <>
+              <Spacer width={8} />
 
-        <IconChevronRightOutline18 className="shrink-0 text-gray-9" />
-      </Link>
-    </li>
+              <span
+                className="
+                  inline-flex h-24 shrink-0 items-center rounded-6 bg-gray-4
+                  px-8 text-12 font-500 text-text-secondary
+                "
+              >
+                Blocked
+              </span>
+            </>
+          )}
+        </Row>
+      </td>
+    </tr>
   )
 }

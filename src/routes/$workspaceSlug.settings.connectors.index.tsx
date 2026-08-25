@@ -12,7 +12,7 @@ export const Route = createFileRoute("/$workspaceSlug/settings/connectors/")({
     return (
       <>
         <h1 className="text-30">Connectors</h1>
-        <Spacer height={16} />
+        <Spacer height={24} />
 
         <SettingsConnectors connectors={connectors} teams={teams} workspaceId={workspaceId} />
       </>

@@ -98,7 +98,13 @@ function GrantedAgentsCard(props: { connector: Connector }): JSX.Element {
   const { connector } = props
   const router = useRouter()
   const grantableAgents = listGrantableAgents(connector)
-  const [agentId, setAgentId] = useState(grantableAgents[0]?.id ?? "")
+  const [firstGrantableAgent] = grantableAgents
+  const [agentId, setAgentId] = useState(firstGrantableAgent?.id ?? "")
+  const selectedAgentId = agentId.length === 0 ? firstGrantableAgent?.id : agentId
+  const selectedAgent =
+    selectedAgentId === undefined
+      ? undefined
+      : grantableAgents.find((agent) => agent.id === selectedAgentId)
 
   const grantedAgents = connector.grantedAgentIds.flatMap((grantedAgentId) => {
     const agent = getAgentById(connector.workspaceId, grantedAgentId)
@@ -107,12 +113,12 @@ function GrantedAgentsCard(props: { connector: Connector }): JSX.Element {
   })
 
   async function onGrant(): Promise<void> {
-    if (agentId.length === 0) {
+    if (selectedAgentId === undefined) {
       return
     }
 
     grantAgentToConnector({
-      agentId,
+      agentId: selectedAgentId,
       connectorId: connector.id,
       workspaceId: connector.workspaceId,
     })
@@ -180,10 +186,10 @@ function GrantedAgentsCard(props: { connector: Connector }): JSX.Element {
                   setAgentId(nextAgentId)
                 }
               }}
-              value={agentId.length === 0 ? (grantableAgents[0]?.id ?? undefined) : agentId}
+              value={selectedAgentId}
             >
               <SelectTrigger className="min-w-0 flex-1">
-                <SelectValue />
+                <SelectValue>{selectedAgent?.name}</SelectValue>
               </SelectTrigger>
               <SelectContent>
                 {grantableAgents.map((agent) => (
@@ -234,7 +240,13 @@ function GrantedTeamsCard(props: { connector: Connector }): JSX.Element {
   const { connector } = props
   const router = useRouter()
   const grantableTeams = listGrantableTeams(connector)
-  const [teamId, setTeamId] = useState(grantableTeams[0]?.id ?? "")
+  const [firstGrantableTeam] = grantableTeams
+  const [teamId, setTeamId] = useState(firstGrantableTeam?.id ?? "")
+  const selectedTeamId = teamId.length === 0 ? firstGrantableTeam?.id : teamId
+  const selectedTeam =
+    selectedTeamId === undefined
+      ? undefined
+      : grantableTeams.find((team) => team.id === selectedTeamId)
 
   const grantedTeams = connector.grantedTeamIds.flatMap((grantedTeamId) => {
     const team = getTeamById(connector.workspaceId, grantedTeamId)
@@ -243,13 +255,13 @@ function GrantedTeamsCard(props: { connector: Connector }): JSX.Element {
   })
 
   async function onGrant(): Promise<void> {
-    if (teamId.length === 0) {
+    if (selectedTeamId === undefined) {
       return
     }
 
     grantTeamToConnector({
       connectorId: connector.id,
-      teamId,
+      teamId: selectedTeamId,
       workspaceId: connector.workspaceId,
     })
     setTeamId("")
@@ -292,10 +304,10 @@ function GrantedTeamsCard(props: { connector: Connector }): JSX.Element {
                   setTeamId(nextTeamId)
                 }
               }}
-              value={teamId.length === 0 ? grantableTeams[0]?.id : teamId}
+              value={selectedTeamId}
             >
               <SelectTrigger className="min-w-0 flex-1">
-                <SelectValue />
+                <SelectValue>{selectedTeam?.name}</SelectValue>
               </SelectTrigger>
               <SelectContent>
                 {grantableTeams.map((team) => (
