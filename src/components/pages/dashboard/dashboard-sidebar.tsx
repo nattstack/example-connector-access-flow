@@ -14,7 +14,7 @@ export function DashboardSidebar(): JSX.Element {
     <Column
       as="aside"
       className="
-        sticky top-0 left-0 isolate z-30 h-dvh w-256 shrink-0
+        sticky top-0 left-0 isolate z-30 h-dvh w-288 shrink-0
         shadow-[inset_-1px_0_0_0_var(--color-border)]
       "
     >
