@@ -168,7 +168,7 @@ function ConnectorDeleteCard(props: { connector: Connector }): JSX.Element {
         connectorId: connector.id,
         workspaceId: connector.workspaceId,
       })
-      await navigate({ params: { workspaceSlug }, to: "/$workspaceSlug/settings/connectors/" })
+      await navigate({ params: { workspaceSlug }, to: "/$workspaceSlug/settings/connectors" })
       await router.invalidate()
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : "Could not delete this connector.")
