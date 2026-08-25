@@ -72,7 +72,9 @@ function LinkAgent(props: LinkAgentProps): JSX.Element {
         <Row className="min-w-0 items-center">
           {agent.team && (
             <>
-              <BadgeTeam team={agent.team} />
+              <span className="pointer-events-auto">
+                <BadgeTeam team={agent.team} />
+              </span>
               <Spacer width={6} />
             </>
           )}
@@ -88,8 +90,8 @@ function LinkAgent(props: LinkAgentProps): JSX.Element {
       <div
         aria-disabled
         className="
-          flex h-56 w-full shrink-0 cursor-default items-center gap-x-8
-          rounded-12 px-8 opacity-50 select-none
+          pointer-events-none flex h-56 w-full shrink-0 cursor-default
+          items-center gap-x-8 rounded-12 px-8 opacity-50 select-none
         "
       >
         {content}
@@ -98,17 +100,25 @@ function LinkAgent(props: LinkAgentProps): JSX.Element {
   }
 
   return (
-    <Link
-      activeProps={{ className: "bg-gray-3" }}
+    <div
       className="
-        flex h-56 w-full shrink-0 items-center gap-x-8 rounded-12 px-8
-        select-none
-        hover:bg-gray-3
+        relative flex h-56 w-full shrink-0 items-center gap-x-8 rounded-12
+        px-8
       "
-      params={{ agentId: agent.id, workspaceSlug }}
-      to="/$workspaceSlug/agents/$agentId"
     >
-      {content}
-    </Link>
+      <Link
+        activeProps={{ className: "bg-gray-3" }}
+        aria-label={agent.name}
+        className="
+          absolute inset-0 rounded-12
+          hover:bg-gray-3
+        "
+        params={{ agentId: agent.id, workspaceSlug }}
+        to="/$workspaceSlug/agents/$agentId"
+      />
+      <div className="pointer-events-none relative z-1 flex min-w-0 flex-1 items-center gap-x-8">
+        {content}
+      </div>
+    </div>
   )
 }
