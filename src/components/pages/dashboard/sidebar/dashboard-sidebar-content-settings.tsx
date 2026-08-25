@@ -3,6 +3,7 @@ import {
   IconGearOutline18,
   IconShieldOutline18,
   IconUserOutline18,
+  IconUsersOutline18,
 } from "@nattstack/icons"
 import { Column, Spacer } from "@nattstack/ui"
 import { motion } from "motion/react"
@@ -44,6 +45,12 @@ export function DashboardSidebarContentSettings(
           icon={<IconUserOutline18 size={ICON_SIZE} />}
           label="Profile"
           to="/$workspaceSlug/settings/profile"
+        />
+        <DashboardSidebarLink
+          exact={false}
+          icon={<IconUsersOutline18 size={ICON_SIZE} />}
+          label="Teams"
+          to="/$workspaceSlug/settings/teams"
         />
         <DashboardSidebarLink
           icon={<IconShieldOutline18 size={ICON_SIZE} />}
