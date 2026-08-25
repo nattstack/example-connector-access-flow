@@ -19,7 +19,7 @@ import { DialogAddConnector } from "#/components/pages/settings/dialog-add-conne
 import {
   addConnector,
   formatConnectorGrantSummary,
-  formatConnectorScopeLabel,
+  formatConnectorScopeCount,
   formatConnectorTitle,
   getConnectorApp,
   isAppBlocked,
@@ -278,7 +278,7 @@ function SettingsConnectorRow(props: SettingsConnectorRowProps): JSX.Element {
         </Link>
       </td>
       <td className="truncate py-12 text-14 text-text-secondary">
-        {formatConnectorScopeLabel(connector)}
+        {formatConnectorScopeCount(connector)}
       </td>
       <td className="py-12">
         <Row className="min-w-0 flex-wrap items-center" gap={8}>

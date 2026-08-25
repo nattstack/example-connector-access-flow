@@ -219,6 +219,20 @@ export function formatConnectorGrantSummary(connector: Connector): string {
   return parts.join(" · ")
 }
 
+export function formatConnectorScopeCount(connector: Connector): string | undefined {
+  const app = getConnectorApp(connector.appId)
+
+  if (app === undefined || app.scopes.length === 0) {
+    return undefined
+  }
+
+  const grantedCount = connector.scopeIds.filter((scopeId) =>
+    app.scopes.some((scope) => scope.id === scopeId),
+  ).length
+
+  return `${String(grantedCount)}/${String(app.scopes.length)}`
+}
+
 export function formatConnectorScopeLabel(connector: Connector): string {
   const app = getConnectorApp(connector.appId)
 
