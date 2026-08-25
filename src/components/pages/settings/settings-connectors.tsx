@@ -265,8 +265,8 @@ function SettingsConnectorRow(props: SettingsConnectorRowProps): JSX.Element {
   return (
     <tr
       className="
-        border-b border-border
-        last:border-b-0
+        border-b border-border last:border-b-0
+        hover:bg-gray-3
       "
     >
       <td className="py-12">

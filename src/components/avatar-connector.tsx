@@ -1,6 +1,14 @@
-import { SiGithub, SiGmail } from "@icons-pack/react-simple-icons"
+import {
+  SiFigma,
+  SiGithub,
+  SiGmail,
+  SiGooglecalendar,
+  SiGoogledrive,
+  SiLinear,
+  SiNotion,
+} from "@icons-pack/react-simple-icons"
 import type { JSX } from "react"
-import { getConnectorApp, type ConnectorAppId } from "#/data/connectors"
+import type { ConnectorAppId } from "#/data/connectors"
 
 interface AvatarConnectorProps {
   appId: ConnectorAppId
@@ -15,22 +23,21 @@ interface BrandAvatar {
 
 const SIZE = 32
 const ICON_SCALE = 0.55
-const FALLBACK_INITIAL_SCALE = 0.42
 
-const BRAND_AVATARS: Partial<Record<ConnectorAppId, BrandAvatar>> = {
+const BRAND_AVATARS: Record<ConnectorAppId, BrandAvatar> = {
+  figma: { Icon: FigmaMark, background: "#FDE8E3", color: "default" },
+  gcalendar: { Icon: GoogleCalendarMark, background: "#E8F0FE", color: "default" },
+  gdrive: { Icon: GoogleDriveMark, background: "#E6F4EA", color: "default" },
   github: { Icon: GithubMark, background: "#F4F4F5", color: "#181717" },
   gmail: { Icon: GmailMark, background: "#FCE8E6", color: "#EA4335" },
+  linear: { Icon: LinearMark, background: "#EEEFFB", color: "default" },
+  notion: { Icon: NotionMark, background: "#F4F4F5", color: "#181717" },
   slack: { Icon: SlackMark, background: "#F4E8F5", color: "#4A154B" },
 }
 
 export function AvatarConnector(props: AvatarConnectorProps): JSX.Element {
   const { appId, size = SIZE } = props
   const brand = BRAND_AVATARS[appId]
-
-  if (brand === undefined) {
-    return <FallbackMark appId={appId} size={size} />
-  }
-
   const { Icon } = brand
 
   return (
@@ -50,27 +57,10 @@ export function AvatarConnector(props: AvatarConnectorProps): JSX.Element {
   )
 }
 
-function FallbackMark(props: { appId: ConnectorAppId; size: number }): JSX.Element {
-  const { appId, size } = props
-  const name = getConnectorApp(appId)?.name ?? appId
-  const initial = [...name][0]?.toUpperCase() ?? "?"
+function FigmaMark(props: { color: string; size: number }): JSX.Element {
+  const { color, size } = props
 
-  return (
-    <span
-      aria-hidden
-      className="
-        flex shrink-0 items-center justify-center rounded-8 bg-gray-4
-        leading-none font-500 text-text-secondary
-      "
-      style={{
-        fontSize: size * FALLBACK_INITIAL_SCALE,
-        height: size,
-        width: size,
-      }}
-    >
-      {initial}
-    </span>
-  )
+  return <SiFigma color={color} size={size} title="" />
 }
 
 function GithubMark(props: { color: string; size: number }): JSX.Element {
@@ -83,6 +73,30 @@ function GmailMark(props: { color: string; size: number }): JSX.Element {
   const { color, size } = props
 
   return <SiGmail color={color} size={size} title="" />
+}
+
+function GoogleCalendarMark(props: { color: string; size: number }): JSX.Element {
+  const { color, size } = props
+
+  return <SiGooglecalendar color={color} size={size} title="" />
+}
+
+function GoogleDriveMark(props: { color: string; size: number }): JSX.Element {
+  const { color, size } = props
+
+  return <SiGoogledrive color={color} size={size} title="" />
+}
+
+function LinearMark(props: { color: string; size: number }): JSX.Element {
+  const { color, size } = props
+
+  return <SiLinear color={color} size={size} title="" />
+}
+
+function NotionMark(props: { color: string; size: number }): JSX.Element {
+  const { color, size } = props
+
+  return <SiNotion color={color} size={size} title="" />
 }
 
 function SlackMark(props: { color: string; size: number }): JSX.Element {
@@ -100,7 +114,7 @@ function SlackMark(props: { color: string; size: number }): JSX.Element {
       <path d="M6.2 14.7a2.2 2.2 0 1 1-2.2-2.2h2.2zm1.1 0a2.2 2.2 0 1 1 4.4 0v5.5a2.2 2.2 0 1 1-4.4 0z" />
       <path d="M9.5 6.2a2.2 2.2 0 1 1 2.2-2.2v2.2zm0 1.1a2.2 2.2 0 1 1 0 4.4H4a2.2 2.2 0 1 1 0-4.4z" />
       <path d="M17.8 9.3a2.2 2.2 0 1 1 2.2 2.2h-2.2zm-1.1 0a2.2 2.2 0 1 1-4.4 0V3.8a2.2 2.2 0 1 1 4.4 0z" />
-      <path d="M14.5 17.8a2.2 2.2 0 1 1-2.2 2.2v-2.2zm0-1.1a2.2 2.2 0 1 1 0-4.4H20a2.2 2.2 0 1 1 0 4.4z" />
+      <path d="M14.5 17.8a2.2 2.2 0 1 1-2.2 2.2v-2.2zm0-1.1a2.2 2.2 0 1 1 0-4.4H20a2.2 2.2 0 1 1 0-4.4z" />
     </svg>
   )
 }
