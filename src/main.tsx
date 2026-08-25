@@ -25,8 +25,13 @@ function syncTheme(): void {
 syncTheme()
 themeQuery.addEventListener("change", syncTheme)
 
-// oxlint-disable-next-line typescript/no-non-null-assertion
-createRoot(document.querySelector("#root")!).render(
+const root = document.querySelector("#root")
+
+if (!root) {
+  throw new Error("Root element not found")
+}
+
+createRoot(root).render(
   <StrictMode>
     <RouterProvider router={router} />
   </StrictMode>,
