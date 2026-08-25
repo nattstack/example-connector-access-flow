@@ -79,6 +79,41 @@ const MOCK_TEAMS: Team[] = [
   },
 ]
 
+export function createTeam(input: {
+  description?: string
+  name: string
+  workspaceId: number
+}): Team {
+  requireWorkspaceAdmin(input.workspaceId)
+
+  const name = input.name.trim()
+  const description = input.description === undefined ? "" : input.description.trim()
+
+  if (name.length === 0) {
+    throw new Error("Expected a team name")
+  }
+
+  const nameTaken = listTeamsByWorkspaceId(input.workspaceId).some(
+    (item) => item.name.toLowerCase() === name.toLowerCase(),
+  )
+
+  if (nameTaken) {
+    throw new Error("A team with this name already exists")
+  }
+
+  const team: Team = {
+    description,
+    id: crypto.randomUUID(),
+    name,
+    slug: uniqueTeamSlug(input.workspaceId, slugifyTeamName(name)),
+    workspaceId: input.workspaceId,
+  }
+
+  MOCK_TEAMS.push(team)
+
+  return team
+}
+
 export function deleteTeam(input: { teamId: string; workspaceId: number }): void {
   requireWorkspaceAdmin(input.workspaceId)
 
@@ -209,4 +244,29 @@ function requireWorkspaceAdmin(workspaceId: number): void {
   if (!isCurrentUserWorkspaceAdmin(workspaceId)) {
     throw new Error("Only workspace admins can edit teams")
   }
+}
+
+function slugifyTeamName(name: string): string {
+  const slug = name
+    .toLowerCase()
+    .replaceAll(/[^\da-z]+/gu, "-")
+    .replaceAll(/^-+|-+$/gu, "")
+
+  return slug.length === 0 ? "team" : slug
+}
+
+function uniqueTeamSlug(workspaceId: number, baseSlug: string): string {
+  const taken = new Set(listTeamsByWorkspaceId(workspaceId).map((team) => team.slug))
+
+  if (!taken.has(baseSlug)) {
+    return baseSlug
+  }
+
+  let suffix = 2
+
+  while (taken.has(`${baseSlug}-${String(suffix)}`)) {
+    suffix += 1
+  }
+
+  return `${baseSlug}-${String(suffix)}`
 }

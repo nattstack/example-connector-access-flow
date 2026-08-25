@@ -8,7 +8,6 @@ import {
   SettingsTeamGeneral,
 } from "#/components/pages/settings/settings-team-general"
 import { SettingsTeamMembers } from "#/components/pages/settings/settings-team-members"
-import { listConnectorsForTeam } from "#/data/connectors"
 import { isCurrentUserWorkspaceAdmin } from "#/data/members"
 import { getTeamBySlug } from "#/data/teams"
 import { getWorkspaceBySlug } from "#/data/workspaces"
@@ -39,7 +38,7 @@ export const Route = createFileRoute("/$workspaceSlug/settings/teams/$teamSlug")
           <SettingsTeamGeneral key={team.id} team={team} />
           <SettingsTeamMembers team={team} />
           <SettingsTeamAgents team={team} />
-          <SettingsTeamConnectors connectors={listConnectorsForTeam(workspace.id, team.id)} />
+          <SettingsTeamConnectors team={team} />
           {isCurrentUserWorkspaceAdmin(workspace.id) && <SettingsTeamDelete team={team} />}
         </Column>
       </>

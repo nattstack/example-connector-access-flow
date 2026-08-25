@@ -305,6 +305,12 @@ export function listConnectorApps(): ConnectorApp[] {
   return CONNECTOR_APPS
 }
 
+export function listConnectorsAvailableForTeam(workspaceId: number, teamId: string): Connector[] {
+  return listConnectorsByWorkspaceId(workspaceId)
+    .filter((connector) => connector.teamId !== teamId)
+    .toSorted((left, right) => left.label.localeCompare(right.label))
+}
+
 export function listConnectorsByWorkspaceId(workspaceId: number): Connector[] {
   return MOCK_CONNECTORS.filter((connector) => connector.workspaceId === workspaceId)
 }
