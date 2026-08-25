@@ -1,5 +1,6 @@
-import { Column, Row, Spacer } from "@nattstack/ui"
+import { Button, Column, Row, Spacer } from "@nattstack/ui"
 import { Fragment, type JSX } from "react"
+import { AvatarConnector } from "#/components/avatar-connector"
 import type { ChatInline, ChatItem, ChatText } from "#/data/agent-chat"
 
 const GAP_CLUSTER = 8
@@ -105,6 +106,37 @@ function ChatChoice(props: { item: Extract<ChatItem, { type: "choice" }> }): JSX
   )
 }
 
+function ChatConnect(props: { item: Extract<ChatItem, { type: "connect" }> }): JSX.Element {
+  const { item } = props
+
+  return (
+    <Row
+      alignItems="center"
+      className="w-full max-w-640 self-start rounded-16 bg-gray-3 px-12 py-10"
+    >
+      <AvatarConnector appId={item.appId} />
+
+      <Spacer width={12} />
+
+      <Column className="min-w-0">
+        <p className="text-14 font-500 text-text-primary">{item.title}</p>
+        <p className="text-12 text-text-secondary">{item.description}</p>
+      </Column>
+
+      <Spacer width={12} />
+
+      <Button
+        className="shrink-0"
+        label={item.actionLabel}
+        rounded
+        size={32}
+        type="button"
+        variant="secondary"
+      />
+    </Row>
+  )
+}
+
 function ChatContent(props: { content: ChatText[]; role: "agent" | "user" }): JSX.Element {
   const { content, role } = props
 
@@ -123,6 +155,10 @@ function ChatEntry(props: { item: ChatItem }): JSX.Element {
   switch (item.type) {
     case "choice": {
       return <ChatChoice item={item} />
+    }
+
+    case "connect": {
+      return <ChatConnect item={item} />
     }
 
     case "message": {

@@ -1,15 +1,37 @@
 import { Column, IconButton, Row, Spacer, Textarea } from "@nattstack/ui"
-import { useState, type JSX } from "react"
+import { useState, type JSX, type KeyboardEvent } from "react"
 
 const ICON_SIZE = 16
 const ICON_STROKE_WIDTH = 1.6
 
 interface AgentComposerProps {
   defaultValue?: string
+  onSend: (text: string) => void
 }
 
 export function AgentComposer(props: AgentComposerProps): JSX.Element {
+  const { onSend } = props
   const [value, setValue] = useState(props.defaultValue ?? "")
+  const trimmedValue = value.trim()
+  const isSendDisabled = trimmedValue.length === 0
+
+  function send(): void {
+    if (isSendDisabled) {
+      return
+    }
+
+    onSend(trimmedValue)
+    setValue("")
+  }
+
+  function onKeyDown(event: KeyboardEvent<HTMLTextAreaElement>): void {
+    if (event.key !== "Enter" || event.shiftKey) {
+      return
+    }
+
+    event.preventDefault()
+    send()
+  }
 
   return (
     <Column className="shrink-0 px-16 pb-16">
@@ -29,6 +51,7 @@ export function AgentComposer(props: AgentComposerProps): JSX.Element {
           onChange={(event) => {
             setValue(event.target.value)
           }}
+          onKeyDown={onKeyDown}
           placeholder="Send a message to your agent"
           rows={2}
           value={value}
@@ -40,7 +63,9 @@ export function AgentComposer(props: AgentComposerProps): JSX.Element {
           <IconButton
             aria-label="Send message"
             className="shrink-0 bg-primary text-gray-1"
+            disabled={isSendDisabled}
             icon={<IconArrowUp />}
+            onClick={send}
             rounded
             size={32}
             type="button"

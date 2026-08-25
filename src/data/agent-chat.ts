@@ -1,9 +1,19 @@
+import type { ConnectorAppId } from "#/data/connector-apps"
+
 export type ChatInline =
   | { href: string; text: string; type: "link" }
   | { text: string; type: "bold" }
   | { text: string; type: "code" }
 
 export type ChatItem =
+  | {
+      actionLabel: string
+      appId: ConnectorAppId
+      description: string
+      id: string
+      title: string
+      type: "connect"
+    }
   | {
       content: ChatText[]
       id: string
@@ -1243,4 +1253,35 @@ const CHAT_PLACEHOLDER: ChatItem[] = [
 
 export function getAgentChatById(agentId: string): ChatItem[] {
   return MOCK_AGENT_CHATS[agentId] ?? CHAT_PLACEHOLDER
+}
+
+export function getAgentSendReply(agentId: string): ChatItem[] {
+  if (agentId !== "d28c5b88-901f-4df0-b5b1-c6b9cab1b420") {
+    return []
+  }
+
+  return [
+    {
+      content: ["On it. Checking your inbox for anything from the last 24 hours."],
+      id: "11-agent-on-it",
+      role: "agent",
+      type: "message",
+    },
+    {
+      content: [
+        "Gmail is already set up, just not signed in. Connect it on the card and I'll pull the last 24 hours right after.",
+      ],
+      id: "11-agent-need-gmail",
+      role: "agent",
+      type: "message",
+    },
+    {
+      actionLabel: "Authorize",
+      appId: "gmail",
+      description: "Search, read, draft, and manage email.",
+      id: "11-connect-gmail",
+      title: "Gmail",
+      type: "connect",
+    },
+  ]
 }
