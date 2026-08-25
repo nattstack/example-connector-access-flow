@@ -1,6 +1,7 @@
 import { Column, Spacer } from "@nattstack/ui"
 import { createFileRoute, notFound, useRouteContext } from "@tanstack/react-router"
 import type { JSX } from "react"
+import { SettingsBackLink } from "#/components/pages/settings/settings-back-link"
 import {
   SettingsTeamAgents,
   SettingsTeamGeneral,
@@ -30,6 +31,9 @@ export const Route = createFileRoute("/$workspaceSlug/settings/teams/$teamSlug")
 
     return (
       <>
+        <SettingsBackLink label="Teams" />
+        <Spacer height={8} />
+
         <h1 className="text-30">{team.name}</h1>
         <Spacer height={24} />
 
