@@ -1,9 +1,9 @@
 import {
   IconArrowLeftOutline18,
   IconGearOutline18,
-  IconGridLayoutOutline18,
+  IconOfficeUserOutline18,
   IconPlugOutline18,
-  IconUserGroupOutline18,
+  IconSquareUserOutline18,
   IconUserOutline18,
   IconUsersOutline18,
 } from "@nattstack/icons"
@@ -63,7 +63,7 @@ export function DashboardSidebarContentSettings(
         <DashboardSidebarLabel label="Administration" />
 
         <DashboardSidebarLink
-          icon={<IconGridLayoutOutline18 size={ICON_SIZE} />}
+          icon={<IconOfficeUserOutline18 size={ICON_SIZE} />}
           label="Workspace"
           to="/$workspaceSlug/settings/workspace"
         />
@@ -75,12 +75,12 @@ export function DashboardSidebarContentSettings(
         />
         <DashboardSidebarLink
           exact={false}
-          icon={<IconUsersOutline18 size={ICON_SIZE} />}
+          icon={<IconSquareUserOutline18 size={ICON_SIZE} />}
           label="Teams"
           to="/$workspaceSlug/settings/teams"
         />
         <DashboardSidebarLink
-          icon={<IconUserGroupOutline18 size={ICON_SIZE} />}
+          icon={<IconUsersOutline18 size={ICON_SIZE} />}
           label="Members"
           to="/$workspaceSlug/settings/members"
         />
