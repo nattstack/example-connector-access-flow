@@ -26,7 +26,7 @@ export function DashboardSidebar(): JSX.Element {
       <Spacer height={8} />
 
       {/* Agents */}
-      <Column as="nav" className="gap-y-2 overflow-y-auto px-8">
+      <Column as="nav" className="gap-y-4 overflow-y-auto px-8">
         {MOCK_AGENTS.map((agent) => (
           <LinkAgent agent={agent} key={agent.id} />
         ))}
