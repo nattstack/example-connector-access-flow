@@ -1,4 +1,5 @@
 import { listAgentsByWorkspaceId, type Agent } from "#/data/agents"
+import { listMembersByWorkspaceId, type Member } from "#/data/members"
 
 export interface Team {
   description: string
@@ -10,6 +11,7 @@ export interface Team {
 
 export interface TeamWithAgents {
   agents: Agent[]
+  members: Member[]
   team: Team
 }
 
@@ -84,6 +86,12 @@ export function listTeamAgents(workspaceId: number, teamName: string): Agent[] {
   return listAgentsByWorkspaceId(workspaceId).filter((agent) => agent.team === teamName)
 }
 
+export function listTeamMembers(workspaceId: number, teamId: string): Member[] {
+  return listMembersByWorkspaceId(workspaceId)
+    .filter((member) => member.teamId === teamId)
+    .toSorted((left, right) => left.name.localeCompare(right.name))
+}
+
 export function listTeamsByWorkspaceId(workspaceId: number): Team[] {
   return MOCK_TEAMS.filter((team) => team.workspaceId === workspaceId).toSorted((left, right) =>
     left.name.localeCompare(right.name),
@@ -93,6 +101,7 @@ export function listTeamsByWorkspaceId(workspaceId: number): Team[] {
 export function listTeamsWithAgentsByWorkspaceId(workspaceId: number): TeamWithAgents[] {
   return listTeamsByWorkspaceId(workspaceId).map((team) => ({
     agents: listTeamAgents(workspaceId, team.name),
+    members: listTeamMembers(workspaceId, team.id),
     team,
   }))
 }

@@ -6,6 +6,7 @@ export interface Member {
   id: string
   name: string
   role: MemberRole
+  teamId?: string
   workspaceId: number
 }
 
@@ -20,12 +21,19 @@ const CURRENT_USER_ROLE_BY_WORKSPACE_ID: Record<number, MemberRole> = {
   4: "Member",
 }
 
+const CURRENT_USER_TEAM_ID_BY_WORKSPACE_ID: Partial<Record<number, string>> = {
+  1: "a3f1c8e2-4b7d-4e91-9c2a-1f6b8d0e3a11",
+  2: "b4e2d9f3-5c8e-4f02-ad3b-2e7c9e1f4b22",
+  3: "cac5d6b9-444d-4f69-973a-04a0fd2781df",
+}
+
 const MOCK_MEMBERS: Member[] = [
   {
     email: "jordan@example.com",
     id: "6c2d1a8e-3f90-4b17-8d4e-2a9c7f1b5e20",
     name: "Jordan Hale",
     role: "Member",
+    teamId: "a3f1c8e2-4b7d-4e91-9c2a-1f6b8d0e3a11",
     workspaceId: 1,
   },
   {
@@ -33,6 +41,7 @@ const MOCK_MEMBERS: Member[] = [
     id: "8e4f3c0a-5b12-4d39-9f6a-4c1e8a3d7b44",
     name: "Riley Chen",
     role: "Member",
+    teamId: "7955dd9a-c8f4-4faf-9103-a054ed33789e",
     workspaceId: 1,
   },
   {
@@ -40,6 +49,7 @@ const MOCK_MEMBERS: Member[] = [
     id: "1a9b7d4c-2e56-4f80-b3c1-7d5e2a8f0c63",
     name: "Casey Novak",
     role: "Member",
+    teamId: "a3f1c8e2-4b7d-4e91-9c2a-1f6b8d0e3a11",
     workspaceId: 1,
   },
   {
@@ -47,6 +57,7 @@ const MOCK_MEMBERS: Member[] = [
     id: "a38460d5-b7ef-4819-4c5a-6041b37c95fc",
     name: "Alex Bell",
     role: "Member",
+    teamId: "7955dd9a-c8f4-4faf-9103-a054ed33789e",
     workspaceId: 1,
   },
   {
@@ -54,6 +65,7 @@ const MOCK_MEMBERS: Member[] = [
     id: "2b0c8e5d-3f67-4091-c4d2-8e6f3b9a1d74",
     name: "Avery Kim",
     role: "Member",
+    teamId: "b4e2d9f3-5c8e-4f02-ad3b-2e7c9e1f4b22",
     workspaceId: 2,
   },
   {
@@ -61,6 +73,7 @@ const MOCK_MEMBERS: Member[] = [
     id: "3c1d9f6e-4078-41a2-d5e3-9f7a4c0b2e85",
     name: "Morgan Ellis",
     role: "Member",
+    teamId: "b4e2d9f3-5c8e-4f02-ad3b-2e7c9e1f4b22",
     workspaceId: 2,
   },
   {
@@ -68,6 +81,7 @@ const MOCK_MEMBERS: Member[] = [
     id: "b49571e6-c8f0-492a-5d6b-7152c48da60d",
     name: "Alex Bell",
     role: "Member",
+    teamId: "a9361bc3-4c13-4ad2-a242-c861b085560d",
     workspaceId: 2,
   },
   {
@@ -75,6 +89,7 @@ const MOCK_MEMBERS: Member[] = [
     id: "4d2e0a7f-5189-42b3-e6f4-0a8b5d1c3f96",
     name: "Harper Diaz",
     role: "Member",
+    teamId: "c5f3e0a4-6d9f-4013-be4c-3f8d0f2a5c33",
     workspaceId: 3,
   },
   {
@@ -82,6 +97,7 @@ const MOCK_MEMBERS: Member[] = [
     id: "5e3f1b80-629a-43c4-f705-1b9c6e2d40a7",
     name: "Sage Okonkwo",
     role: "Member",
+    teamId: "cac5d6b9-444d-4f69-973a-04a0fd2781df",
     workspaceId: 3,
   },
   {
@@ -96,6 +112,7 @@ const MOCK_MEMBERS: Member[] = [
     id: "70513da2-84bc-45e6-1927-3d1e804f62c9",
     name: "Quinn Patel",
     role: "Member",
+    teamId: "cac5d6b9-444d-4f69-973a-04a0fd2781df",
     workspaceId: 3,
   },
   {
@@ -103,6 +120,7 @@ const MOCK_MEMBERS: Member[] = [
     id: "c5a682f7-d901-4a3b-6e7c-8263d59eb71e",
     name: "Alex Bell",
     role: "Member",
+    teamId: "c5f3e0a4-6d9f-4013-be4c-3f8d0f2a5c33",
     workspaceId: 3,
   },
   {
@@ -110,6 +128,7 @@ const MOCK_MEMBERS: Member[] = [
     id: "81624eb3-95cd-46f7-2a38-4e2f915a73da",
     name: "Cameron Walsh",
     role: "Member",
+    teamId: "d6a4f1b5-7e0a-4124-cf5d-4a9e1a3b6d44",
     workspaceId: 4,
   },
   {
@@ -117,6 +136,7 @@ const MOCK_MEMBERS: Member[] = [
     id: "92735fc4-a6de-4708-3b49-5f30a26b84eb",
     name: "Jules Moreau",
     role: "Member",
+    teamId: "e7b5a2c6-8f1b-4235-da6e-5b0f2b4c7e55",
     workspaceId: 4,
   },
   {
@@ -124,6 +144,7 @@ const MOCK_MEMBERS: Member[] = [
     id: "d6b79308-ea12-4b4c-7f8d-9374e6afc82f",
     name: "Alex Bell",
     role: "Admin",
+    teamId: "d6a4f1b5-7e0a-4124-cf5d-4a9e1a3b6d44",
     workspaceId: 4,
   },
 ]
@@ -189,6 +210,8 @@ function isMemberEmail(email: string): boolean {
 }
 
 function memberFromCurrentUser(user: User, workspaceId: number): Member {
+  const teamId = CURRENT_USER_TEAM_ID_BY_WORKSPACE_ID[workspaceId]
+
   return {
     avatar: user.avatar,
     email: user.email,
@@ -196,6 +219,7 @@ function memberFromCurrentUser(user: User, workspaceId: number): Member {
     name: user.name,
     role: getCurrentUserRole(workspaceId),
     workspaceId,
+    ...(teamId === undefined ? {} : { teamId }),
   }
 }
 

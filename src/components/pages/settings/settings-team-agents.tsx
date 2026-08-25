@@ -28,7 +28,7 @@ export function SettingsTeamAgents(props: SettingsTeamAgentsProps): JSX.Element 
   return (
     <SettingsSection title="Agents">
       {agents.length === 0 ? (
-        <SettingsRow description="No agents are part of this team yet." label="Agents">
+        <SettingsRow description="No agents have joined this team yet." label="Agents">
           <span className="text-14 text-text-secondary">None</span>
         </SettingsRow>
       ) : (
@@ -43,7 +43,10 @@ export function SettingsTeamGeneral(props: SettingsTeamGeneralProps): JSX.Elemen
 
   return (
     <SettingsSection>
-      <SettingsRow description="Shown in settings and anywhere this team appears." label="Name">
+      <SettingsRow
+        description="Members and agents can join this team. Shown in settings and anywhere this team appears."
+        label="Name"
+      >
         <span className="text-14 text-text-secondary">{team.name}</span>
       </SettingsRow>
       <SettingsRow description={team.description} label="Description" />

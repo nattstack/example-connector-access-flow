@@ -32,8 +32,12 @@ export function SettingsTeams(props: SettingsTeamsProps): JSX.Element {
   )
 }
 
-function formatAgentCountLabel(count: number): string {
-  return count === 1 ? "1 agent" : `${count} agents`
+function formatCountLabel(count: number, singular: string, plural: string): string {
+  return count === 1 ? `1 ${singular}` : `${String(count)} ${plural}`
+}
+
+function formatTeamRosterLabel(memberCount: number, agentCount: number): string {
+  return `${formatCountLabel(memberCount, "member", "members")} · ${formatCountLabel(agentCount, "agent", "agents")}`
 }
 
 function SettingsTeamRow(props: SettingsTeamRowProps): JSX.Element {
@@ -42,7 +46,7 @@ function SettingsTeamRow(props: SettingsTeamRowProps): JSX.Element {
 
   return (
     <SettingsLinkRow
-      description={formatAgentCountLabel(item.agents.length)}
+      description={formatTeamRosterLabel(item.members.length, item.agents.length)}
       label={item.team.name}
       link={{
         params: { teamSlug: item.team.slug, workspaceSlug },

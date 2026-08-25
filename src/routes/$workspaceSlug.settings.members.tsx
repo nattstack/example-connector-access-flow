@@ -10,7 +10,7 @@ export const Route = createFileRoute("/$workspaceSlug/settings/members")({
 
     return (
       <>
-        <h1 className="text-30">Team members</h1>
+        <h1 className="text-30">Members</h1>
         <Spacer height={24} />
 
         <SettingsMembers members={members} />
@@ -20,7 +20,7 @@ export const Route = createFileRoute("/$workspaceSlug/settings/members")({
   head: () => ({
     meta: [
       {
-        title: "Team members · Settings",
+        title: "Members · Settings",
       },
     ],
   }),
