@@ -48,11 +48,9 @@ export function AgentComposer(props: AgentComposerProps): JSX.Element {
             shadow-none! outline-none
             placeholder:text-text-secondary
           "
-          onChange={(event) => {
-            setValue(event.target.value)
-          }}
           onKeyDown={onKeyDown}
           placeholder="Send a message to your agent"
+          readOnly
           rows={2}
           value={value}
         />
