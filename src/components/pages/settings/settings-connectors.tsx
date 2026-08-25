@@ -14,6 +14,7 @@ import {
 import { Link, useParams, useRouter } from "@tanstack/react-router"
 import { useMemo, useState, type JSX } from "react"
 import { AvatarConnector } from "#/components/avatar-connector"
+import { BadgeTeam } from "#/components/badge-team"
 import { DialogAddConnector } from "#/components/pages/settings/dialog-add-connector"
 import {
   addConnector,
@@ -26,7 +27,7 @@ import {
   type Connector,
   type ConnectorAppId,
 } from "#/data/connectors"
-import type { Team } from "#/data/teams"
+import { getTeamById, type Team } from "#/data/teams"
 
 type AppFilter = "All" | ConnectorAppId
 
@@ -236,6 +237,7 @@ function SettingsConnectorRow(props: SettingsConnectorRowProps): JSX.Element {
   const { connector } = props
   const { workspaceSlug } = useParams({ from: "/$workspaceSlug" })
   const blocked = isAppBlocked(connector.workspaceId, connector.appId)
+  const extraAgentCount = connector.grantedAgentIds.length
 
   return (
     <tr
@@ -253,38 +255,56 @@ function SettingsConnectorRow(props: SettingsConnectorRowProps): JSX.Element {
           <AvatarConnector appId={connector.appId} />
           <Spacer width={12} />
 
-          <Column className="min-w-0">
-            <span className="truncate text-14 font-500 text-text-primary">
-              {formatConnectorTitle(connector)}
-            </span>
-            <span className="truncate text-13 text-text-secondary">{connector.label}</span>
-          </Column>
+          <span className="truncate text-14 font-500 text-text-primary">
+            {formatConnectorTitle(connector)}
+          </span>
         </Link>
       </td>
       <td className="truncate py-12 text-14 text-text-secondary">
         {formatConnectorScopeLabel(connector)}
       </td>
       <td className="py-12">
-        <Row className="min-w-0 items-center">
-          <span className="truncate text-14 text-text-secondary">
-            {formatConnectorGrantSummary(connector)}
-          </span>
+        <Row className="min-w-0 flex-wrap items-center" gap={8}>
+          {listConnectorAccessTeams(connector).map((team) => (
+            <BadgeTeam key={team.id} team={team.name} />
+          ))}
+          {extraAgentCount > 0 && (
+            <span
+              className="
+                inline-flex h-18 shrink-0 items-center rounded-4 bg-gray-4 px-4
+                text-12 text-text-secondary
+              "
+            >
+              {extraAgentCount === 1 ? "1 agent" : `${String(extraAgentCount)} agents`}
+            </span>
+          )}
           {blocked && (
-            <>
-              <Spacer width={8} />
-
-              <span
-                className="
-                  inline-flex h-24 shrink-0 items-center rounded-6 bg-gray-4
-                  px-8 text-12 font-500 text-text-secondary
-                "
-              >
-                Blocked
-              </span>
-            </>
+            <span
+              className="
+                inline-flex h-24 shrink-0 items-center rounded-6 bg-gray-4 px-8
+                text-12 font-500 text-text-secondary
+              "
+            >
+              Blocked
+            </span>
           )}
         </Row>
       </td>
     </tr>
   )
+}
+
+function listConnectorAccessTeams(connector: Connector): Team[] {
+  const ownerTeam = getTeamById(connector.workspaceId, connector.ownerTeamId)
+  const grantedTeams = connector.grantedTeamIds.flatMap((teamId) => {
+    const team = getTeamById(connector.workspaceId, teamId)
+
+    return team === undefined ? [] : [team]
+  })
+
+  if (ownerTeam === undefined) {
+    return grantedTeams
+  }
+
+  return [ownerTeam, ...grantedTeams]
 }
