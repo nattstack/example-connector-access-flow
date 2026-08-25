@@ -1,8 +1,9 @@
+import { IconArrowUpOutline18 } from "@nattstack/icons"
 import { Column, IconButton, Row, Spacer, Textarea } from "@nattstack/ui"
 import { useState, type JSX, type KeyboardEvent } from "react"
 
-const ICON_SIZE = 16
-const ICON_STROKE_WIDTH = 1.6
+const ICON_SIZE = 20
+const ICON_STROKE_WIDTH = 2
 
 interface AgentComposerProps {
   defaultValue?: string
@@ -60,37 +61,20 @@ export function AgentComposer(props: AgentComposerProps): JSX.Element {
         <Row className="items-end justify-end">
           <IconButton
             aria-label="Send message"
-            className="shrink-0 bg-primary text-gray-1"
+            className="
+              shrink-0 bg-primary text-gray-1 transition-opacity
+              hover:opacity-75
+            "
             disabled={isSendDisabled}
-            icon={<IconArrowUp />}
+            icon={<IconArrowUpOutline18 size={ICON_SIZE} strokeWidth={ICON_STROKE_WIDTH} />}
             onClick={send}
             rounded
-            size={32}
+            size={40}
             type="button"
             variant="ghost"
           />
         </Row>
       </Column>
     </Column>
-  )
-}
-
-function IconArrowUp(): JSX.Element {
-  return (
-    <svg
-      aria-hidden="true"
-      className="size-16"
-      fill="none"
-      viewBox={`0 0 ${ICON_SIZE} ${ICON_SIZE}`}
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M8 12.5V3.5M8 3.5 4 7.5M8 3.5 12 7.5"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={ICON_STROKE_WIDTH}
-      />
-    </svg>
   )
 }
