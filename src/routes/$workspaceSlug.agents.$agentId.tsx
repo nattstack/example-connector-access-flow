@@ -5,7 +5,12 @@ import { AvatarAgent } from "#/components/avatar-agent"
 import { BadgeTeam } from "#/components/badge-team"
 import { AgentChat } from "#/components/pages/dashboard/agent-chat"
 import { AgentComposer } from "#/components/pages/dashboard/agent-composer"
-import { getAgentChatById, getAgentSendReply, type ChatItem } from "#/data/agent-chat.ts"
+import {
+  getAgentAuthorizeReply,
+  getAgentChatById,
+  getAgentSendReply,
+  type ChatItem,
+} from "#/data/agent-chat.ts"
 import { getAgentById } from "#/data/agents.ts"
 import { RouteAgentHead } from "#/routes/-route-agent-head"
 
@@ -24,6 +29,29 @@ export const Route = createFileRoute("/$workspaceSlug/agents/$agentId")({
 
       node.scrollTo({ top: node.scrollHeight })
     }, [items])
+
+    function onAuthorize(itemId: string): void {
+      setItems((current) => {
+        if (current.some((item) => item.id === "11-agent-gmail-connected")) {
+          return current
+        }
+
+        const next = current.map((item) => {
+          if (item.id !== itemId || item.type !== "connect") {
+            return item
+          }
+
+          return {
+            ...item,
+            actionLabel: "Added",
+            status: "added" as const,
+            toolCount: 30,
+          }
+        })
+
+        return [...next, ...getAgentAuthorizeReply(agent.id)]
+      })
+    }
 
     function onSend(text: string): void {
       const userMessage: ChatItem = {
@@ -60,7 +88,7 @@ export const Route = createFileRoute("/$workspaceSlug/agents/$agentId")({
 
         {/* Content */}
         <Column className="min-h-0 flex-1 overflow-y-auto" ref={scrollRef}>
-          <AgentChat items={items} key={agent.id} />
+          <AgentChat items={items} key={agent.id} onAuthorize={onAuthorize} />
         </Column>
 
         {/* Composer */}

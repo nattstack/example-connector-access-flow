@@ -11,7 +11,9 @@ export type ChatItem =
       appId: ConnectorAppId
       description: string
       id: string
+      status?: "added"
       title: string
+      toolCount?: number
       type: "connect"
     }
   | {
@@ -1250,6 +1252,51 @@ const CHAT_PLACEHOLDER: ChatItem[] = [
     type: "message",
   },
 ]
+
+export function getAgentAuthorizeReply(agentId: string): ChatItem[] {
+  if (agentId !== "d28c5b88-901f-4df0-b5b1-c6b9cab1b420") {
+    return []
+  }
+
+  return [
+    {
+      content: ["Gmail's connected. Pulling everything from the last 24 hours."],
+      id: "11-agent-gmail-connected",
+      role: "agent",
+      type: "message",
+    },
+    {
+      content: ["13 threads since yesterday morning. Two are on a clock."],
+      id: "11-agent-thread-count",
+      role: "agent",
+      type: "message",
+    },
+    {
+      content: [
+        "On a clock: Maya asked you to ",
+        { href: "https://zoom.us", text: "Register on Zoom", type: "link" },
+        " for Thursday's customer call, and the ",
+        { href: "https://docs.google.com", text: "Activity form", type: "link" },
+        " for the offsite is still with you. Jordan wants a yes on the ",
+        { href: "https://calendar.google.com", text: "schedule", type: "link" },
+        " before noon.",
+      ],
+      id: "11-agent-on-a-clock",
+      role: "agent",
+      type: "message",
+    },
+    {
+      content: [
+        "The rest: 2 unnamed LinkedIn invitations, a pile of Google security alerts to ",
+        { href: "mailto:sam@example.com", text: "sam@example.com", type: "link" },
+        ", TLDR, and a Substack you can ignore.",
+      ],
+      id: "11-agent-the-rest",
+      role: "agent",
+      type: "message",
+    },
+  ]
+}
 
 export function getAgentChatById(agentId: string): ChatItem[] {
   return MOCK_AGENT_CHATS[agentId] ?? CHAT_PLACEHOLDER

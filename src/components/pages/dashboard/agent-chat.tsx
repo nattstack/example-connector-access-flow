@@ -11,12 +11,13 @@ const ICON_STROKE_WIDTH = 1.6
 
 interface AgentChatProps {
   items: ChatItem[]
+  onAuthorize?: (itemId: string, scopeIds: string[]) => void
 }
 
 type ChatSide = "agent" | "meta" | "user"
 
 export function AgentChat(props: AgentChatProps): JSX.Element {
-  const { items } = props
+  const { items, onAuthorize } = props
 
   return (
     <Column className="px-16">
@@ -31,7 +32,7 @@ export function AgentChat(props: AgentChatProps): JSX.Element {
             <Fragment key={item.id}>
               {gap > 0 && <Spacer height={gap} />}
 
-              <ChatEntry item={item} />
+              <ChatEntry item={item} onAuthorize={onAuthorize} />
             </Fragment>
           )
         })}
@@ -107,9 +108,13 @@ function ChatChoice(props: { item: Extract<ChatItem, { type: "choice" }> }): JSX
   )
 }
 
-function ChatConnect(props: { item: Extract<ChatItem, { type: "connect" }> }): JSX.Element {
-  const { item } = props
+function ChatConnect(props: {
+  item: Extract<ChatItem, { type: "connect" }>
+  onAuthorize?: (itemId: string, scopeIds: string[]) => void
+}): JSX.Element {
+  const { item, onAuthorize } = props
   const [isAuthorizeOpen, setIsAuthorizeOpen] = useState(false)
+  const isAdded = item.status === "added"
 
   return (
     <>
@@ -127,23 +132,42 @@ function ChatConnect(props: { item: Extract<ChatItem, { type: "connect" }> }): J
           <Column className="min-w-0">
             <p className="text-14 font-500 text-text-primary">{item.title}</p>
             <p className="text-12 text-text-secondary">{item.description}</p>
+            {item.toolCount !== undefined && (
+              <p className="text-12 text-text-secondary">{String(item.toolCount)} tools</p>
+            )}
           </Column>
         </Row>
 
-        <Button
-          className="shrink-0"
-          label={item.actionLabel}
-          onClick={() => setIsAuthorizeOpen(true)}
-          rounded
-          size={32}
-          type="button"
-          variant="secondary"
-        />
+        {isAdded ? (
+          <Row
+            alignItems="center"
+            className="
+              shrink-0 rounded-full bg-success/15 px-8 py-4 text-success
+            "
+          >
+            <IconCheck />
+
+            <Spacer width={4} />
+
+            <span className="text-12 font-500">Added</span>
+          </Row>
+        ) : (
+          <Button
+            className="shrink-0"
+            label={item.actionLabel}
+            onClick={() => setIsAuthorizeOpen(true)}
+            rounded
+            size={32}
+            type="button"
+            variant="secondary"
+          />
+        )}
       </Row>
 
       <DialogAuthorizeConnector
         appId={item.appId}
         isOpen={isAuthorizeOpen}
+        onAuthorize={(scopeIds) => onAuthorize?.(item.id, scopeIds)}
         onIsOpenChange={setIsAuthorizeOpen}
       />
     </>
@@ -162,8 +186,11 @@ function ChatContent(props: { content: ChatText[]; role: "agent" | "user" }): JS
   )
 }
 
-function ChatEntry(props: { item: ChatItem }): JSX.Element {
-  const { item } = props
+function ChatEntry(props: {
+  item: ChatItem
+  onAuthorize?: (itemId: string, scopeIds: string[]) => void
+}): JSX.Element {
+  const { item, onAuthorize } = props
 
   switch (item.type) {
     case "choice": {
@@ -171,7 +198,7 @@ function ChatEntry(props: { item: ChatItem }): JSX.Element {
     }
 
     case "connect": {
-      return <ChatConnect item={item} />
+      return <ChatConnect item={item} onAuthorize={onAuthorize} />
     }
 
     case "message": {
