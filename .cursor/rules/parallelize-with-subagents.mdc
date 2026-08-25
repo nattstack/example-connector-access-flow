@@ -1,0 +1,33 @@
+---
+description: Parallelize independent work with subagents; keep small or dependent tasks inline.
+alwaysApply: true
+---
+
+# Parallelize with subagents
+
+When a task splits into independent parts, delegate them to subagents and launch them all in a single batch so they run concurrently. Don't block waiting on one before starting the next.
+
+Good candidates:
+
+- Broad exploration or research spanning several unrelated areas — one explore agent per area
+- Multiple independent workstreams (separate features, fixes in unrelated modules)
+- Best-of-N attempts or experiments that need isolation from each other
+
+Keep inline (no subagent):
+
+- Narrow lookups a single search or file read can answer
+- Small tasks (1–3 steps) where spin-up costs more than it saves
+- Sequential work where each step needs the previous step's output
+- Work that depends on conversation context a subagent can't see
+
+Subagents start fresh with no access to the conversation. Write self-contained prompts: include all necessary context and state exactly what each agent should return.
+
+```text
+❌ BAD — serial and vague
+Launch one agent: "look into the auth code". Wait. Launch another.
+
+✅ GOOD — parallel and specific
+One message, three explore agents: "map the auth flow in src/auth",
+"list API route handlers in src/server", "find all ConnectorCard usages" —
+each returns a short report of files and findings.
+```
