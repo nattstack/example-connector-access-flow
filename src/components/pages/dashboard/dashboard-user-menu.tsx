@@ -1,11 +1,21 @@
 import { IconArrowDoorOutOutline18, IconGearOutline18 } from "@nattstack/icons"
-import { Column, Menu, MenuContent, MenuItem, MenuSeparator, MenuTrigger } from "@nattstack/ui"
+import {
+  Column,
+  Menu,
+  MenuContent,
+  MenuItem,
+  MenuLinkItem,
+  MenuSeparator,
+  MenuTrigger,
+} from "@nattstack/ui"
+import { Link, useParams } from "@tanstack/react-router"
 import type { JSX } from "react"
 import { AvatarUser } from "#/components/avatar-user"
-import { getCurrentUser } from "#/data/user"
+import { useCurrentUser } from "#/data/user"
 
 export function DashboardUserMenu(): JSX.Element {
-  const user = getCurrentUser()
+  const { workspaceSlug } = useParams({ from: "/$workspaceSlug" })
+  const user = useCurrentUser()
 
   return (
     <Menu>
@@ -34,10 +44,13 @@ export function DashboardUserMenu(): JSX.Element {
           <span className="truncate text-12 text-text-secondary">{user.email}</span>
         </Column>
         <MenuSeparator />
-        <MenuItem>
+        <MenuLinkItem
+          closeOnClick
+          render={<Link params={{ workspaceSlug }} to="/$workspaceSlug/settings/profile" />}
+        >
           <IconGearOutline18 className="text-gray-9" />
           Settings
-        </MenuItem>
+        </MenuLinkItem>
         <MenuItem>
           <IconArrowDoorOutOutline18 className="text-gray-9" />
           Sign out

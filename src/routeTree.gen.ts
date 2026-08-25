@@ -12,7 +12,12 @@ import { Route as rootRouteImport } from "./routes/__root"
 import { Route as IndexRouteImport } from "./routes/index"
 import { Route as WorkspaceSlugRouteImport } from "./routes/$workspaceSlug"
 import { Route as WorkspaceSlugIndexRouteImport } from "./routes/$workspaceSlug.index"
+import { Route as WorkspaceSlugSettingsRouteImport } from "./routes/$workspaceSlug.settings"
 import { Route as WorkspaceSlugAgentsAgentIdRouteImport } from "./routes/$workspaceSlug.agents.$agentId"
+import { Route as WorkspaceSlugSettingsIndexRouteImport } from "./routes/$workspaceSlug.settings.index"
+import { Route as WorkspaceSlugSettingsAccountRouteImport } from "./routes/$workspaceSlug.settings.account"
+import { Route as WorkspaceSlugSettingsProfileRouteImport } from "./routes/$workspaceSlug.settings.profile"
+import { Route as WorkspaceSlugSettingsSecurityRouteImport } from "./routes/$workspaceSlug.settings.security"
 
 const IndexRoute = IndexRouteImport.update({
   id: "/",
@@ -29,46 +34,106 @@ const WorkspaceSlugIndexRoute = WorkspaceSlugIndexRouteImport.update({
   path: "/",
   getParentRoute: () => WorkspaceSlugRoute,
 } as any)
+const WorkspaceSlugSettingsRoute = WorkspaceSlugSettingsRouteImport.update({
+  id: "/settings",
+  path: "/settings",
+  getParentRoute: () => WorkspaceSlugRoute,
+} as any)
 const WorkspaceSlugAgentsAgentIdRoute =
   WorkspaceSlugAgentsAgentIdRouteImport.update({
     id: "/agents/$agentId",
     path: "/agents/$agentId",
     getParentRoute: () => WorkspaceSlugRoute,
   } as any)
+const WorkspaceSlugSettingsIndexRoute =
+  WorkspaceSlugSettingsIndexRouteImport.update({
+    id: "/",
+    path: "/",
+    getParentRoute: () => WorkspaceSlugSettingsRoute,
+  } as any)
+const WorkspaceSlugSettingsAccountRoute =
+  WorkspaceSlugSettingsAccountRouteImport.update({
+    id: "/account",
+    path: "/account",
+    getParentRoute: () => WorkspaceSlugSettingsRoute,
+  } as any)
+const WorkspaceSlugSettingsProfileRoute =
+  WorkspaceSlugSettingsProfileRouteImport.update({
+    id: "/profile",
+    path: "/profile",
+    getParentRoute: () => WorkspaceSlugSettingsRoute,
+  } as any)
+const WorkspaceSlugSettingsSecurityRoute =
+  WorkspaceSlugSettingsSecurityRouteImport.update({
+    id: "/security",
+    path: "/security",
+    getParentRoute: () => WorkspaceSlugSettingsRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   "/": typeof IndexRoute
   "/$workspaceSlug": typeof WorkspaceSlugRouteWithChildren
+  "/$workspaceSlug/settings": typeof WorkspaceSlugSettingsRouteWithChildren
   "/$workspaceSlug/": typeof WorkspaceSlugIndexRoute
   "/$workspaceSlug/agents/$agentId": typeof WorkspaceSlugAgentsAgentIdRoute
+  "/$workspaceSlug/settings/account": typeof WorkspaceSlugSettingsAccountRoute
+  "/$workspaceSlug/settings/profile": typeof WorkspaceSlugSettingsProfileRoute
+  "/$workspaceSlug/settings/security": typeof WorkspaceSlugSettingsSecurityRoute
+  "/$workspaceSlug/settings/": typeof WorkspaceSlugSettingsIndexRoute
 }
 export interface FileRoutesByTo {
   "/": typeof IndexRoute
   "/$workspaceSlug": typeof WorkspaceSlugIndexRoute
   "/$workspaceSlug/agents/$agentId": typeof WorkspaceSlugAgentsAgentIdRoute
+  "/$workspaceSlug/settings/account": typeof WorkspaceSlugSettingsAccountRoute
+  "/$workspaceSlug/settings/profile": typeof WorkspaceSlugSettingsProfileRoute
+  "/$workspaceSlug/settings/security": typeof WorkspaceSlugSettingsSecurityRoute
+  "/$workspaceSlug/settings": typeof WorkspaceSlugSettingsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   "/": typeof IndexRoute
   "/$workspaceSlug": typeof WorkspaceSlugRouteWithChildren
+  "/$workspaceSlug/settings": typeof WorkspaceSlugSettingsRouteWithChildren
   "/$workspaceSlug/": typeof WorkspaceSlugIndexRoute
   "/$workspaceSlug/agents/$agentId": typeof WorkspaceSlugAgentsAgentIdRoute
+  "/$workspaceSlug/settings/account": typeof WorkspaceSlugSettingsAccountRoute
+  "/$workspaceSlug/settings/profile": typeof WorkspaceSlugSettingsProfileRoute
+  "/$workspaceSlug/settings/security": typeof WorkspaceSlugSettingsSecurityRoute
+  "/$workspaceSlug/settings/": typeof WorkspaceSlugSettingsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | "/"
     | "/$workspaceSlug"
+    | "/$workspaceSlug/settings"
     | "/$workspaceSlug/"
     | "/$workspaceSlug/agents/$agentId"
+    | "/$workspaceSlug/settings/account"
+    | "/$workspaceSlug/settings/profile"
+    | "/$workspaceSlug/settings/security"
+    | "/$workspaceSlug/settings/"
   fileRoutesByTo: FileRoutesByTo
-  to: "/" | "/$workspaceSlug" | "/$workspaceSlug/agents/$agentId"
+  to:
+    | "/"
+    | "/$workspaceSlug"
+    | "/$workspaceSlug/agents/$agentId"
+    | "/$workspaceSlug/settings/account"
+    | "/$workspaceSlug/settings/profile"
+    | "/$workspaceSlug/settings/security"
+    | "/$workspaceSlug/settings"
   id:
     | "__root__"
     | "/"
     | "/$workspaceSlug"
+    | "/$workspaceSlug/settings"
     | "/$workspaceSlug/"
     | "/$workspaceSlug/agents/$agentId"
+    | "/$workspaceSlug/settings/account"
+    | "/$workspaceSlug/settings/profile"
+    | "/$workspaceSlug/settings/security"
+    | "/$workspaceSlug/settings/"
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -99,6 +164,13 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof WorkspaceSlugIndexRouteImport
       parentRoute: typeof WorkspaceSlugRoute
     }
+    "/$workspaceSlug/settings": {
+      id: "/$workspaceSlug/settings"
+      path: "/settings"
+      fullPath: "/$workspaceSlug/settings"
+      preLoaderRoute: typeof WorkspaceSlugSettingsRouteImport
+      parentRoute: typeof WorkspaceSlugRoute
+    }
     "/$workspaceSlug/agents/$agentId": {
       id: "/$workspaceSlug/agents/$agentId"
       path: "/agents/$agentId"
@@ -106,15 +178,64 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof WorkspaceSlugAgentsAgentIdRouteImport
       parentRoute: typeof WorkspaceSlugRoute
     }
+    "/$workspaceSlug/settings/": {
+      id: "/$workspaceSlug/settings/"
+      path: "/"
+      fullPath: "/$workspaceSlug/settings/"
+      preLoaderRoute: typeof WorkspaceSlugSettingsIndexRouteImport
+      parentRoute: typeof WorkspaceSlugSettingsRoute
+    }
+    "/$workspaceSlug/settings/account": {
+      id: "/$workspaceSlug/settings/account"
+      path: "/account"
+      fullPath: "/$workspaceSlug/settings/account"
+      preLoaderRoute: typeof WorkspaceSlugSettingsAccountRouteImport
+      parentRoute: typeof WorkspaceSlugSettingsRoute
+    }
+    "/$workspaceSlug/settings/profile": {
+      id: "/$workspaceSlug/settings/profile"
+      path: "/profile"
+      fullPath: "/$workspaceSlug/settings/profile"
+      preLoaderRoute: typeof WorkspaceSlugSettingsProfileRouteImport
+      parentRoute: typeof WorkspaceSlugSettingsRoute
+    }
+    "/$workspaceSlug/settings/security": {
+      id: "/$workspaceSlug/settings/security"
+      path: "/security"
+      fullPath: "/$workspaceSlug/settings/security"
+      preLoaderRoute: typeof WorkspaceSlugSettingsSecurityRouteImport
+      parentRoute: typeof WorkspaceSlugSettingsRoute
+    }
   }
 }
 
+interface WorkspaceSlugSettingsRouteChildren {
+  WorkspaceSlugSettingsAccountRoute: typeof WorkspaceSlugSettingsAccountRoute
+  WorkspaceSlugSettingsProfileRoute: typeof WorkspaceSlugSettingsProfileRoute
+  WorkspaceSlugSettingsSecurityRoute: typeof WorkspaceSlugSettingsSecurityRoute
+  WorkspaceSlugSettingsIndexRoute: typeof WorkspaceSlugSettingsIndexRoute
+}
+
+const WorkspaceSlugSettingsRouteChildren: WorkspaceSlugSettingsRouteChildren = {
+  WorkspaceSlugSettingsAccountRoute: WorkspaceSlugSettingsAccountRoute,
+  WorkspaceSlugSettingsProfileRoute: WorkspaceSlugSettingsProfileRoute,
+  WorkspaceSlugSettingsSecurityRoute: WorkspaceSlugSettingsSecurityRoute,
+  WorkspaceSlugSettingsIndexRoute: WorkspaceSlugSettingsIndexRoute,
+}
+
+const WorkspaceSlugSettingsRouteWithChildren =
+  WorkspaceSlugSettingsRoute._addFileChildren(
+    WorkspaceSlugSettingsRouteChildren,
+  )
+
 interface WorkspaceSlugRouteChildren {
+  WorkspaceSlugSettingsRoute: typeof WorkspaceSlugSettingsRouteWithChildren
   WorkspaceSlugIndexRoute: typeof WorkspaceSlugIndexRoute
   WorkspaceSlugAgentsAgentIdRoute: typeof WorkspaceSlugAgentsAgentIdRoute
 }
 
 const WorkspaceSlugRouteChildren: WorkspaceSlugRouteChildren = {
+  WorkspaceSlugSettingsRoute: WorkspaceSlugSettingsRouteWithChildren,
   WorkspaceSlugIndexRoute: WorkspaceSlugIndexRoute,
   WorkspaceSlugAgentsAgentIdRoute: WorkspaceSlugAgentsAgentIdRoute,
 }

@@ -1,23 +1,10 @@
 import { Column, Row, Spacer } from "@nattstack/ui"
-import { Link, useParams, useRouteContext } from "@tanstack/react-router"
 import type { JSX } from "react"
-import { AvatarAgent } from "#/components/avatar-agent"
-import { BadgeTeam } from "#/components/badge-team"
 import { LogoLink } from "#/components/logo-link"
 import { DashboardUserMenu } from "#/components/pages/dashboard/dashboard-user-menu"
-import { DashboardWorkspaceCombobox } from "#/components/pages/dashboard/dashboard-workspace-combobox"
-import { listAgentsByWorkspaceId, type Agent } from "#/data/agents"
-import { formatRelativeTimestamp } from "#/utils/date"
-
-interface LinkAgentProps {
-  agent: Agent
-}
+import { DashboardSidebarContent } from "#/components/pages/dashboard/sidebar/dashboard-sidebar-content"
 
 export function DashboardSidebar(): JSX.Element {
-  const { workspace } = useRouteContext({ from: "/$workspaceSlug" })
-
-  const agents = listAgentsByWorkspaceId(workspace.id)
-
   return (
     <Column
       as="aside"
@@ -26,77 +13,16 @@ export function DashboardSidebar(): JSX.Element {
         shadow-[inset_-1px_0_0_0_var(--color-border)]
       "
     >
-      {/* Logo */}
       <Row as="header" className="mt-8 ml-8">
         <LogoLink />
       </Row>
       <Spacer height={8} />
 
-      {/* Workspace  */}
-      <Column className="px-8">
-        <DashboardWorkspaceCombobox />
-      </Column>
-      <Spacer height={8} />
+      <DashboardSidebarContent />
 
-      {/* Separator */}
-      <Spacer aria-hidden className="mx-16 border-t border-border" height={8} />
-
-      {/* Agents */}
-      <Column as="nav" className="min-h-0 flex-1 gap-y-4 overflow-y-auto px-8">
-        {agents.map((agent) => (
-          <LinkAgent agent={agent} key={agent.id} />
-        ))}
-      </Column>
-
-      {/* Footer */}
       <Column className="px-8 pb-8">
         <DashboardUserMenu />
       </Column>
     </Column>
-  )
-}
-
-function LinkAgent(props: LinkAgentProps): JSX.Element {
-  const { agent } = props
-  const { workspaceSlug } = useParams({ from: "/$workspaceSlug" })
-
-  return (
-    <Link
-      activeProps={{ className: "bg-gray-3" }}
-      className="
-        flex h-56 w-full shrink-0 items-center gap-x-8 rounded-12 px-8
-        select-none
-        hover:bg-gray-3
-      "
-      params={{ agentId: agent.id, workspaceSlug }}
-      to="/$workspaceSlug/agents/$agentId"
-    >
-      {/* Avatar */}
-      <AvatarAgent alt={agent.name} src={agent.avatar} />
-
-      <Column className="w-full min-w-0">
-        <Row className="items-baseline justify-between gap-x-8">
-          {/* Name */}
-          <span className="min-w-0 truncate text-14 font-500 text-text-primary">{agent.name}</span>
-
-          {/* Updated at */}
-          <time className="shrink-0 text-12 text-text-secondary" dateTime={agent.updatedAt}>
-            {formatRelativeTimestamp(agent.updatedAt)}
-          </time>
-        </Row>
-
-        {/* Team and chat */}
-        <Row className="min-w-0 items-center">
-          {agent.team && (
-            <>
-              <BadgeTeam team={agent.team} />
-              <Spacer width={6} />
-            </>
-          )}
-
-          <span className="truncate text-13 text-text-secondary">{agent.chat}</span>
-        </Row>
-      </Column>
-    </Link>
   )
 }
