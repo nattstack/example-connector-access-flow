@@ -995,9 +995,7 @@ const CHAT_BRAND_VOICE: ChatItem[] = [
     type: "message",
   },
   {
-    content: [
-      "It's doing too much. Cut the clause after the comma and it still says the product.",
-    ],
+    content: ["It's doing too much. Cut the clause after the comma and it still says the product."],
     id: "25-agent-cut",
     role: "agent",
     type: "message",
