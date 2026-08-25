@@ -2,7 +2,11 @@ import { Column, Row, Spacer } from "@nattstack/ui"
 import { Link, type LinkComponentProps } from "@tanstack/react-router"
 import type { JSX } from "react"
 import { LogoLink } from "#/components/logo-link"
-import { projects } from "#/data/projects"
+import { MOCK_AGENTS, type Agent } from "#/data/agents"
+
+interface LinkAgentProps {
+  agent: Agent
+}
 
 export function DashboardSidebar(): JSX.Element {
   return (
@@ -25,20 +29,38 @@ export function DashboardSidebar(): JSX.Element {
       </Column>
       <Spacer height={24} />
 
-      <p className="px-12 text-12 font-500 text-text-secondary uppercase">Projects</p>
+      <p className="px-12 text-12 uppercase">Agents</p>
       <Spacer className="h-8" />
 
       <Column as="nav" className="gap-y-2 px-8">
-        {projects.map((project) => (
-          <NavLink
-            key={project.id}
-            label={project.name}
-            params={{ projectId: project.id }}
-            to="/dashboard/projects/$projectId"
-          />
+        {MOCK_AGENTS.map((agent) => (
+          <LinkAgent agent={agent} key={agent.id} />
         ))}
       </Column>
     </Column>
+  )
+}
+
+function LinkAgent(props: LinkAgentProps): JSX.Element {
+  const { agent } = props
+
+  return (
+    <Link
+      activeProps={{ className: "bg-gray-3" }}
+      className="
+        flex h-56 w-full items-center gap-x-8 rounded-8 px-8
+        hover:bg-gray-3
+      "
+      params={{ agentId: agent.id }}
+      to="/dashboard/agents/$agentId"
+    >
+      <Row className="aspect-1-1 h-40 rounded-full bg-gray-4" />
+
+      <Column className="w-full min-w-0">
+        <span className="text-14 font-500 text-text-primary">{agent.name}</span>
+        <span className="truncate text-14 text-text-secondary">{agent.chat}</span>
+      </Column>
+    </Link>
   )
 }
 
