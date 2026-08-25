@@ -24,6 +24,10 @@ export const Route = createFileRoute("/$workspaceSlug/agents/$agentId")({
     const scrollRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
+      setItems(chat)
+    }, [agent.id, agent.workspaceId, chat])
+
+    useEffect(() => {
       const node = scrollRef.current
 
       if (node === null) {
@@ -128,14 +132,18 @@ export const Route = createFileRoute("/$workspaceSlug/agents/$agentId")({
         <Column className="min-h-0 flex-1 overflow-y-auto" ref={scrollRef}>
           <AgentChat
             items={items}
-            key={agent.id}
+            key={`${agent.workspaceId}-${agent.id}`}
             onAuthorize={onAuthorize}
             onRequestAccess={onRequestAccess}
           />
         </Column>
 
         {/* Composer */}
-        <AgentComposer defaultValue={agent.draft} key={agent.id} onSend={onSend} />
+        <AgentComposer
+          defaultValue={agent.draft}
+          key={`${agent.workspaceId}-${agent.id}`}
+          onSend={onSend}
+        />
       </>
     )
   },
