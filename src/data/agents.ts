@@ -4,7 +4,7 @@ export interface Agent {
   id: string
   logo: string
   name: string
-  team: string
+  team?: string
   updatedAt: string
 }
 
@@ -24,7 +24,6 @@ export const MOCK_AGENTS: Agent[] = [
     id: "1",
     logo: "/logos/bear.webp",
     name: "Daily priority bot",
-    team: "Personal",
     updatedAt: "2026-08-25T00:57:00",
   },
   {
@@ -33,7 +32,6 @@ export const MOCK_AGENTS: Agent[] = [
     id: "2",
     logo: "/logos/headphones.webp",
     name: "Summarize podcasts",
-    team: "Content",
     updatedAt: "2026-08-21T16:48:00",
   },
   {
@@ -60,7 +58,6 @@ export const MOCK_AGENTS: Agent[] = [
     id: "5",
     logo: "/logos/paintbrush.webp",
     name: "Design portfolio analysis",
-    team: "Design",
     updatedAt: "2026-08-20T15:41:00",
   },
   {
@@ -69,7 +66,6 @@ export const MOCK_AGENTS: Agent[] = [
     id: "6",
     logo: "/logos/cat.webp",
     name: "Virtual assistant bot",
-    team: "Personal",
     updatedAt: "2026-08-20T14:09:00",
   },
   {

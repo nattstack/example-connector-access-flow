@@ -63,9 +63,23 @@ function LinkAgent(props: LinkAgentProps): JSX.Element {
         </Row>
 
         {/* Team and chat */}
-        <span className="truncate text-13 text-text-secondary">
-          {agent.team} · {agent.chat}
-        </span>
+        <Row className="min-w-0 items-center">
+          {agent.team && (
+            <>
+              <span
+                className="
+                  flex h-[18px] shrink-0 items-center rounded-4 bg-gray-4 px-4
+                  text-12 text-text-secondary
+                "
+              >
+                {agent.team}
+              </span>
+              <Spacer width={6} />
+            </>
+          )}
+
+          <span className="truncate text-13 text-text-secondary">{agent.chat}</span>
+        </Row>
       </Column>
     </Link>
   )
