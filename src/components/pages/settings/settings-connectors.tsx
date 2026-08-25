@@ -18,16 +18,17 @@ import { BadgeTeam } from "#/components/badge-team"
 import { DialogAddConnector } from "#/components/pages/settings/dialog-add-connector"
 import {
   addConnector,
-  formatConnectorGrantSummary,
+  formatConnectorAccessLabel,
   formatConnectorScopeCount,
   formatConnectorTitle,
+  getConnectorAccessTeam,
   getConnectorApp,
   isAppBlocked,
   listConnectorApps,
   type Connector,
   type ConnectorAppId,
 } from "#/data/connectors"
-import { getTeamById, type Team } from "#/data/teams"
+import type { Team } from "#/data/teams"
 
 type AppFilter = "All" | ConnectorAppId
 
@@ -73,13 +74,13 @@ export function SettingsConnectors(props: SettingsConnectorsProps): JSX.Element 
 
         const app = getConnectorApp(connector.appId)
         const title = formatConnectorTitle(connector).toLowerCase()
-        const grantSummary = formatConnectorGrantSummary(connector).toLowerCase()
+        const accessLabel = formatConnectorAccessLabel(connector).toLowerCase()
 
         return (
           title.includes(query) ||
           connector.label.toLowerCase().includes(query) ||
           (app?.name.toLowerCase().includes(query) ?? false) ||
-          grantSummary.includes(query)
+          accessLabel.includes(query)
         )
       })
       .toSorted((left, right) => {
@@ -135,7 +136,6 @@ export function SettingsConnectors(props: SettingsConnectorsProps): JSX.Element 
           </Select>
         </Row>
         <Button
-          disabled={teams.length === 0}
           label="Add a connector"
           onClick={() => setIsAddOpen(true)}
           size={36}
@@ -237,26 +237,30 @@ function connectorTypeName(connector: Connector): string {
   return getConnectorApp(connector.appId)?.name ?? connector.appId
 }
 
-function listConnectorAccessTeams(connector: Connector): Team[] {
-  const ownerTeam = getTeamById(connector.workspaceId, connector.ownerTeamId)
-  const grantedTeams = connector.grantedTeamIds.flatMap((teamId) => {
-    const team = getTeamById(connector.workspaceId, teamId)
+function SettingsConnectorAccessBadge(props: { connector: Connector }): JSX.Element {
+  const { connector } = props
+  const accessTeam = getConnectorAccessTeam(connector)
 
-    return team === undefined ? [] : [team]
-  })
-
-  if (ownerTeam === undefined) {
-    return grantedTeams
+  if (accessTeam !== undefined) {
+    return <BadgeTeam team={accessTeam.name} />
   }
 
-  return [ownerTeam, ...grantedTeams]
+  return (
+    <span
+      className="
+        flex h-[18px] shrink-0 items-center rounded-4 bg-gray-4 px-4 text-12
+        text-text-secondary
+      "
+    >
+      Everybody
+    </span>
+  )
 }
 
 function SettingsConnectorRow(props: SettingsConnectorRowProps): JSX.Element {
   const { connector } = props
   const { workspaceSlug } = useParams({ from: "/$workspaceSlug" })
   const blocked = isAppBlocked(connector.workspaceId, connector.appId)
-  const extraAgentCount = connector.grantedAgentIds.length
 
   return (
     <tr
@@ -282,19 +286,7 @@ function SettingsConnectorRow(props: SettingsConnectorRowProps): JSX.Element {
       </td>
       <td className="py-12">
         <Row className="min-w-0 flex-wrap items-center" gap={8}>
-          {listConnectorAccessTeams(connector).map((team) => (
-            <BadgeTeam key={team.id} team={team.name} />
-          ))}
-          {extraAgentCount > 0 && (
-            <span
-              className="
-                inline-flex h-[18px] shrink-0 items-center rounded-4 bg-gray-4
-                px-4 text-12 text-text-secondary
-              "
-            >
-              {extraAgentCount === 1 ? "1 agent" : `${String(extraAgentCount)} agents`}
-            </span>
-          )}
+          <SettingsConnectorAccessBadge connector={connector} />
           {blocked && (
             <span
               className="

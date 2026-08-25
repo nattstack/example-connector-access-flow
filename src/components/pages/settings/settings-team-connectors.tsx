@@ -9,20 +9,17 @@ import {
   isAppBlocked,
   type Connector,
 } from "#/data/connectors"
-import type { Team } from "#/data/teams"
 
 interface SettingsTeamConnectorRowProps {
   connector: Connector
-  teamId: string
 }
 
 interface SettingsTeamConnectorsProps {
   connectors: Connector[]
-  team: Team
 }
 
 export function SettingsTeamConnectors(props: SettingsTeamConnectorsProps): JSX.Element {
-  const { connectors, team } = props
+  const { connectors } = props
 
   return (
     <Column
@@ -34,9 +31,7 @@ export function SettingsTeamConnectors(props: SettingsTeamConnectorsProps): JSX.
       <h2 className="text-24">Connectors</h2>
       <Spacer height={8} />
 
-      <p className="text-14 text-text-secondary">
-        Connections this team owns, plus any granted from another team.
-      </p>
+      <p className="text-14 text-text-secondary">Connectors restricted to this team.</p>
       <Spacer height={16} />
 
       {connectors.length === 0 ? (
@@ -44,7 +39,7 @@ export function SettingsTeamConnectors(props: SettingsTeamConnectorsProps): JSX.
       ) : (
         <Column as="ul" className="gap-y-4">
           {connectors.map((connector) => (
-            <SettingsTeamConnectorRow connector={connector} key={connector.id} teamId={team.id} />
+            <SettingsTeamConnectorRow connector={connector} key={connector.id} />
           ))}
         </Column>
       )}
@@ -53,10 +48,9 @@ export function SettingsTeamConnectors(props: SettingsTeamConnectorsProps): JSX.
 }
 
 function SettingsTeamConnectorRow(props: SettingsTeamConnectorRowProps): JSX.Element {
-  const { connector, teamId } = props
+  const { connector } = props
   const { workspaceSlug } = useParams({ from: "/$workspaceSlug" })
   const blocked = isAppBlocked(connector.workspaceId, connector.appId)
-  const ownership = connector.ownerTeamId === teamId ? "Owns" : "Granted"
 
   return (
     <li>
@@ -76,8 +70,6 @@ function SettingsTeamConnectorRow(props: SettingsTeamConnectorRowProps): JSX.Ele
             {formatConnectorTitle(connector)}
           </span>
           <span className="truncate text-13 text-text-secondary">
-            {ownership}
-            {" · "}
             {connector.label}
             {" · "}
             {formatConnectorScopeLabel(connector)}

@@ -1,18 +1,16 @@
-import { getAgentById, listUnteamedAgentsByWorkspaceId, type Agent } from "#/data/agents"
+import type { Agent } from "#/data/agents"
 import { CONNECTOR_APP_CATALOG, type ConnectorAppId } from "#/data/connector-apps"
 export { type ConnectorAppId } from "#/data/connector-apps"
-import { getTeamById, listTeamsByWorkspaceId, type Team } from "#/data/teams"
+import { getTeamById, type Team } from "#/data/teams"
 
 const SCOPE_PAIR_COUNT = 2
 
 export interface Connector {
   appId: ConnectorAppId
-  grantedAgentIds: string[]
-  grantedTeamIds: string[]
   id: string
   label: string
-  ownerTeamId: string
   scopeIds: string[]
+  teamId?: string
   workspaceId: number
 }
 
@@ -51,102 +49,81 @@ const MOCK_BLOCKED_APPS: BlockedApp[] = [
 const MOCK_CONNECTORS: Connector[] = [
   {
     appId: "gmail",
-    grantedAgentIds: ["1fff8a3f-f8a2-4033-a086-9cc2cbf8b9fc"],
-    grantedTeamIds: [],
     id: "c8e1a4b2-6d0f-4a73-9e15-2b7c8d0f3a21",
     label: "Inbox",
-    ownerTeamId: "a3f1c8e2-4b7d-4e91-9c2a-1f6b8d0e3a11",
     scopeIds: ["read"],
     workspaceId: 1,
   },
   {
     appId: "gmail",
-    grantedAgentIds: [],
-    grantedTeamIds: [],
     id: "d9f2b5c3-7e10-4b84-af26-3c8d9e1a4b32",
     label: "Cleanup",
-    ownerTeamId: "a3f1c8e2-4b7d-4e91-9c2a-1f6b8d0e3a11",
     scopeIds: ["read", "delete"],
+    teamId: "a3f1c8e2-4b7d-4e91-9c2a-1f6b8d0e3a11",
     workspaceId: 1,
   },
   {
     appId: "slack",
-    grantedAgentIds: [],
-    grantedTeamIds: [],
     id: "e0a3c6d4-8f21-4c95-b037-4d9e0f2b5c43",
     label: "Figma Design",
-    ownerTeamId: "7955dd9a-c8f4-4faf-9103-a054ed33789e",
     scopeIds: [],
+    teamId: "7955dd9a-c8f4-4faf-9103-a054ed33789e",
     workspaceId: 1,
   },
   {
     appId: "github",
-    grantedAgentIds: [],
-    grantedTeamIds: [],
     id: "f1b4d7e5-9032-4da6-c148-5e0f1a3c6d54",
     label: "nattstack",
-    ownerTeamId: "b4e2d9f3-5c8e-4f02-ad3b-2e7c9e1f4b22",
     scopeIds: [],
+    teamId: "b4e2d9f3-5c8e-4f02-ad3b-2e7c9e1f4b22",
     workspaceId: 2,
   },
   {
     appId: "slack",
-    grantedAgentIds: [],
-    grantedTeamIds: [],
     id: "02c5e8f6-a143-4eb7-d259-6f1a2b4d7e65",
     label: "Linear Product",
-    ownerTeamId: "a9361bc3-4c13-4ad2-a242-c861b085560d",
     scopeIds: [],
+    teamId: "a9361bc3-4c13-4ad2-a242-c861b085560d",
     workspaceId: 2,
   },
   {
     appId: "gmail",
-    grantedAgentIds: [],
-    grantedTeamIds: ["c5f3e0a4-6d9f-4013-be4c-3f8d0f2a5c33"],
     id: "13d6f907-b254-4fc8-e36a-702b3c5e8f76",
     label: "Ops inbox",
-    ownerTeamId: "cac5d6b9-444d-4f69-973a-04a0fd2781df",
     scopeIds: ["read"],
+    teamId: "cac5d6b9-444d-4f69-973a-04a0fd2781df",
     workspaceId: 3,
   },
   {
     appId: "slack",
-    grantedAgentIds: [],
-    grantedTeamIds: [],
     id: "24e70a18-c365-40d9-f47b-813c4d6f9087",
     label: "Notion Design",
-    ownerTeamId: "c5f3e0a4-6d9f-4013-be4c-3f8d0f2a5c33",
     scopeIds: [],
+    teamId: "c5f3e0a4-6d9f-4013-be4c-3f8d0f2a5c33",
     workspaceId: 3,
   },
   {
     appId: "github",
-    grantedAgentIds: [],
-    grantedTeamIds: [],
     id: "35f81b29-d476-41ea-058c-924d5e70a198",
     label: "vercel",
-    ownerTeamId: "d6a4f1b5-7e0a-4124-cf5d-4a9e1a3b6d44",
     scopeIds: [],
+    teamId: "d6a4f1b5-7e0a-4124-cf5d-4a9e1a3b6d44",
     workspaceId: 4,
   },
   {
     appId: "slack",
-    grantedAgentIds: [],
-    grantedTeamIds: [],
     id: "46092c3a-e587-42fb-169d-a35e6f81b2a9",
     label: "Vercel Marketing",
-    ownerTeamId: "e7b5a2c6-8f1b-4235-da6e-5b0f2b4c7e55",
     scopeIds: [],
+    teamId: "e7b5a2c6-8f1b-4235-da6e-5b0f2b4c7e55",
     workspaceId: 4,
   },
   {
     appId: "gmail",
-    grantedAgentIds: [],
-    grantedTeamIds: [],
     id: "571a3d4b-f698-430c-27ae-b46f7092c3ba",
     label: "Product inbox",
-    ownerTeamId: "d6a4f1b5-7e0a-4124-cf5d-4a9e1a3b6d44",
     scopeIds: ["read"],
+    teamId: "d6a4f1b5-7e0a-4124-cf5d-4a9e1a3b6d44",
     workspaceId: 4,
   },
 ]
@@ -154,8 +131,8 @@ const MOCK_CONNECTORS: Connector[] = [
 export function addConnector(input: {
   appId: ConnectorAppId
   label: string
-  ownerTeamId: string
   scopeIds: string[]
+  teamId?: string
   workspaceId: number
 }): Connector {
   const app = getConnectorApp(input.appId)
@@ -168,10 +145,8 @@ export function addConnector(input: {
     throw new Error(`${app.name} is blocked in this workspace`)
   }
 
-  const ownerTeam = getTeamById(input.workspaceId, input.ownerTeamId)
-
-  if (ownerTeam === undefined) {
-    throw new Error("Expected an owner team in this workspace")
+  if (input.teamId !== undefined && getTeamById(input.workspaceId, input.teamId) === undefined) {
+    throw new Error("Expected a team in this workspace")
   }
 
   const scopeIds = uniqueScopeIds(app, input.scopeIds)
@@ -188,13 +163,11 @@ export function addConnector(input: {
 
   const connector: Connector = {
     appId: input.appId,
-    grantedAgentIds: [],
-    grantedTeamIds: [],
     id: crypto.randomUUID(),
     label,
-    ownerTeamId: input.ownerTeamId,
     scopeIds,
     workspaceId: input.workspaceId,
+    ...(input.teamId === undefined ? {} : { teamId: input.teamId }),
   }
 
   MOCK_CONNECTORS.push(connector)
@@ -202,21 +175,10 @@ export function addConnector(input: {
   return connector
 }
 
-export function formatConnectorGrantSummary(connector: Connector): string {
-  const ownerTeam = getTeamById(connector.workspaceId, connector.ownerTeamId)
-  const extraTeamCount = connector.grantedTeamIds.length
-  const extraAgentCount = connector.grantedAgentIds.length
-  const parts = [ownerTeam?.name ?? "Unknown team"]
+export function formatConnectorAccessLabel(connector: Connector): string {
+  const team = getConnectorAccessTeam(connector)
 
-  if (extraTeamCount > 0) {
-    parts.push(extraTeamCount === 1 ? "+1 team" : `+${String(extraTeamCount)} teams`)
-  }
-
-  if (extraAgentCount > 0) {
-    parts.push(extraAgentCount === 1 ? "1 agent" : `${String(extraAgentCount)} agents`)
-  }
-
-  return parts.join(" · ")
+  return team?.name ?? "Everybody"
 }
 
 export function formatConnectorScopeCount(connector: Connector): string | undefined {
@@ -275,6 +237,14 @@ export function formatConnectorTitle(connector: Connector): string {
   return `${name} · ${scopeLabel}`
 }
 
+export function getConnectorAccessTeam(connector: Connector): Team | undefined {
+  if (connector.teamId === undefined) {
+    return undefined
+  }
+
+  return getTeamById(connector.workspaceId, connector.teamId)
+}
+
 export function getConnectorApp(appId: ConnectorAppId): ConnectorApp | undefined {
   return CONNECTOR_APPS.find((app) => app.id === appId)
 }
@@ -283,52 +253,6 @@ export function getConnectorById(workspaceId: number, connectorId: string): Conn
   return MOCK_CONNECTORS.find(
     (connector) => connector.workspaceId === workspaceId && connector.id === connectorId,
   )
-}
-
-export function grantAgentToConnector(input: {
-  agentId: string
-  connectorId: string
-  workspaceId: number
-}): Connector {
-  const connector = requireConnector(input.workspaceId, input.connectorId)
-  const agent = getAgentById(input.workspaceId, input.agentId)
-
-  if (agent === undefined) {
-    throw new Error("Expected an agent in this workspace")
-  }
-
-  if (agent.team !== undefined) {
-    throw new Error("Grant individual access only to agents that are not on a team")
-  }
-
-  if (!connector.grantedAgentIds.includes(input.agentId)) {
-    connector.grantedAgentIds.push(input.agentId)
-  }
-
-  return connector
-}
-
-export function grantTeamToConnector(input: {
-  connectorId: string
-  teamId: string
-  workspaceId: number
-}): Connector {
-  const connector = requireConnector(input.workspaceId, input.connectorId)
-  const team = getTeamById(input.workspaceId, input.teamId)
-
-  if (team === undefined) {
-    throw new Error("Expected a team in this workspace")
-  }
-
-  if (team.id === connector.ownerTeamId) {
-    throw new Error("The owner team already has access")
-  }
-
-  if (!connector.grantedTeamIds.includes(input.teamId)) {
-    connector.grantedTeamIds.push(input.teamId)
-  }
-
-  return connector
 }
 
 export function isAppBlocked(workspaceId: number, appId: ConnectorAppId): boolean {
@@ -358,47 +282,7 @@ export function listConnectorsForAgent(workspaceId: number, agent: Agent): Conne
 }
 
 export function listConnectorsForTeam(workspaceId: number, teamId: string): Connector[] {
-  return listConnectorsByWorkspaceId(workspaceId).filter(
-    (connector) => connector.ownerTeamId === teamId || connector.grantedTeamIds.includes(teamId),
-  )
-}
-
-export function listGrantableAgents(connector: Connector): Agent[] {
-  return listUnteamedAgentsByWorkspaceId(connector.workspaceId).filter(
-    (agent) => !connector.grantedAgentIds.includes(agent.id),
-  )
-}
-
-export function listGrantableTeams(connector: Connector): Team[] {
-  return listTeamsByWorkspaceId(connector.workspaceId).filter(
-    (team) => team.id !== connector.ownerTeamId && !connector.grantedTeamIds.includes(team.id),
-  )
-}
-
-export function revokeAgentFromConnector(input: {
-  agentId: string
-  connectorId: string
-  workspaceId: number
-}): Connector {
-  const connector = requireConnector(input.workspaceId, input.connectorId)
-
-  connector.grantedAgentIds = connector.grantedAgentIds.filter(
-    (agentId) => agentId !== input.agentId,
-  )
-
-  return connector
-}
-
-export function revokeTeamFromConnector(input: {
-  connectorId: string
-  teamId: string
-  workspaceId: number
-}): Connector {
-  const connector = requireConnector(input.workspaceId, input.connectorId)
-
-  connector.grantedTeamIds = connector.grantedTeamIds.filter((teamId) => teamId !== input.teamId)
-
-  return connector
+  return listConnectorsByWorkspaceId(workspaceId).filter((connector) => connector.teamId === teamId)
 }
 
 export function setAppBlocked(workspaceId: number, appId: ConnectorAppId, blocked: boolean): void {
@@ -416,12 +300,33 @@ export function setAppBlocked(workspaceId: number, appId: ConnectorAppId, blocke
   }
 }
 
+export function setConnectorAccess(input: {
+  connectorId: string
+  teamId: string | undefined
+  workspaceId: number
+}): Connector {
+  const connector = requireConnector(input.workspaceId, input.connectorId)
+
+  if (input.teamId === undefined) {
+    delete connector.teamId
+    return connector
+  }
+
+  if (getTeamById(input.workspaceId, input.teamId) === undefined) {
+    throw new Error("Expected a team in this workspace")
+  }
+
+  connector.teamId = input.teamId
+
+  return connector
+}
+
 function agentCanUseConnector(agent: Agent, connector: Connector): boolean {
   if (isAppBlocked(connector.workspaceId, connector.appId)) {
     return false
   }
 
-  if (connector.grantedAgentIds.includes(agent.id)) {
+  if (connector.teamId === undefined) {
     return true
   }
 
@@ -429,17 +334,9 @@ function agentCanUseConnector(agent: Agent, connector: Connector): boolean {
     return false
   }
 
-  const ownerTeam = getTeamById(connector.workspaceId, connector.ownerTeamId)
+  const accessTeam = getTeamById(connector.workspaceId, connector.teamId)
 
-  if (ownerTeam !== undefined && agent.team === ownerTeam.name) {
-    return true
-  }
-
-  return connector.grantedTeamIds.some((teamId) => {
-    const team = getTeamById(connector.workspaceId, teamId)
-
-    return team !== undefined && agent.team === team.name
-  })
+  return accessTeam !== undefined && agent.team === accessTeam.name
 }
 
 function requireConnector(workspaceId: number, connectorId: string): Connector {

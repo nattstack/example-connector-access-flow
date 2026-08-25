@@ -32,10 +32,7 @@ export const Route = createFileRoute("/$workspaceSlug/settings/teams/$teamSlug")
         <SettingsTeamAgents agents={listTeamAgents(workspace.id, team.name)} team={team} />
         <Spacer height={16} />
 
-        <SettingsTeamConnectors
-          connectors={listConnectorsForTeam(workspace.id, team.id)}
-          team={team}
-        />
+        <SettingsTeamConnectors connectors={listConnectorsForTeam(workspace.id, team.id)} />
       </>
     )
   },

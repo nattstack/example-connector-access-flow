@@ -295,7 +295,3 @@ export function getFirstAgent(workspaceId: number): Agent | undefined {
 export function listAgentsByWorkspaceId(workspaceId: number): Agent[] {
   return MOCK_AGENTS.filter((agent) => agent.workspaceId === workspaceId)
 }
-
-export function listUnteamedAgentsByWorkspaceId(workspaceId: number): Agent[] {
-  return listAgentsByWorkspaceId(workspaceId).filter((agent) => agent.team === undefined)
-}

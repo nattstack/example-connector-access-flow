@@ -38,27 +38,26 @@ interface DialogAddConnectorProps {
   onAdd: (input: {
     appId: ConnectorAppId
     label: string
-    ownerTeamId: string
     scopeIds: string[]
+    teamId?: string
   }) => Promise<void> | void
   onIsOpenChange: (isOpen: boolean) => void
   teams: Team[]
   workspaceId: number
 }
 
+const ACCESS_EVERYBODY = "everybody"
 const LABEL_INPUT_ID = "settings-add-connector-label"
 
 export function DialogAddConnector(props: DialogAddConnectorProps): JSX.Element {
   const { isOpen, onAdd, onIsOpenChange, teams, workspaceId } = props
   const apps = listAvailableConnectorApps(workspaceId)
   const defaultApp = apps.find((app) => app.id === "gmail") ?? apps[0]
-  const [firstTeam] = teams
-
+  const [access, setAccess] = useState(ACCESS_EVERYBODY)
   const [appId, setAppId] = useState<ConnectorAppId | undefined>(defaultApp?.id)
   const [errorMessage, setErrorMessage] = useState<string>()
   const [isAppComboboxOpen, setIsAppComboboxOpen] = useState(false)
   const [label, setLabel] = useState("")
-  const [ownerTeamId, setOwnerTeamId] = useState(firstTeam?.id ?? "")
   const [scopeIds, setScopeIds] = useState<string[]>(defaultScopeIds(defaultApp?.id))
   const appItems: AppOption[] = useMemo(
     () =>
@@ -72,13 +71,10 @@ export function DialogAddConnector(props: DialogAddConnectorProps): JSX.Element 
   const selectedAppItem = appItems.find((item) => item.value === appId) ?? null
 
   const selectedApp = appId === undefined ? undefined : getConnectorApp(appId)
-  const selectedOwnerTeam = teams.find((team) => team.id === ownerTeamId)
+  const selectedAccessTeam = teams.find((team) => team.id === access)
   const hasScopes = selectedApp !== undefined && selectedApp.scopes.length > 0
   const isSubmitDisabled =
-    appId === undefined ||
-    ownerTeamId.length === 0 ||
-    label.trim().length === 0 ||
-    (hasScopes && scopeIds.length === 0)
+    appId === undefined || label.trim().length === 0 || (hasScopes && scopeIds.length === 0)
 
   function onOpenChange(nextOpen: boolean): void {
     onIsOpenChange(nextOpen)
@@ -86,13 +82,12 @@ export function DialogAddConnector(props: DialogAddConnectorProps): JSX.Element 
     if (!nextOpen) {
       const nextApps = listAvailableConnectorApps(workspaceId)
       const nextApp = nextApps.find((app) => app.id === "gmail") ?? nextApps[0]
-      const [nextTeam] = teams
 
+      setAccess(ACCESS_EVERYBODY)
       setAppId(nextApp?.id)
       setErrorMessage(undefined)
       setIsAppComboboxOpen(false)
       setLabel("")
-      setOwnerTeamId(nextTeam?.id ?? "")
       setScopeIds(defaultScopeIds(nextApp?.id))
     }
   }
@@ -108,8 +103,8 @@ export function DialogAddConnector(props: DialogAddConnectorProps): JSX.Element 
       await onAdd({
         appId,
         label: label.trim(),
-        ownerTeamId,
         scopeIds,
+        teamId: access === ACCESS_EVERYBODY ? undefined : access,
       })
       onOpenChange(false)
     } catch (error) {
@@ -126,7 +121,7 @@ export function DialogAddConnector(props: DialogAddConnectorProps): JSX.Element 
             <Spacer height={8} />
 
             <p className="text-14 text-text-secondary">
-              Connect an app and give a team of agents access to it.
+              Connect an app and choose whether everybody or one team can use it.
             </p>
             <Spacer height={24} />
 
@@ -236,22 +231,23 @@ export function DialogAddConnector(props: DialogAddConnectorProps): JSX.Element 
                   </>
                 )}
 
-                <Label>Owner team</Label>
+                <Label>Access</Label>
                 <Spacer height={8} />
 
                 <Select
-                  onValueChange={(nextTeamId) => {
-                    if (nextTeamId !== null) {
-                      setOwnerTeamId(nextTeamId)
+                  onValueChange={(nextAccess) => {
+                    if (nextAccess !== null) {
+                      setAccess(nextAccess)
                       setErrorMessage(undefined)
                     }
                   }}
-                  value={ownerTeamId.length === 0 ? undefined : ownerTeamId}
+                  value={access}
                 >
                   <SelectTrigger className="w-full">
-                    <SelectValue>{selectedOwnerTeam?.name}</SelectValue>
+                    <SelectValue>{selectedAccessTeam?.name ?? "Everybody"}</SelectValue>
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value={ACCESS_EVERYBODY}>Everybody</SelectItem>
                     {teams.map((team) => (
                       <SelectItem key={team.id} value={team.id}>
                         {team.name}
