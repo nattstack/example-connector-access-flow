@@ -17,7 +17,6 @@ import { useRouter } from "@tanstack/react-router"
 import { useMemo, useState, type JSX } from "react"
 import { AvatarConnector } from "#/components/avatar-connector"
 import {
-  listBlockedConnectorApps,
   listConnectorApps,
   setAppBlocked,
   type ConnectorApp,
@@ -37,16 +36,16 @@ interface SettingsConnectorAppRowProps {
 }
 
 interface SettingsConnectorAppsProps {
+  blockedApps: ConnectorApp[]
   workspaceId: number
 }
 
 export function SettingsConnectorApps(props: SettingsConnectorAppsProps): JSX.Element {
-  const { workspaceId } = props
+  const { blockedApps, workspaceId } = props
   const router = useRouter()
   const [isComboboxOpen, setIsComboboxOpen] = useState(false)
 
   const isAdmin = isCurrentUserWorkspaceAdmin(workspaceId)
-  const blockedApps = listBlockedConnectorApps(workspaceId)
   const items: BlockableAppOption[] = useMemo(
     () =>
       listConnectorApps()

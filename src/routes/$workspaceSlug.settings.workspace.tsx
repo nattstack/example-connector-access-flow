@@ -1,12 +1,13 @@
 import { Spacer } from "@nattstack/ui"
-import { createFileRoute, useRouteContext } from "@tanstack/react-router"
+import { createFileRoute } from "@tanstack/react-router"
 import type { JSX } from "react"
 import { SettingsConnectorApps } from "#/components/pages/settings/settings-connector-apps"
 import { SettingsWorkspaceName } from "#/components/pages/settings/settings-workspace-name"
+import { listBlockedConnectorApps } from "#/data/connectors"
 
 export const Route = createFileRoute("/$workspaceSlug/settings/workspace")({
   component: function SettingsWorkspacePage(): JSX.Element {
-    const { workspace } = useRouteContext({ from: "/$workspaceSlug" })
+    const { blockedApps, workspaceId } = Route.useLoaderData()
 
     return (
       <>
@@ -16,7 +17,7 @@ export const Route = createFileRoute("/$workspaceSlug/settings/workspace")({
         <SettingsWorkspaceName />
         <Spacer height={16} />
 
-        <SettingsConnectorApps workspaceId={workspace.id} />
+        <SettingsConnectorApps blockedApps={blockedApps} workspaceId={workspaceId} />
       </>
     )
   },
@@ -26,5 +27,9 @@ export const Route = createFileRoute("/$workspaceSlug/settings/workspace")({
         title: "Workspace · Settings",
       },
     ],
+  }),
+  loader: ({ context }) => ({
+    blockedApps: listBlockedConnectorApps(context.workspace.id),
+    workspaceId: context.workspace.id,
   }),
 })

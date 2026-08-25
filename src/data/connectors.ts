@@ -175,6 +175,19 @@ export function addConnector(input: {
   return connector
 }
 
+export function deleteConnector(input: { connectorId: string; workspaceId: number }): void {
+  const index = MOCK_CONNECTORS.findIndex(
+    (connector) =>
+      connector.workspaceId === input.workspaceId && connector.id === input.connectorId,
+  )
+
+  if (index === -1) {
+    throw new Error("Expected a connector in this workspace")
+  }
+
+  MOCK_CONNECTORS.splice(index, 1)
+}
+
 export function formatConnectorAccessLabel(connector: Connector): string {
   const team = getConnectorAccessTeam(connector)
 
@@ -317,6 +330,37 @@ export function setConnectorAccess(input: {
   }
 
   connector.teamId = input.teamId
+
+  return connector
+}
+
+export function updateConnector(input: {
+  connectorId: string
+  label: string
+  scopeIds: string[]
+  workspaceId: number
+}): Connector {
+  const connector = requireConnector(input.workspaceId, input.connectorId)
+  const app = getConnectorApp(connector.appId)
+
+  if (app === undefined) {
+    throw new Error("Expected a connector app")
+  }
+
+  const scopeIds = uniqueScopeIds(app, input.scopeIds)
+
+  if (app.scopes.length > 0 && scopeIds.length === 0) {
+    throw new Error(`Select at least one ${app.name} scope`)
+  }
+
+  const label = input.label.trim()
+
+  if (label.length === 0) {
+    throw new Error("Expected a connector label")
+  }
+
+  connector.label = label
+  connector.scopeIds = scopeIds
 
   return connector
 }

@@ -24,10 +24,10 @@ export const Route = createFileRoute("/$workspaceSlug/settings/connectors/$conne
 
     return (
       <>
-        <h1 className="text-30">Access</h1>
+        <h1 className="text-30">{connector.label}</h1>
         <Spacer height={16} />
 
-        <SettingsConnectorAccess connector={connector} />
+        <SettingsConnectorAccess connector={connector} key={connector.id} />
       </>
     )
   },
