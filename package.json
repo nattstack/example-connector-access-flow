@@ -14,6 +14,7 @@
     "preview": "portless connector vite preview"
   },
   "dependencies": {
+    "@nattstack/icons": "npm:nucleo-ui-outline-18@1.5.0",
     "@nattstack/ui": "0.1.2",
     "@tanstack/react-router": "1.170.32",
     "date-fns": "4.4.0",

@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router"
 import type { JSX } from "react"
 import { AvatarAgent } from "#/components/avatar-agent"
 import { LogoLink } from "#/components/logo-link"
+import { DashboardWorkspaceCombobox } from "#/components/pages/dashboard/dashboard-workspace-combobox"
 import { MOCK_AGENTS, type Agent } from "#/data/agents"
 import { formatRelativeTimestamp } from "#/utils/date"
 
@@ -23,6 +24,11 @@ export function DashboardSidebar(): JSX.Element {
       <Row as="header" className="mt-8 ml-8">
         <LogoLink />
       </Row>
+      <Spacer height={8} />
+
+      <Column className="px-8">
+        <DashboardWorkspaceCombobox />
+      </Column>
       <Spacer height={8} />
 
       {/* Agents */}

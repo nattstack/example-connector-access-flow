@@ -5,6 +5,7 @@
     "": {
       "name": "example-connector-access-flow",
       "dependencies": {
+        "@nattstack/icons": "npm:nucleo-ui-outline-18@1.5.0",
         "@nattstack/ui": "0.1.2",
         "@tanstack/react-router": "1.170.32",
         "date-fns": "4.4.0",
@@ -117,6 +118,8 @@
     "@jridgewell/sourcemap-codec": ["@jridgewell/sourcemap-codec@1.5.5", "", {}, "sha512-cYQ9310grqxueWbl+WuIUIaiUaDcj7WOq5fVhEljNVgRfOUhY9fy2zTvfoqWsnebh8Sl70VScFbICvJnLKB0Og=="],
 
     "@jridgewell/trace-mapping": ["@jridgewell/trace-mapping@0.3.31", "", { "dependencies": { "@jridgewell/resolve-uri": "^3.1.0", "@jridgewell/sourcemap-codec": "^1.4.14" } }, "sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw=="],
+
+    "@nattstack/icons": ["nucleo-ui-outline-18@1.5.0", "", { "dependencies": { "tslib": "^2.0.0" }, "peerDependencies": { "react": ">=16.8.0", "react-dom": ">=16.8.0" } }, "sha512-kZq8sqCYTlPeD4VhaR/gC25KcdK298GG1lXg5O4110uDcBtsvDWPuu2rp6+2xREx+8zd4hOTQd9vmNFdZFd2iw=="],
 
     "@nattstack/ui": ["@nattstack/ui@0.1.2", "", { "dependencies": { "@base-ui/react": "1.7.0", "@stylexjs/stylex": "0.19.0" }, "peerDependencies": { "@types/react": "^18 || ^19", "react": "^19.2.8", "react-dom": "^19.2.8" } }, "sha512-PVoZggnYO34Qk+phO0qPUEU9nsgor3EWuO3sjfPRIzidwhbs+4EIgEJJHwT22jzVdaERBOGdtVtO3+l7B3YcMA=="],
 
@@ -615,6 +618,8 @@
     "tsconfig-paths": ["tsconfig-paths@4.2.0", "", { "dependencies": { "json5": "^2.2.2", "minimist": "^1.2.6", "strip-bom": "^3.0.0" } }, "sha512-NoZ4roiN7LnbKn9QqE1amc9DJfzvZXxF4xDavcOWt1BPkdx+m+0gJuPM+S0vCe7zTJMYUP0R8pO2XMr+Y8oLIg=="],
 
     "tsconfig-paths-webpack-plugin": ["tsconfig-paths-webpack-plugin@4.2.0", "", { "dependencies": { "chalk": "^4.1.0", "enhanced-resolve": "^5.7.0", "tapable": "^2.2.1", "tsconfig-paths": "^4.1.2" } }, "sha512-zbem3rfRS8BgeNK50Zz5SIQgXzLafiHjOwUAvk/38/o1jHn/V5QAgVUcz884or7WYcPaH3N2CIfUc2u0ul7UcA=="],
+
+    "tslib": ["tslib@2.8.1", "", {}, "sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w=="],
 
     "type-check": ["type-check@0.4.0", "", { "dependencies": { "prelude-ls": "^1.2.1" } }, "sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew=="],
 
