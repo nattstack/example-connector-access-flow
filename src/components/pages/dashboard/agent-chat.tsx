@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router"
 import { Fragment, useState, type JSX } from "react"
 import { AvatarConnector } from "#/components/avatar-connector"
 import { DialogAuthorizeConnector } from "#/components/pages/dashboard/dialog-authorize-connector"
+import { DialogBlockedConnector } from "#/components/pages/dashboard/dialog-blocked-connector"
 import type { ChatInline, ChatItem, ChatText } from "#/data/agent-chat"
 
 const GAP_CLUSTER = 8
@@ -117,6 +118,7 @@ function ChatConnect(props: {
 }): JSX.Element {
   const { item, onAuthorize, onRequestAccess } = props
   const [isAuthorizeOpen, setIsAuthorizeOpen] = useState(false)
+  const [isBlockedOpen, setIsBlockedOpen] = useState(false)
   const isAdded = item.status === "added"
   const isRequested = item.status === "requested"
   const isRequest = item.action === "request"
@@ -149,7 +151,7 @@ function ChatConnect(props: {
           isRequested={isRequested}
           onAction={() => {
             if (isRequest) {
-              onRequestAccess?.(item.id)
+              setIsBlockedOpen(true)
               return
             }
 
@@ -158,7 +160,15 @@ function ChatConnect(props: {
         />
       </Row>
 
-      {isRequest ? undefined : (
+      {isRequest ? (
+        <DialogBlockedConnector
+          appId={item.appId}
+          connectorLabel={item.title}
+          isOpen={isBlockedOpen}
+          onIsOpenChange={setIsBlockedOpen}
+          onRequest={() => onRequestAccess?.(item.id)}
+        />
+      ) : (
         <DialogAuthorizeConnector
           appId={item.appId}
           description={item.dialogDescription}
