@@ -1,5 +1,5 @@
 import { Column, Row, Spacer } from "@nattstack/ui"
-import { Link, type LinkComponentProps } from "@tanstack/react-router"
+import { Link } from "@tanstack/react-router"
 import type { JSX } from "react"
 import { AgentAvatar } from "#/components/agent-avatar"
 import { LogoLink } from "#/components/logo-link"
@@ -24,15 +24,7 @@ export function DashboardSidebar(): JSX.Element {
       </Row>
       <Spacer height={8} />
 
-      {/* Navigation */}
-      <Column as="nav" className="gap-y-2 px-8">
-        <NavLink activeOptions={{ exact: true }} label="Home" to="/dashboard" />
-      </Column>
-      <Spacer height={24} />
-
-      <p className="px-12 text-12 uppercase">Agents</p>
-      <Spacer className="h-8" />
-
+      {/* Agents */}
       <Column as="nav" className="gap-y-2 px-8">
         {MOCK_AGENTS.map((agent) => (
           <LinkAgent agent={agent} key={agent.id} />
@@ -64,24 +56,6 @@ function LinkAgent(props: LinkAgentProps): JSX.Element {
         {/* Chat */}
         <span className="truncate text-14 text-text-secondary">{agent.chat}</span>
       </Column>
-    </Link>
-  )
-}
-
-function NavLink(props: { label: string } & LinkComponentProps): JSX.Element {
-  const { label = "", to = "/dashboard", ...rest } = props
-
-  return (
-    <Link
-      activeProps={{ className: "bg-gray-3 text-text-primary!" }}
-      className="
-        flex h-36 items-center rounded-8 px-8 text-14 text-text-secondary
-        hover:bg-gray-3 hover:text-text-primary
-      "
-      to={to}
-      {...rest}
-    >
-      {label}
     </Link>
   )
 }

@@ -74,7 +74,7 @@ export const MOCK_AGENTS: Agent[] = [
     chat: "Sent 1 Markdown file",
     createdAt: "2026-08-20T07:50:00",
     id: "9",
-    name: "Completor analysis",
+    name: "Competitor analysis",
     updatedAt: "2026-08-20T10:16:00",
   },
   {
@@ -88,4 +88,14 @@ export const MOCK_AGENTS: Agent[] = [
 
 export function getAgentById(agentId: string): Agent | undefined {
   return MOCK_AGENTS.find((agent) => agent.id === agentId)
+}
+
+export function getFirstAgent(): Agent {
+  const [agent] = MOCK_AGENTS
+
+  if (agent === undefined) {
+    throw new Error("Expected at least one mock agent")
+  }
+
+  return agent
 }
