@@ -16,15 +16,6 @@ declare module "@tanstack/react-router" {
   }
 }
 
-const themeQuery = matchMedia("(prefers-color-scheme: dark)")
-
-function syncTheme(): void {
-  document.documentElement.classList.toggle("dark", themeQuery.matches)
-}
-
-syncTheme()
-themeQuery.addEventListener("change", syncTheme)
-
 const root = document.querySelector("#root")
 
 if (!root) {
