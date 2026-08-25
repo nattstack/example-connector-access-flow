@@ -54,10 +54,14 @@ function LinkAgent(props: LinkAgentProps): JSX.Element {
       params={{ agentId: agent.id }}
       to="/dashboard/agents/$agentId"
     >
+      {/* Avatar */}
       <Row className="aspect-1-1 h-40 rounded-full bg-gray-4" />
 
       <Column className="w-full min-w-0">
+        {/* Name */}
         <span className="text-14 font-500 text-text-primary">{agent.name}</span>
+
+        {/* Chat */}
         <span className="truncate text-14 text-text-secondary">{agent.chat}</span>
       </Column>
     </Link>
