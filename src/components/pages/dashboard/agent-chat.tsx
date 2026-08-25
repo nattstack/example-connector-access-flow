@@ -1,5 +1,5 @@
-import { Column, IconButton, Row, Spacer } from "@nattstack/ui"
-import { Fragment, useRef, type JSX } from "react"
+import { Column, Row, Spacer } from "@nattstack/ui"
+import { Fragment, type JSX } from "react"
 import type { ChatInline, ChatItem, ChatText } from "#/data/agent-chat"
 
 const GAP_CLUSTER = 8
@@ -15,7 +15,6 @@ type ChatSide = "agent" | "meta" | "user"
 
 export function AgentChat(props: AgentChatProps): JSX.Element {
   const { items } = props
-  const endRef = useRef<HTMLDivElement>(null)
 
   return (
     <Column className="px-16">
@@ -34,23 +33,6 @@ export function AgentChat(props: AgentChatProps): JSX.Element {
             </Fragment>
           )
         })}
-
-        <div ref={endRef} />
-
-        <Spacer height={16} />
-
-        <Row justifyContent="flex-end">
-          <IconButton
-            aria-label="Scroll to latest message"
-            icon={<IconChevronDown />}
-            onClick={() => {
-              endRef.current?.scrollIntoView({ behavior: "smooth" })
-            }}
-            rounded
-            size={32}
-            variant="secondary"
-          />
-        </Row>
 
         <Spacer height={32} />
       </Column>
@@ -284,22 +266,3 @@ function IconCheck(): JSX.Element {
   )
 }
 
-function IconChevronDown(): JSX.Element {
-  return (
-    <svg
-      aria-hidden="true"
-      className="size-16"
-      fill="none"
-      viewBox={`0 0 ${ICON_SIZE} ${ICON_SIZE}`}
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M4 6.5 8 10.5 12 6.5"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={ICON_STROKE_WIDTH}
-      />
-    </svg>
-  )
-}
