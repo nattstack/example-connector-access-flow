@@ -13,7 +13,7 @@ import {
 } from "@nattstack/ui"
 import { useNavigate, useRouteContext, useRouter } from "@tanstack/react-router"
 import { useMemo, useState, type JSX } from "react"
-import { Logomark } from "#/components/logomark"
+import { AvatarWorkspace } from "#/components/avatar-workspace"
 import { DialogCreateWorkspace } from "#/components/pages/dashboard/dialog-create-workspace"
 import { DialogRenameWorkspace } from "#/components/pages/dashboard/dialog-rename-workspace"
 import { createWorkspace, listWorkspaces, renameWorkspace } from "#/data/workspaces"
@@ -87,7 +87,7 @@ export function DashboardWorkspaceCombobox(): JSX.Element {
           <ComboboxValue placeholder="Select a workspace">
             {(item: WorkspaceOption) => (
               <Row className="items-center gap-8">
-                <Logomark height={16} width={16} />
+                <AvatarWorkspace name={item.label} />
                 <span className="truncate">{item.label}</span>
               </Row>
             )}
@@ -100,7 +100,7 @@ export function DashboardWorkspaceCombobox(): JSX.Element {
             {(item: WorkspaceOption) => (
               <ComboboxItem key={item.value} value={item}>
                 <Row className="items-center gap-8">
-                  <Logomark height={16} width={16} />
+                  <AvatarWorkspace name={item.label} />
                   <span className="truncate">{item.label}</span>
                 </Row>
               </ComboboxItem>

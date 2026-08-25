@@ -22,8 +22,8 @@ const workspaces: Workspace[] = [
   },
   {
     id: 4,
-    name: "Dragon fruit (Flow #4)",
-    slug: "dragon-fruit",
+    name: "Grapes (Flow #4)",
+    slug: "Grapes",
   },
 ]
 
