@@ -4,6 +4,7 @@ export interface Agent {
   avatar: string
   chat: string
   createdAt: string
+  draft?: string
   id: string
   name: string
   team?: string
@@ -14,8 +15,9 @@ export interface Agent {
 export const MOCK_AGENTS: Agent[] = [
   {
     avatar: "/avatars/cloud.webp",
-    chat: "3 need a reply today. The other 3 can wait until Thursday.",
+    chat: "What do you actually want me around for? The more specific, the better I can get useful fast.",
     createdAt: "2026-08-25T01:02:00",
+    draft: "Review all emails received in my connected inbox during the past 24 hours",
     id: "d28c5b88-901f-4df0-b5b1-c6b9cab1b420",
     name: "Email summary",
     team: "Operations",

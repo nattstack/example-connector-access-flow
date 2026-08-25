@@ -1,10 +1,16 @@
 import { Column, IconButton, Row, Spacer, Textarea } from "@nattstack/ui"
-import type { JSX } from "react"
+import { useState, type JSX } from "react"
 
 const ICON_SIZE = 16
 const ICON_STROKE_WIDTH = 1.6
 
-export function AgentComposer(): JSX.Element {
+interface AgentComposerProps {
+  defaultValue?: string
+}
+
+export function AgentComposer(props: AgentComposerProps): JSX.Element {
+  const [value, setValue] = useState(props.defaultValue ?? "")
+
   return (
     <Column className="shrink-0 px-16 pb-16">
       <Column
@@ -20,8 +26,12 @@ export function AgentComposer(): JSX.Element {
             outline-none
             placeholder:text-text-secondary
           "
+          onChange={(event) => {
+            setValue(event.target.value)
+          }}
           placeholder="Send a message to your agent"
           rows={2}
+          value={value}
         />
 
         <Spacer height={12} />

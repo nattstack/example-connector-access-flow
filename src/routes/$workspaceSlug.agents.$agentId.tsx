@@ -35,7 +35,7 @@ export const Route = createFileRoute("/$workspaceSlug/agents/$agentId")({
         </Column>
 
         {/* Composer */}
-        <AgentComposer />
+        <AgentComposer defaultValue={agent.draft} key={agent.id} />
       </>
     )
   },

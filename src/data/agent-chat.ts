@@ -493,36 +493,16 @@ const CHAT_EMAIL_SUMMARY: ChatItem[] = [
     type: "meta",
   },
   {
-    content: [
-      "I can collapse the inbox into what needs a reply, what's FYI, and what you can ignore.",
-    ],
+    content: ["Hey Sam. Good to meet you."],
     id: "11-agent-hello",
     role: "agent",
     type: "message",
   },
   {
-    content: ["Last 24 hours. Operations only."],
-    id: "11-user-scope",
-    role: "user",
-    type: "message",
-  },
-  {
     content: [
-      "I used Gmail · Read on the Operations inbox. 47 unread. 6 need a reply, 4 are FYI, the rest is noise or already handled.",
+      "What do you actually want me around for? The more specific, the better I can get useful fast.",
     ],
-    id: "11-agent-count",
-    role: "agent",
-    type: "message",
-  },
-  {
-    id: "11-choice-replies",
-    label: "Show the 6 that need a reply",
-    selected: true,
-    type: "choice",
-  },
-  {
-    content: ["3 need a reply today. The other 3 can wait until Thursday."],
-    id: "11-agent-today",
+    id: "11-agent-purpose",
     role: "agent",
     type: "message",
   },
