@@ -265,4 +265,3 @@ function IconCheck(): JSX.Element {
     </svg>
   )
 }
-
