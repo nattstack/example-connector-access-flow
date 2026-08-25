@@ -13,12 +13,14 @@ export function DashboardSidebar(): JSX.Element {
         shadow-[inset_-1px_0_0_0_var(--color-border)]
       "
     >
+      {/* Logo */}
       <Row className="mt-8 ml-8">
         <LogoLink />
       </Row>
       <Spacer height={8} />
 
-      <Column className="gap-y-2 px-8">
+      {/* Navigation */}
+      <Column as="nav" className="gap-y-2 px-8">
         <NavLink activeOptions={{ exact: true }} label="Dashboard" to="/dashboard" />
       </Column>
       <Spacer height={24} />
@@ -26,7 +28,7 @@ export function DashboardSidebar(): JSX.Element {
       <p className="px-12 text-12 font-500 text-text-secondary uppercase">Projects</p>
       <Spacer className="h-8" />
 
-      <Column className="gap-y-2 px-8">
+      <Column as="nav" className="gap-y-2 px-8">
         {projects.map((project) => (
           <NavLink
             key={project.id}
